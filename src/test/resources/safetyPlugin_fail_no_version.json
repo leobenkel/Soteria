@@ -1,0 +1,25 @@
+{
+  "modules": {
+    "com.orgs": {
+      "name-of-library": {
+      }
+    }
+  },
+  "sbtVersion": "1.2.6",
+  "scalaCFlags": [
+    "-feature",
+    "-Yrangepos",
+    "-Ywarn-dead-code",
+    "-Ywarn-inaccessible",
+    "-Ywarn-unused",
+    "-Ywarn-unused-import",
+    "-Ywarn-value-discard",
+    "-deprecation",
+    "-encoding",
+    "utf8"
+  ],
+  "scalaVersions": [
+    "2.12.7",
+    "2.11.12"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "modules": {
+    "com.orgs": {
+      "name-of-library": {
+        "version": "3.0"
+      }
+    }
+  },
+  "sbtVersion": "1.2.6",
+  "scalaVersions": [
+    "2.12.7",
+    "2.11.12"
+  ]
+}

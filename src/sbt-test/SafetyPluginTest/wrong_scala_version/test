@@ -1,0 +1,3 @@
+# should fail because scala version is wrong
+-> assembly
+-$ exists target/scala-2.10/foo.jar
