@@ -1,12 +1,13 @@
 package com.leobenkel.safetyplugin
 
 import com.leobenkel.safetyplugin.Config.SafetyConfiguration
-import com.leobenkel.safetyplugin.Utils.ImplicitModuleToString._
-import com.leobenkel.safetyplugin.Utils.LoggerExtended
-import sbt.{ExclusionRule, ModuleID}
 import com.leobenkel.safetyplugin.Messages.CommonMessage._
 import com.leobenkel.safetyplugin.Messages.{ErrorMessage, Errors}
 import com.leobenkel.safetyplugin.Modules._
+import com.leobenkel.safetyplugin.Utils.EitherUtils._
+import com.leobenkel.safetyplugin.Utils.ImplicitModuleToString._
+import com.leobenkel.safetyplugin.Utils.LoggerExtended
+import sbt.ModuleID
 
 private[safetyplugin] case class LibraryDependencyWriter(config: SafetyConfiguration) {
 
@@ -16,15 +17,53 @@ private[safetyplugin] case class LibraryDependencyWriter(config: SafetyConfigura
   ): Seq[(ModuleID, Seq[NameOfModule])] = {
     libraries
       .map { m =>
-        val knowledge = config.PackageKnownRiskDependencies
-          .filter { case (k, _) => k === m }
+        val knowledge = config.PackageKnownRiskDependencies.filterKeys(_ === m)
         val depToRemove = knowledge.values.flatten.toSeq.distinct
         log.debug(s"For ${m.prettyString}: ${knowledge.size}/${depToRemove.length} lib to remove")
-        (
-          m,
-          depToRemove
-        )
+
+        (m, depToRemove)
       }
+  }
+
+  private def removeBadDependencies(
+    log:      LoggerExtended,
+    module:   ModuleID,
+    acc:      Seq[ModuleID],
+    toRemove: NameOfModule
+  ): (ModuleID, Seq[ModuleID]) = {
+    val depsToReplace = config.NeedToBeReplaced.filter(_.key == toRemove.key)
+
+    require(
+      depsToReplace.isEmpty || depsToReplace.size == 1,
+      s"Size was ${depsToReplace.size} with: " +
+        s"\n${depsToReplace.map(_.toString).mkString("\n")}"
+    )
+
+    toRemove.exclusionRule match {
+      case Right(er) if depsToReplace.nonEmpty =>
+        val dependencyToInjectBack = depsToReplace
+          .map(_.toModuleID).flattenEI
+        require(dependencyToInjectBack.isEmpty || dependencyToInjectBack.size == 1)
+
+        log.debug(s"> For ${module.prettyString} - Exclude ${toRemove.toString}")
+        if (dependencyToInjectBack.nonEmpty) {
+          log.debug(
+            s">> replacing with: ${dependencyToInjectBack.head.prettyString}."
+          )
+        } else {
+          log.debug(s">> removing entirely.")
+        }
+
+        (
+          module.excludeAll(er),
+          acc ++ dependencyToInjectBack.map(removeAllDependencies).flattenEI
+        )
+      case Left(ex) =>
+        log.debug(s"Error for $toRemove -> Exclusion rule: $ex")
+        (module, acc)
+      case _ => (module, acc)
+    }
+
   }
 
   private def rewriteLibraries(
@@ -46,44 +85,7 @@ private[safetyplugin] case class LibraryDependencyWriter(config: SafetyConfigura
         case (m, thingsToRemove) =>
           thingsToRemove
             .foldLeft((m, Seq[ModuleID]())) {
-              case ((module, acc), toRemove) =>
-                val dependencyToReplace = config.NeedToBeReplaced
-                  .filter(m => toRemove.key == m.key)
-
-                require(
-                  dependencyToReplace.isEmpty || dependencyToReplace.size == 1,
-                  s"was ${dependencyToReplace.size} instead: " +
-                    s"\n${dependencyToReplace.map(_.toString).mkString("\n")}"
-                )
-
-                if (dependencyToReplace.nonEmpty) {
-                  val dependencyToInjectBack = dependencyToReplace
-                    .map(_.toModuleID)
-                    .filter(_.isRight).map(_.right.get)
-                  require(dependencyToInjectBack.isEmpty || dependencyToInjectBack.size == 1)
-
-                  log.debug(s"> For ${module.prettyString} - Exclude ${toRemove.toString}")
-                  if (dependencyToInjectBack.nonEmpty) {
-                    log.debug(s">> replacing with: ${dependencyToInjectBack.head.prettyString}.")
-                  } else {
-                    log.debug(s">> removing entirely.")
-                  }
-
-                  (
-                    module.excludeAll(
-                      ExclusionRule(
-                        organization = toRemove.organization,
-                        name = toRemove.name
-                      )
-                    ),
-                    acc ++ dependencyToInjectBack
-                      .map(removeAllDependencies)
-                      .filter(_.isRight)
-                      .map(_.right.get)
-                  )
-                } else {
-                  (module, acc)
-                }
+              case ((module, acc), toRemove) => removeBadDependencies(log, module, acc, toRemove)
             }
       }
       .flatMap { case (m, listModule) => listModule :+ m }
@@ -111,21 +113,20 @@ private[safetyplugin] case class LibraryDependencyWriter(config: SafetyConfigura
       Right(libraries)
     } else {
       checkVersion(log, libraries) match {
-        case Left(error) =>
-          if (log.isSoftError) Right(rewriteLibraries(log, libraries)) else Left(error)
-        case Right(_) => Right(rewriteLibraries(log, libraries))
+        case Left(_) if log.isSoftError => Right(rewriteLibraries(log, libraries))
+        case Left(er)                   => Left(er)
+        case Right(_)                   => Right(rewriteLibraries(log, libraries))
       }
     }
   }
 
   private def removeAllDependencies(moduleID: ModuleID): Either[String, ModuleID] = {
-    val start: Either[String, ModuleID] = Right(moduleID)
     config.NeedToBeReplaced
-      .foldLeft(start) {
+      .foldLeft(Right(moduleID): Either[String, ModuleID]) {
         case (m, toRemove) =>
           m.flatMap { module =>
-            if (module.organization != toRemove.organization &&
-                module.name != toRemove.name) {
+            // to not remove itself from itself
+            if (toRemove =!= module) {
               toRemove.exclusionRule.right.map(module.excludeAll(_))
             } else {
               Right(module)
@@ -186,9 +187,8 @@ private[safetyplugin] case class LibraryDependencyWriter(config: SafetyConfigura
     librariesToCheck.prettyString(log, "checkVersion")
 
     (allCorrectLibraries
-      .map(m => (m, m.version))
-      .filter { case (_, v) => v.isRight }
-      .map { case (m, v) => (m, v.right.get) }
+      .filter(_.version.isRight)
+      .map(m => (m, m.version.right.get))
       .flatMap {
         case (correctModule, correctVersion) =>
           librariesToCheck

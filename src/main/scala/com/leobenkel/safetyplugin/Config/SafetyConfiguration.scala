@@ -4,16 +4,17 @@ import com.leobenkel.safetyplugin.Modules.{Dependency, NameOfModule}
 import com.leobenkel.safetyplugin.Utils.Json.JsonDecode
 import com.leobenkel.safetyplugin.Utils.Json.JsonParserHelper._
 import sbt.librarymanagement.ModuleID
+import com.leobenkel.safetyplugin.Utils.EitherUtils._
 
 /**
   * What is read from the JSON config file
   */
 private[safetyplugin] case class SafetyConfiguration(
-  sbtVersion:    String,
-  scalaVersions: Set[String],
-  scalaCFlags:   Array[String],
-  modules:       Map[String, Map[String, SerializedModule]],
-  dockerImageOpt:   Option[String]
+  sbtVersion:     String,
+  scalaVersions:  Set[String],
+  scalaCFlags:    Array[String],
+  modules:        Map[String, Map[String, SerializedModule]],
+  dockerImageOpt: Option[String]
 ) {
   @transient lazy private val retrieval: String => Either[String, NameOfModule] =
     NameOfModule.find(modules)
@@ -41,8 +42,7 @@ private[safetyplugin] case class SafetyConfiguration(
       .toMap
   @transient lazy val DependenciesOverride: Set[ModuleID] = AllModules
     .map(_.toModuleID)
-    .filter(_.isRight)
-    .map(_.right.get)
+    .flattenEI
     .toSet
   @transient lazy val ForbiddenModules: Seq[(Dependency, String)] = AllModules
     .filter(_.isForbidden)
