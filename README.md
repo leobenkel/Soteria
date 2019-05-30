@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/leobenkel/safety_plugin.svg?branch=master)](https://travis-ci.org/leobenkel/safety_plugin)
+
 # sbt_safety_plugin
 
 ## Setup steps

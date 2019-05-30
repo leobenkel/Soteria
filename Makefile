@@ -26,4 +26,7 @@ test_unit_test:
 test_plugin:
 	sbt 'set isSnapshot := true' scripted
 
-test: fmt deep_clean publishLocal test_unit_test test_plugin
+check_style:
+	sbt safetyCheckScalaFmt || echo "Need to add the plugin to itself"
+
+test: deep_clean publishLocal check_style test_unit_test test_plugin
