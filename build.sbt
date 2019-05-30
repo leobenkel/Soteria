@@ -1,5 +1,3 @@
-crossSbtVersions := Seq("0.13.17")
-
 safetySoftOnCompilerWarning := true
 
 // Test
