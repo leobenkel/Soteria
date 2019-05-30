@@ -1,4 +1,5 @@
-safetySoftOnCompilerWarning := true
+// commented out until the plugin is pushed out the maven
+//safetySoftOnCompilerWarning := true
 
 // Test
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % Test
