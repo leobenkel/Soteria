@@ -8,6 +8,7 @@ import com.leobenkel.safetyplugin.Utils.SafetyLogger
 import sbt.internal.util.complete.Parser
 import sbt.{Def, _}
 import sbtassembly._
+import com.leobenkel.safetyplugin.Utils.EitherUtils._
 
 private[safetyplugin] object SafetyExecutionLogic {
   def safetyGetLogExec(): Def.Initialize[SafetyLogger] = {
@@ -104,14 +105,8 @@ private[safetyplugin] object SafetyExecutionLogic {
       log.info(s"Overriding assembly settings")
 
       Def.task {
-        val mergeStrategy = { input: String =>
-          {
-            getMergeStrategy(input, oldStrategy)
-          }
-        }
-        val shadeRule = Seq(
-          ShadeRule.rename("com.google.common.**" -> "shade.@0").inAll
-        )
+        val mergeStrategy = (input: String) => getMergeStrategy(input, oldStrategy)
+        val shadeRule = Seq(ShadeRule.rename("com.google.common.**" -> "shade.@0").inAll)
 
         assemblyOption
           .copy(
@@ -128,11 +123,7 @@ private[safetyplugin] object SafetyExecutionLogic {
     Def.taskDyn {
       val log = safetyGetLog.value
       val shouldNotFail = safetySoftOnCompilerWarning.value
-      val origin = (if (conf.isDefined) {
-                      conf.get / Keys.scalacOptions
-                    } else {
-                      Keys.scalacOptions
-                    }).value
+      val origin = conf.fold(Keys.scalacOptions)(_ / Keys.scalacOptions).value
       val configuration = SafetyPluginKeys.safetyConfig.value
 
       Def.task {
@@ -151,11 +142,8 @@ private[safetyplugin] object SafetyExecutionLogic {
   def libraryDependencies(conf: Option[Configuration]): Def.Initialize[Seq[ModuleID]] = {
     Def.settingDyn {
       val log = safetyGetLog.value
-      val libraryDependencies = (if (conf.isDefined) {
-                                   conf.get / Keys.libraryDependencies
-                                 } else {
-                                   Keys.libraryDependencies
-                                 }).value
+      val libraryDependencies =
+        conf.fold(Keys.libraryDependencies)(_ / Keys.libraryDependencies).value
       val config = SafetyPluginKeys.safetyConfig.value
 
       Def.setting {
@@ -242,20 +230,22 @@ private[safetyplugin] object SafetyExecutionLogic {
   ): sbt.UpdateReport = {
     val allModule: Seq[(String, Seq[Dependency])] = updateReport.configurations
       .filter(_.configuration == configuration)
-      .map(
-        c =>
-          (
-            c.configuration.name,
-            c.allModules
-              .map(Dependency(_))
-              .groupBy(_.key)
-              .map { case (_, cModules) => cModules.reduce((l, r) => (l |+| r).right.get) }
-              .toSeq
-              .sortBy(_.key)
-          )
-      )
+      .map { c =>
+        (
+          c.configuration.name,
+          c.allModules
+            .map(Dependency(_))
+            .groupBy(_.key)
+            .map { case (_, cModules) => cModules.reduce((l, r) => (l |+| r).right.get) }
+            .toSeq
+            .sortBy(_.key)
+        )
+      }
 
-    val logger: String => Unit = if (debugValue.isDefined) log.info(_) else log.debug(_)
+    val logger: String => Unit = debugValue match {
+      case None    => log.debug(_)
+      case Some(_) => log.info(_)
+    }
 
     val header = debugValue.fold("Here are all categories fetch") {
       case (org, name) => s"The module ${Dependency(org, name).toString} have fetch categories"
@@ -383,8 +373,7 @@ private[safetyplugin] object SafetyExecutionLogic {
                   .extract(state).appendWithoutSession(
                     Seq(
                       Keys.libraryDependencies += moduleIdSome,
-                      safetyDebugModule :=
-                        Some(moduleIdSome.organization, moduleIdSome.name),
+                      safetyDebugModule         := Some(moduleIdSome.organization, moduleIdSome.name),
                       safetyDebugPrintScalaCode := true
                     ),
                     state
@@ -394,8 +383,7 @@ private[safetyplugin] object SafetyExecutionLogic {
                 ()
               case _ => log.fail(s"Module '$module' with revision '${module.version}' is invalid.")
             }
-          case Left(e) =>
-            log.fail(e)
+          case Left(e) => log.fail(e)
         }
 
         state
@@ -457,8 +445,7 @@ private[safetyplugin] object SafetyExecutionLogic {
 
       val config = SafetyPluginKeys.safetyConfig.value
 
-      val allDependenciesTmp = config.ShouldDownload
-        .map(_.toModuleID)
+      val allDependenciesTmp = config.ShouldDownload.map(_.toModuleID)
 
       allDependenciesTmp
         .filter(_.isLeft)
@@ -466,8 +453,7 @@ private[safetyplugin] object SafetyExecutionLogic {
         .foreach(log.debug(_))
 
       val allDependencies = allDependenciesTmp
-        .filter(_.isRight)
-        .map(_.right.get)
+        .flattenEI
         .filter { m =>
           if (m.name.contains("_")) {
             val nameBlocks = m.name.split("_")
@@ -496,17 +482,13 @@ private[safetyplugin] object SafetyExecutionLogic {
     Def.settingDyn {
       val log = safetyGetLog.value
       log.separatorDebug(s"$conf / dependencyOverrides")
-      val originalDependencies = (if (conf.isDefined) {
-                                    conf.get / Keys.dependencyOverrides
-                                  } else {
-                                    Keys.dependencyOverrides
-                                  }).value
+      val originalDependencies =
+        conf.fold(Keys.dependencyOverrides)(_ / Keys.dependencyOverrides).value
       val config = SafetyPluginKeys.safetyConfig.value
 
       Def.setting {
         log.debug(s"> Starting with ${originalDependencies.size} dependencyOverrides:")
-        val newDependencyOverrides =
-          (originalDependencies ++ config.DependenciesOverride).distinct
+        val newDependencyOverrides = (originalDependencies ++ config.DependenciesOverride).distinct
 
         if (conf.isEmpty) {
           log.info(s"> 'dependencyOverrides' have ${newDependencyOverrides.size} overrides.")

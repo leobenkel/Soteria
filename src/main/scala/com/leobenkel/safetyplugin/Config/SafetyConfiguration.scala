@@ -4,6 +4,7 @@ import com.leobenkel.safetyplugin.Modules.{Dependency, NameOfModule}
 import com.leobenkel.safetyplugin.Utils.Json.JsonDecode
 import com.leobenkel.safetyplugin.Utils.Json.JsonParserHelper._
 import sbt.librarymanagement.ModuleID
+import com.leobenkel.safetyplugin.Utils.EitherUtils._
 
 /**
   * What is read from the JSON config file
@@ -41,8 +42,7 @@ private[safetyplugin] case class SafetyConfiguration(
       .toMap
   @transient lazy val DependenciesOverride: Set[ModuleID] = AllModules
     .map(_.toModuleID)
-    .filter(_.isRight)
-    .map(_.right.get)
+    .flattenEI
     .toSet
   @transient lazy val ForbiddenModules: Seq[(Dependency, String)] = AllModules
     .filter(_.isForbidden)
