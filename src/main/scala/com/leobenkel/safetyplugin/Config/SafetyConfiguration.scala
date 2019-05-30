@@ -10,11 +10,11 @@ import com.leobenkel.safetyplugin.Utils.EitherUtils._
   * What is read from the JSON config file
   */
 private[safetyplugin] case class SafetyConfiguration(
-  sbtVersion:    String,
-  scalaVersions: Set[String],
-  scalaCFlags:   Array[String],
-  modules:       Map[String, Map[String, SerializedModule]],
-  dockerImageOpt:   Option[String]
+  sbtVersion:     String,
+  scalaVersions:  Set[String],
+  scalaCFlags:    Array[String],
+  modules:        Map[String, Map[String, SerializedModule]],
+  dockerImageOpt: Option[String]
 ) {
   @transient lazy private val retrieval: String => Either[String, NameOfModule] =
     NameOfModule.find(modules)

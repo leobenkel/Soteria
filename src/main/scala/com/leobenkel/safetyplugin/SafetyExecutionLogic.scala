@@ -452,8 +452,7 @@ private[safetyplugin] object SafetyExecutionLogic {
         .map(_.left.get)
         .foreach(log.debug(_))
 
-      val allDependencies = allDependenciesTmp
-        .flattenEI
+      val allDependencies = allDependenciesTmp.flattenEI
         .filter { m =>
           if (m.name.contains("_")) {
             val nameBlocks = m.name.split("_")

@@ -187,7 +187,7 @@ private[safetyplugin] case class LibraryDependencyWriter(config: SafetyConfigura
     librariesToCheck.prettyString(log, "checkVersion")
 
     (allCorrectLibraries
-        .filter(_.version.isRight)
+      .filter(_.version.isRight)
       .map(m => (m, m.version.right.get))
       .flatMap {
         case (correctModule, correctVersion) =>
