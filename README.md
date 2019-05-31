@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/leobenkel/safety_plugin.svg?branch=master)](https://travis-ci.org/leobenkel/safety_plugin)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # sbt_safety_plugin
 
@@ -22,7 +23,7 @@ If you have any question [ask Leo](https://github.com/leobenkel).
      1. `dependencyOverrides`
      1. `scalacOptions`
      1. All settings related to `sbt-assembly` and `sbt-docker`
-     1. All test options `in Test`: 
+     1. All test options `in Test`:
         1. `javaOptions in Test`
         1. `testOptions in Test`
         1. `parallelExecution in Test`
@@ -58,16 +59,16 @@ To check that you are following the right styling do:
 1. Check that you have `.scalafix.conf`, `.scalafmt.conf` and `scalastyle-config.xml` in your project
    * Feel free to copy the one present in this repo to follow the same style guides
 2. Run `sbt safetyCheckScalaCheckAll` to check that everything is correct.
-    * You can run each system independently with: 
+    * You can run each system independently with:
         * `safetyCheckScalaStyle`
         * `safetyCheckScalaFix`
         * `safetyCheckScalaFmt`
-3. To apply the fix for `ScalaFMT`, you can run `sbt safetyCheckScalaFmtRun`. 
+3. To apply the fix for `ScalaFMT`, you can run `sbt safetyCheckScalaFmtRun`.
     * Be sure to be in a clean branch as the changes might be huge.
-    
+
 ### For fat-jar assembly build
 
-You need to add 
+You need to add
 ```
 assemblyOption in assembly := safetyAssemblySettings.value
 enablePlugins(DockerPlugin)
@@ -120,7 +121,7 @@ safetyLogLevel := Level.Error
 
 * Update version number in `VERSION` file.
 * Deploy the updated plugin locally: `make publishLocal`
-* Update version number in `./project/safety.sbt`. 
+* Update version number in `./project/safety.sbt`.
 * Run the plugin on itself with `make publishLocal`
 * Publish: `make publish`
 
