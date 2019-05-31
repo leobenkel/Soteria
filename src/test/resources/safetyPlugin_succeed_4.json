@@ -1,0 +1,32 @@
+{
+  "modules": {
+    "com.orgs": {
+      "name-of-library": {
+        "version": "3.0"
+      }
+    },
+    "com.other.org": {
+      "artifact-name": {
+        "version": "2.1.0"
+      },
+      "artif": {
+        "version": "None",
+        "exactName": false,
+        "excludeName": [
+          "artifice",
+          "artifactory"
+        ],
+        "dependenciesToRemove": [
+          "com.orgs | name-of-library",
+          "not.existing.org | bad-library-name",
+          "com.orgs | bad-library-name"
+        ]
+      }
+    }
+  },
+  "sbtVersion": "1.2.6",
+  "scalaVersions": [
+    "2.12.7",
+    "2.11.12"
+  ]
+}

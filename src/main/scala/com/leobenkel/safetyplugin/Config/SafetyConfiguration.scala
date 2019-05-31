@@ -22,7 +22,7 @@ private[safetyplugin] case class SafetyConfiguration(
     case (org, mm) =>
       mm.map {
         case (name, m) =>
-          val (modules, errors) = m.toModuleName(org, name, retrieval)
+          val (modules, errors) = m.toDependency(org, name, retrieval)
           if (errors.nonEmpty) {
             System.err.println(s"[ERROR] Error for module [$modules] (${errors.length}):")
             errors.map(e => s"[ERROR]   $e").foreach(System.err.println)
@@ -50,10 +50,6 @@ private[safetyplugin] case class SafetyConfiguration(
 }
 
 private[Config] object SafetyConfiguration {
-  implicit val parserMap: JsonDecode.Parser[Map[String, Any]] = (input: Map[String, Any]) => {
-    Right(input)
-  }
-
   implicit val parser: JsonDecode.Parser[SafetyConfiguration] = (input: Map[String, Any]) => {
     for {
       sbtVersion   <- input.getAs[String]("sbtVersion")

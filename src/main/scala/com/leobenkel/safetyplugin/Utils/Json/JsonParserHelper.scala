@@ -19,17 +19,6 @@ private[safetyplugin] object JsonParserHelper {
         case None    => Left(s"Failed to parse key '$key'")
       }
     }
-
-    def convertTo[A <: Product](
-      key: String
-    )(
-      implicit p: JsonDecode.Parser[A]
-    ): Either[String, A] = {
-      m.get(key).map(_.asInstanceOf[Map[String, Any]]) match {
-        case Some(v) => Right(v).flatMap(p(_))
-        case None    => Left(s"Failed to parse key '$key'")
-      }
-    }
   }
 
   implicit class EISequence[A, B](s: Seq[Either[A, B]]) {

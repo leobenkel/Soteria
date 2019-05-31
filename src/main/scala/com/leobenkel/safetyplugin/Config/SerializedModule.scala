@@ -39,7 +39,7 @@ case class SerializedModule(
     )
   }
 
-  def toModuleName(
+  def toDependency(
     org:       String,
     name:      String,
     retrieval: String => Either[String, NameOfModule]

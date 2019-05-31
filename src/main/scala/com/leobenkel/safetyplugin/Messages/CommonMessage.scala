@@ -6,7 +6,7 @@ object CommonMessage {
   implicit class StringsToError(messages: Seq[String]) {
     def toError(title: String): ErrorMessage = {
       if (messages.isEmpty) {
-        NoError()
+        NoError
       } else {
         WithErrorMessage(
           title = title,
