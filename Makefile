@@ -26,6 +26,10 @@ test_unit_test:
 test_plugin:
 	sbt 'set isSnapshot := true' scripted
 
+test_coverage_run:
+	sbt clean coverage test coverageReport
+	open ./target/scala-2.12/sbt-1.0/scoverage-report/index.html
+
 test_coverage:
 	sbt clean coverage test
 
