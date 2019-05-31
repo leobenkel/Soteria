@@ -120,13 +120,7 @@ object Dependency {
     name: String
   ): Dependency = {
     Dependency(
-      nameObj = NameOfModule(
-        org,
-        name,
-        exactName = ModuleDefaults.ExactName,
-        excludeName = Seq.empty,
-        needDoublePercent = ModuleDefaults.NeedDoublePercent
-      ),
+      nameObj = NameOfModule(org, name),
       shouldDownload = ModuleDefaults.ShouldDownload,
       versions = Set.empty,
       overrideIsEnough = ModuleDefaults.OverrideIsEnough,

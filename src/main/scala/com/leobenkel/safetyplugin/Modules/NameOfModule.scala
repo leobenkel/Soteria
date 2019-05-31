@@ -15,6 +15,19 @@ object NameOfModule {
     )
   }
 
+  def apply(
+    org:  String,
+    name: String
+  ): NameOfModule = {
+    NameOfModule(
+      org,
+      name,
+      exactName = ModuleDefaults.ExactName,
+      excludeName = Seq.empty,
+      needDoublePercent = ModuleDefaults.NeedDoublePercent
+    )
+  }
+
   def find(
     data: Map[String, Map[String, SerializedModule]]
   )(
