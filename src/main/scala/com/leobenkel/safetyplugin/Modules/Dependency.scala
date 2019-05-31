@@ -73,7 +73,10 @@ case class Dependency(
       )
     }
   }
+
   def withName(f: NameOfModule => NameOfModule): Dependency = this.copy(nameObj = f(this.nameObj))
+
+  def withVersion(version: String): Dependency = this.copy(versions = Set(version))
 }
 
 object Dependency {
