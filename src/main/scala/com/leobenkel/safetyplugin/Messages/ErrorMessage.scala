@@ -11,13 +11,23 @@ sealed trait ErrorMessage {
 }
 
 case class Errors(errorMessage: Seq[WithErrorMessage]) {
-  def consume(logFail: String => Unit): Unit = logFail(this.toString)
+  def consume(logFail: String => Unit): Unit = {
+    if (errorMessage.nonEmpty) {
+      logFail(this.toString)
+    } else {
+      ()
+    }
+  }
 
   override def toString: String = {
-    errorMessage
-      .map(_.toString)
-      .toError("Found blocks of errors")
-      .toString
+    if (errorMessage.nonEmpty) {
+      errorMessage
+        .map(_.toString)
+        .toError("Found blocks of errors")
+        .toString
+    } else {
+      "No Error"
+    }
   }
 
   def ++(other: Errors): Errors = {
@@ -45,7 +55,7 @@ case class WithErrorMessage(
 ) extends ErrorMessage {
   override def ++(other: ErrorMessage): Errors = {
     other match {
-      case _:     NoError          => Errors(Seq(this))
+      case NoError => Errors(Seq(this))
       case error: WithErrorMessage => Errors(Seq(this, error))
     }
   }
@@ -67,12 +77,10 @@ case class WithErrorMessage(
   override def consume(log: String => Unit): Unit = log(this.toString)
 }
 
-object WithErrorMessage {}
-
-case class NoError() extends ErrorMessage {
+case object NoError extends ErrorMessage {
   override def ++(other: ErrorMessage): Errors = {
     other match {
-      case NoError() => Errors(Seq.empty)
+      case NoError => Errors(Seq.empty)
       case error: WithErrorMessage => Errors(Seq(error))
     }
   }
@@ -83,7 +91,7 @@ case class NoError() extends ErrorMessage {
 }
 
 object ErrorMessage {
-  val Empty: ErrorMessage = NoError()
+  val Empty: ErrorMessage = NoError
 
   def apply(
     title:   String,
