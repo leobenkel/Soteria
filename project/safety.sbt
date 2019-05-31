@@ -1,4 +1,4 @@
-resolvers += "MAVEN" at "FILL ME"
+// resolvers += "MAVEN" at "FILL ME"
 
 // https://github.com/leobenkel/sbt_safety_plugin
 // commented out until the plugin is pushed out the maven

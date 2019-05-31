@@ -8,3 +8,6 @@ jdk:
 
 script:
   - make test
+
+after_success:
+  - sbt coveralls

@@ -26,7 +26,13 @@ test_unit_test:
 test_plugin:
 	sbt 'set isSnapshot := true' scripted
 
+test_coverage:
+	sbt clean coverage test
+
+test_coverage_report:
+	sbt coverageReport && sbt coverageAggregate
+
 check_style:
 	sbt safetyCheckScalaFmt || echo "Need to add the plugin to itself"
 
-test: deep_clean publishLocal check_style test_unit_test test_plugin
+test: deep_clean publishLocal check_style test_coverage test_plugin test_coverage_report

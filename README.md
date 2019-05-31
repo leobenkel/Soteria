@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/leobenkel/safety_plugin.svg?branch=master)](https://travis-ci.org/leobenkel/safety_plugin)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Coverage Status](https://coveralls.io/repos/github/leobenkel/safety_plugin/badge.svg?branch=master)](https://coveralls.io/github/leobenkel/safety_plugin?branch=master)
 
 # sbt_safety_plugin
 
