@@ -50,10 +50,6 @@ private[safetyplugin] case class SafetyConfiguration(
 }
 
 private[Config] object SafetyConfiguration {
-  implicit val parserMap: JsonDecode.Parser[Map[String, Any]] = (input: Map[String, Any]) => {
-    Right(input)
-  }
-
   implicit val parser: JsonDecode.Parser[SafetyConfiguration] = (input: Map[String, Any]) => {
     for {
       sbtVersion   <- input.getAs[String]("sbtVersion")
