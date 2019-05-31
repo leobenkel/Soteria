@@ -22,7 +22,7 @@ private[safetyplugin] case class SafetyConfiguration(
     case (org, mm) =>
       mm.map {
         case (name, m) =>
-          val (modules, errors) = m.toModuleName(org, name, retrieval)
+          val (modules, errors) = m.toDependency(org, name, retrieval)
           if (errors.nonEmpty) {
             System.err.println(s"[ERROR] Error for module [$modules] (${errors.length}):")
             errors.map(e => s"[ERROR]   $e").foreach(System.err.println)
