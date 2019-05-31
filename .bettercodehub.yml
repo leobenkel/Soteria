@@ -1,0 +1,13 @@
+component_depth: 7
+languages:
+- name: scala
+  production:
+    include:
+      - .*/src/main/.*\.scala
+    exclude:
+        - /src/sbt-test/*
+  test:
+      include:
+        - /src/test.*\.scala
+      exclude:
+        - /src/sbt-test/*
