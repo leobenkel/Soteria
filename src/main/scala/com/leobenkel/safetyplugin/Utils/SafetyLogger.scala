@@ -33,6 +33,8 @@ case class SafetyLogger(
 
   override def success(message: => String): Unit = innerLog.success(message)
 
+  @inline def infoNotLazy(message: String): Unit = this.info(message)
+
   override def log(
     level:   Level.Value,
     message: => String
@@ -84,7 +86,7 @@ case class SafetyLogger(
 }
 
 object SafetyLogger {
-  val Header: String = "SafetyPlugin"
+  val Header:             String = "SafetyPlugin"
   val SeparatorLength:    Int = 70
   val SeparatorCharacter: String = "-"
 }

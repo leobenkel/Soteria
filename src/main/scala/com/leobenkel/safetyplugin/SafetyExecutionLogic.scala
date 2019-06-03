@@ -186,16 +186,12 @@ private[safetyplugin] object SafetyExecutionLogic {
     sys.error("You cannot compile when 'safetyDebugModule' is set.")
   }
 
-  private def checkUpdatedLibraries(
-    log:            SafetyLogger,
-    safetyConfig:   SafetyConfiguration,
-    configuration:  ConfigRef,
-    updateReport:   UpdateReport,
-    debugValue:     Option[(String, String)],
-    printScalaCode: Boolean
-  ): sbt.UpdateReport = {
-    val allModule: Seq[(String, Seq[Dependency])] = updateReport.configurations
-      .filter(_.configuration == configuration)
+  private def getAllModuleForConfigurations(
+    configurations:      Seq[ConfigurationReport],
+    targetConfiguration: ConfigRef
+  ): Seq[(String, Seq[Dependency])] = {
+    configurations
+      .filter(_.configuration == targetConfiguration)
       .map { c =>
         (
           c.configuration.name,
@@ -207,7 +203,22 @@ private[safetyplugin] object SafetyExecutionLogic {
             .sortBy(_.key)
         )
       }
+  }
 
+  private def combineModules(allModule: Seq[(String, Seq[Dependency])]): Seq[Dependency] = {
+    allModule
+      .flatMap(_._2)
+      .groupBy(_.key)
+      .map { case (_, cModules) => cModules.reduce((l, r) => (l |+| r).right.get) }
+      .toSeq
+      .sortBy(_.key)
+  }
+
+  private def printDebug(
+    log:        SafetyLogger,
+    debugValue: Option[(String, String)],
+    allModule:  Seq[(String, Seq[Dependency])]
+  ): Unit = {
     val logger: String => Unit = debugValue match {
       case None    => log.debug(_)
       case Some(_) => log.info(_)
@@ -222,21 +233,30 @@ private[safetyplugin] object SafetyExecutionLogic {
         logger(s"> For category '$category' (${modules.size}): ")
         modules.prettyString(log, "checkUpdatedLibraries")
     }
+  }
+
+  private def checkUpdatedLibraries(
+    log:            SafetyLogger,
+    safetyConfig:   SafetyConfiguration,
+    configuration:  ConfigRef,
+    updateReport:   UpdateReport,
+    debugValue:     Option[(String, String)],
+    printScalaCode: Boolean
+  ): sbt.UpdateReport = {
+    val allModule: Seq[(String, Seq[Dependency])] =
+      getAllModuleForConfigurations(updateReport.configurations, configuration)
+
+    printDebug(log, debugValue, allModule)
 
     if (debugValue.isDefined) {
       debugPrintScala(log, safetyConfig, printScalaCode, debugValue.get, allModule.flatMap(_._2))
     } else {
       // last check up
-      val allSafetyModule = allModule
-        .flatMap(_._2)
-        .groupBy(_.key)
-        .map { case (_, cModules) => cModules.reduce((l, r) => (l |+| r).right.get) }
-        .toSeq
-        .sortBy(_.key)
+      val allSafetyModule = combineModules(allModule)
 
       LibraryDependencyWriter(safetyConfig).lastCheckUp(log, allSafetyModule) match {
         case Left(error)    => error.consume(log.fail)
-        case Right(success) => success.consume((s: String) => log.info(s))
+        case Right(success) => success.consume(log.infoNotLazy)
       }
     }
     updateReport
