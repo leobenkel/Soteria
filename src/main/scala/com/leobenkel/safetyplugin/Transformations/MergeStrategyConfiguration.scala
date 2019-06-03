@@ -1,4 +1,4 @@
-package com.leobenkel.safetyplugin
+package com.leobenkel.safetyplugin.Transformations
 
 import sbtassembly.{MergeStrategy, PathList}
 

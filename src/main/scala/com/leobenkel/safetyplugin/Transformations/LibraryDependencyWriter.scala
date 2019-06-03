@@ -1,13 +1,14 @@
-package com.leobenkel.safetyplugin
+package com.leobenkel.safetyplugin.Transformations
 
 import com.leobenkel.safetyplugin.Config.SafetyConfiguration
-import com.leobenkel.safetyplugin.Messages.CommonMessage._
+import com.leobenkel.safetyplugin.Messages.CommonMessage.ResultMessages
 import com.leobenkel.safetyplugin.Messages.{ErrorMessage, Errors}
-import com.leobenkel.safetyplugin.Modules._
-import com.leobenkel.safetyplugin.Utils.EitherUtils._
-import com.leobenkel.safetyplugin.Utils.ImplicitModuleToString._
+import com.leobenkel.safetyplugin.Modules.{Dependency, NameOfModule}
 import com.leobenkel.safetyplugin.Utils.LoggerExtended
-import sbt.ModuleID
+import sbt._
+import com.leobenkel.safetyplugin.Utils.ImplicitModuleToString._
+import com.leobenkel.safetyplugin.Utils.EitherUtils._
+import com.leobenkel.safetyplugin.Messages.CommonMessage._
 
 private[safetyplugin] case class LibraryDependencyWriter(config: SafetyConfiguration) {
 

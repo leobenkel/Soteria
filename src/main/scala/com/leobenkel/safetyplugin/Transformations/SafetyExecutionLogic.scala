@@ -1,14 +1,15 @@
-package com.leobenkel.safetyplugin
+package com.leobenkel.safetyplugin.Transformations
 
-import com.leobenkel.safetyplugin.Config._
+import com.leobenkel.safetyplugin.Config.SafetyConfiguration
 import com.leobenkel.safetyplugin.Modules.Dependency
 import com.leobenkel.safetyplugin.SafetyPluginKeys._
-import com.leobenkel.safetyplugin.Utils.ImplicitModuleToString._
 import com.leobenkel.safetyplugin.Utils.SafetyLogger
+import com.leobenkel.safetyplugin.{Config, SafetyPluginKeys}
 import sbt.internal.util.complete.Parser
-import sbt.{Def, _}
-import sbtassembly._
+import com.leobenkel.safetyplugin.Utils.ImplicitModuleToString._
 import com.leobenkel.safetyplugin.Utils.EitherUtils._
+import sbt._
+import sbtassembly._
 
 private[safetyplugin] object SafetyExecutionLogic {
   def safetyGetLogExec(): Def.Initialize[SafetyLogger] = {
