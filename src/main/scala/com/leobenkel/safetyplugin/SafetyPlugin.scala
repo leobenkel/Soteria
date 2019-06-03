@@ -1,6 +1,6 @@
 package com.leobenkel.safetyplugin
 
-import com.leobenkel.safetyplugin.SafetyExecutionLogic._
+import com.leobenkel.safetyplugin.Transformations.SafetyExecutionLogic._
 import com.leobenkel.safetyplugin.Utils.SafetyLogger
 import sbt.util.Level
 import sbt.{Def, _}
