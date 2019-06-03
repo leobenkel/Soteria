@@ -6,7 +6,7 @@ import sbtassembly.{MergeStrategy, PathList}
   * Stryker4s was mutating this method and making it too large for the JVM.
   * Moved to its own place so it is easier to deal with
   */
-object MergeStrategyConfiguration {
+private[Transformations] trait MergeStrategyConfiguration {
 
   // scalastyle:off cyclomatic.complexity
   def getMergeStrategy(
