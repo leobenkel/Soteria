@@ -40,3 +40,13 @@ check_style:
 	sbt safetyCheckScalaFmt || echo "Need to add the plugin to itself"
 
 test: deep_clean publishLocal check_style test_coverage test_plugin test_coverage_report
+
+mutator_test:
+	export SBT_OPTS="-XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=4G -Xmx4G"
+	sbt stryker
+
+mutator_open_results:
+	open `find ./target/stryker4s* -type f -iname "*index.html"`
+
+mutator_test_run: mutator_test mutator_open_results
+

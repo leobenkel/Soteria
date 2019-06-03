@@ -61,41 +61,6 @@ private[safetyplugin] object SafetyExecutionLogic {
     }
   }
 
-  // scalastyle:off cyclomatic.complexity
-  private def getMergeStrategy(
-    input:       String,
-    oldStrategy: String => MergeStrategy
-  ): MergeStrategy = {
-    input match {
-      case "git.properties"                           => MergeStrategy.rename
-      case "mime.types"                               => MergeStrategy.filterDistinctLines
-      case "overview.html"                            => MergeStrategy.rename
-      case "BUILD"                                    => MergeStrategy.rename
-      case "module-info.class"                        => MergeStrategy.rename
-      case "play/reference-overrides.conf"            => MergeStrategy.rename
-      case PathList("META-INF", _ @_*)                => MergeStrategy.rename
-      case PathList("com", "databricks", _ @_*)       => MergeStrategy.last
-      case PathList("org", "slf4j", _ @_*)            => MergeStrategy.last
-      case PathList("org", "apache", _ @_*)           => MergeStrategy.last
-      case PathList("javax", "inject", _ @_*)         => MergeStrategy.last
-      case PathList("javax", "servlet", _ @_*)        => MergeStrategy.last
-      case PathList("javax", "ws", _ @_*)             => MergeStrategy.last
-      case PathList("javax", "xml", _ @_*)            => MergeStrategy.last
-      case PathList("javax", "annotation", _ @_*)     => MergeStrategy.last
-      case PathList("com", "sun", _ @_*)              => MergeStrategy.last
-      case PathList("com", "codahale", _ @_*)         => MergeStrategy.last
-      case PathList("org", "glassfish", _ @_*)        => MergeStrategy.last
-      case PathList("org", "aopalliance", _ @_*)      => MergeStrategy.last
-      case PathList("org", "objectweb", "asm", _ @_*) => MergeStrategy.last
-      case PathList("jersey", "repackaged", _ @_*)    => MergeStrategy.last
-      case PathList("io", "netty", _ @_*)             => MergeStrategy.last
-      case PathList("mozilla", _ @_*)                 => MergeStrategy.last
-      case x                                          => oldStrategy(x)
-    }
-  }
-
-  // scalastyle:on
-
   def safetyAssemblySettingsExec(): Def.Initialize[Task[AssemblyOption]] = {
     Def.taskDyn {
       val log = safetyGetLog.value
@@ -105,7 +70,8 @@ private[safetyplugin] object SafetyExecutionLogic {
       log.info(s"Overriding assembly settings")
 
       Def.task {
-        val mergeStrategy = (input: String) => getMergeStrategy(input, oldStrategy)
+        val mergeStrategy =
+          (input: String) => MergeStrategyConfiguration.getMergeStrategy(input, oldStrategy)
         val shadeRule = Seq(ShadeRule.rename("com.google.common.**" -> "shade.@0").inAll)
 
         assemblyOption
@@ -368,12 +334,12 @@ private[safetyplugin] object SafetyExecutionLogic {
             val orgArtifact = module.toOrganizationArtifactName
 
             (moduleId, orgArtifact) match {
-              case (Right(moduleIdSome), Right(_)) =>
+              case (Right(m), Right(_)) =>
                 val newState = Project
                   .extract(state).appendWithoutSession(
                     Seq(
-                      Keys.libraryDependencies += moduleIdSome,
-                      safetyDebugModule         := Some(moduleIdSome.organization, moduleIdSome.name),
+                      Keys.libraryDependencies += m,
+                      safetyDebugModule         := Some(m.organization, m.name),
                       safetyDebugPrintScalaCode := true
                     ),
                     state

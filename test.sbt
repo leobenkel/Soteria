@@ -16,3 +16,4 @@ Keys.javaOptions in Test ++= Seq(
 )
 Keys.parallelExecution in Test := false
 Keys.fork in Test              := true
+logLevel in stryker            := Level.Debug
