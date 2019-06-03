@@ -105,6 +105,62 @@ private[safetyplugin] object SafetyExecutionLogic {
     }
   }
 
+  private def debugLibraryDependencies(
+    log:                 SafetyLogger,
+    conf:                Option[Configuration],
+    libraryDependencies: Seq[ModuleID]
+  ): Unit = {
+    log.separatorDebug(s"$conf / libraryDependencies")
+    log.debug(s"Found ${libraryDependencies.size} libraries in 'libraryDependencies': ")
+    libraryDependencies.prettyString(log, s"$conf/libraryDependencies")
+  }
+
+  private def getForbiddenVersionErrors(
+    libraryDependencies: Seq[ModuleID],
+    forbiddenModules:    Seq[(Dependency, String)]
+  ): Seq[String] = {
+    for {
+      inputLib     <- libraryDependencies
+      forbidModule <- forbiddenModules if forbidModule._1 === inputLib
+    } yield {
+      s"${inputLib.prettyString}\n   Detailed error > ${forbidModule._2}"
+    }
+  }
+
+  private def getProvidedEnforcedErrors(
+    libraryDependencies: Seq[ModuleID],
+    mustBeProvided:      Seq[Dependency]
+  ): Seq[String] = {
+    for {
+      providedLib <- mustBeProvided
+      inputLib <- libraryDependencies
+        .filterNot(_.configurations.getOrElse("").contains("test"))
+        .filterNot(_.configurations.getOrElse("").contains("provided"))
+      if providedLib === inputLib
+    } yield {
+      s"${inputLib.prettyString}\n   Detailed error > Should be marked as provided."
+    }
+  }
+
+  private def processLibraryDependencies(
+    log:                 SafetyLogger,
+    config:              SafetyConfiguration,
+    conf:                Option[Configuration],
+    libraryDependencies: Seq[ModuleID]
+  ): Seq[sbt.ModuleID] = {
+    debugLibraryDependencies(log, conf, libraryDependencies)
+
+    val errors = (getForbiddenVersionErrors(libraryDependencies, config.ForbiddenModules) ++
+      getProvidedEnforcedErrors(libraryDependencies, config.AsProvided))
+      .sortBy(identity)
+
+    if (errors.nonEmpty) {
+      log.fail(s"You have errors in your 'libraryDependencies': \n${errors.mkString("\n")}")
+    }
+
+    libraryDependencies
+  }
+
   def libraryDependencies(conf: Option[Configuration]): Def.Initialize[Seq[ModuleID]] = {
     Def.settingDyn {
       val log = safetyGetLog.value
@@ -113,32 +169,7 @@ private[safetyplugin] object SafetyExecutionLogic {
       val config = SafetyPluginKeys.safetyConfig.value
 
       Def.setting {
-        log.separatorDebug(s"$conf / libraryDependencies")
-        log.debug(s"Found ${libraryDependencies.size} libraries in 'libraryDependencies': ")
-        libraryDependencies.prettyString(log, s"$conf/libraryDependencies")
-
-        val errors = ((for {
-          inputLib     <- libraryDependencies
-          forbidModule <- config.ForbiddenModules if forbidModule._1 === inputLib
-        } yield {
-          s"${inputLib.prettyString}\n   Detailed error > ${forbidModule._2}"
-        }) ++
-          (for {
-            providedLib <- config.AsProvided
-            inputLib <- libraryDependencies
-              .filterNot(_.configurations.getOrElse("").contains("test"))
-              .filterNot(_.configurations.getOrElse("").contains("provided"))
-            if providedLib === inputLib
-          } yield {
-            s"${inputLib.prettyString}\n   Detailed error > Should be marked as provided."
-          }))
-          .sortBy(identity)
-
-        if (errors.nonEmpty) {
-          log.fail(s"You have errors in your 'libraryDependencies': \n${errors.mkString("\n")}")
-        }
-
-        libraryDependencies
+        processLibraryDependencies(log, config, conf, libraryDependencies)
       }
     }
   }
