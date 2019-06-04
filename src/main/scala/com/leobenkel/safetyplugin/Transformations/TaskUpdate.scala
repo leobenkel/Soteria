@@ -79,46 +79,73 @@ private[Transformations] trait TaskUpdate extends CheckVersion {
   }
 
   private def debugPrintScala(
-    log:            SafetyLogger,
-    safetyConfig:   SafetyConfiguration,
-    printScalaCode: Boolean,
-    debugValue:     (String, String),
-    allModule:      Seq[Dependency]
+    log:                SafetyLogger,
+    safetyConfig:       SafetyConfiguration,
+    willPrintScalaCode: Boolean,
+    debugValue:         (String, String),
+    allModule:          Seq[Dependency]
   ): Unit = {
-    val (org, name) = debugValue
-    val debugModule = Dependency(org, name)
+    if (willPrintScalaCode) {
+      val (org, name) = debugValue
+      val debugModule = Dependency(org, name)
+      printScalaCode(log, safetyConfig, allModule, debugModule)
+    }
 
-    if (printScalaCode) {
-      val allModuleOnly: Seq[Dependency] = allModule
-        .groupBy(_.key)
-        .map {
-          case (_, cModules) =>
-            cModules.reduce((l, r) => (l |+| r).right.get)
-        }
-        .toSeq
-        .sortBy(_.key)
+    sys.error("You cannot compile when 'safetyDebugModule' is set.")
+  }
 
-      val dangerModules = for {
-        dangerModule <- safetyConfig.AllModules
-        module       <- allModuleOnly if dangerModule === module
-      } yield {
-        module
+  private def printScalaCode(
+    log:          SafetyLogger,
+    safetyConfig: SafetyConfiguration,
+    allModule:    Seq[Dependency],
+    debugModule:  Dependency
+  ): Unit = {
+    val dangerModules = buildDangerousModule(safetyConfig, allModule)
+    convertToConfigCopyPastable(log, dangerModules, debugModule)
+  }
+
+  private def buildDangerousModule(
+    safetyConfig: SafetyConfiguration,
+    allModule:    Seq[Dependency]
+  ): Seq[Dependency] = {
+    val allModuleOnly: Seq[Dependency] = allModule
+      .groupBy(_.key)
+      .map {
+        case (_, cModules) =>
+          cModules.reduce((l, r) => (l |+| r).right.get)
       }
+      .toSeq
+      .sortBy(_.key)
 
-      val allDangerModule: String = dangerModules
-        .sortBy(m => m.key)
-        .map(m => s"""ModuleNoVersion("${m.organization}","${m.name}", exactName = true)""")
-        .mkString(",\n")
-      val modOrg = debugModule.organization
-      val modName = debugModule.name
-      log.info(s"""
+    for {
+      dangerModule <- safetyConfig.AllModules
+      module       <- allModuleOnly if dangerModule === module
+    } yield {
+      module
+    }
+  }
+
+  /**
+    * TODO: This is now obsolete since it is printing Scala code instead of the safetyPlugin.json,
+    * compliant json format. This should be rewritten to produce json to be able to copy paste
+    * in the config file.
+    */
+  private def convertToConfigCopyPastable(
+    log:           SafetyLogger,
+    dangerModules: Seq[Dependency],
+    debugModule:   Dependency
+  ): Unit = {
+    val allDangerModule: String = dangerModules
+      .sortBy(m => m.key)
+      .map(m => s"""ModuleNoVersion("${m.organization}","${m.name}", exactName = true)""")
+      .mkString(",\n")
+    val modOrg = debugModule.organization
+    val modName = debugModule.name
+    log.info(s"""
            | ModuleNoVersion("$modOrg", "$modName", exactName = true) -> Seq(
            | $allDangerModule
            | )
               """.stripMargin)
-    }
-
-    sys.error("You cannot compile when 'safetyDebugModule' is set.")
   }
 
   private def getAllModuleForConfigurations(
