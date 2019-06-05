@@ -49,4 +49,3 @@ mutator_open_results:
 	open `find ./target/stryker4s* -type f -iname "*index.html"`
 
 mutator_test_run: mutator_test mutator_open_results
-
