@@ -1,6 +1,5 @@
 package com.leobenkel.safetyplugin.Transformations
 
-import com.leobenkel.safetyplugin.Config.SafetyConfiguration
 import com.leobenkel.safetyplugin.Messages.CommonMessage._
 import com.leobenkel.safetyplugin.Messages.ErrorMessage
 import com.leobenkel.safetyplugin.Modules.Dependency
@@ -17,17 +16,16 @@ private[Transformations] trait CheckVersion {
     * @param log       The current log
     */
   def checkVersion(
-    log:        LoggerExtended,
-    config:     SafetyConfiguration,
-    libraries:  Seq[ModuleID],
-    moreErrors: ErrorMessage = ErrorMessage.Empty
+    log:                 LoggerExtended,
+    allCorrectLibraries: Seq[Dependency],
+    libraries:           Seq[ModuleID],
+    moreErrors:          ErrorMessage = ErrorMessage.Empty
   ): ResultMessages = {
-    log.separatorDebug("LibraryDependencyWriter.checkVersion")
-
-    val allCorrectLibraries = config.CorrectVersions
+    log.separatorDebug("checkVersion")
 
     val librariesToCheck: Seq[ModuleID] = getLibraryToCheck(allCorrectLibraries, libraries)
 
+    // librariesToCheck.size == (allCorrectLibraries intersect libraries).size
     log.debug(s"> Verifying version of libraries (${librariesToCheck.size}) :")
     librariesToCheck.prettyString(log, "checkVersion")
 
@@ -38,12 +36,12 @@ private[Transformations] trait CheckVersion {
     allCorrectLibraries: Seq[Dependency],
     libraries:           Seq[ModuleID]
   ): Seq[ModuleID] = {
-    for {
+    (for {
       correctLibrary <- allCorrectLibraries
       library        <- libraries if correctLibrary === library
     } yield {
       library
-    }
+    }).sortBy(m => (m.organization, m.name))
   }
 
   private def consolidateErrors(
@@ -75,10 +73,27 @@ private[Transformations] trait CheckVersion {
       .map { m =>
         val correctModuleToString = m
           .withRevision(correctVersion)
-          .withName(correctModule.name)
+          .withName(m.name)
           .prettyString
 
         s"${m.prettyString} should be $correctModuleToString"
       }
+  }
+
+  object ZTestOnly {
+    @inline def buildErrorsTest(
+      librariesToCheck: Seq[ModuleID],
+      correctModule:    Dependency,
+      correctVersion:   String
+    ): Seq[String] = {
+      buildErrors(librariesToCheck, correctModule, correctVersion)
+    }
+
+    @inline def getLibraryToCheckTest(
+      allCorrectLibraries: Seq[Dependency],
+      libraries:           Seq[ModuleID]
+    ): Seq[ModuleID] = {
+      getLibraryToCheck(allCorrectLibraries, libraries)
+    }
   }
 }
