@@ -93,7 +93,7 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
     if (inDebugMode) {
       Right(libraries)
     } else {
-      checkVersion(log, config, libraries) match {
+      checkVersion(log, config.CorrectVersions, libraries) match {
         case Left(_) if log.isSoftError => Right(rewriteLibraries(log, config, libraries))
         case Left(er)                   => Left(er)
         case Right(_)                   => Right(rewriteLibraries(log, config, libraries))

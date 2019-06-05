@@ -75,7 +75,7 @@ private[Transformations] trait TaskUpdate extends CheckVersion {
     val errors = tooManyVersions
       .map(m => s"More than one version of: ${m.toString} - [${m.versions.mkString(", ")}]")
       .toError("Found libraries with more than one version")
-    checkVersion(log, config, oneVersion, errors)
+    checkVersion(log, config.CorrectVersions, oneVersion, errors)
   }
 
   private def debugPrintScala(

@@ -8,9 +8,9 @@ clean:
 	sbt clean
 
 fmt:
-	sbt safetyCheckScalaFmtRun || echo "Need to add the plugin to itself"
+	sbt safetyCheckScalaFmtRun || echo ">> Need to add the plugin to itself !"
 
-publishLocal: fmt
+publishLocal:
 	 sbt 'set isSnapshot := true' publishLocal && sbt 'set isSnapshot := true' publishLocal
 
 publish: have_right_version test
@@ -37,7 +37,7 @@ test_coverage_report:
 	sbt coverageReport && sbt coverageAggregate
 
 check_style:
-	sbt safetyCheckScalaFmt || echo "Need to add the plugin to itself"
+	sbt safetyCheckScalaFmt || echo ">> Need to add the plugin to itself !"
 
 test: deep_clean publishLocal check_style test_coverage test_plugin test_coverage_report
 
