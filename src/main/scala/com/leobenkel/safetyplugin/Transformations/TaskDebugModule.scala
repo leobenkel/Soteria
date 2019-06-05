@@ -2,8 +2,8 @@ package com.leobenkel.safetyplugin.Transformations
 
 import com.leobenkel.safetyplugin.Modules.Dependency
 import com.leobenkel.safetyplugin.SafetyPluginKeys
-import sbt.{Command, Keys, Project, Test}
 import sbt.internal.util.complete.Parser
+import sbt.{Command, Keys, Project, Test}
 
 private[Transformations] trait TaskDebugModule {
 

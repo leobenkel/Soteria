@@ -1,7 +1,7 @@
 package com.leobenkel.safetyplugin.Config
 
 import com.leobenkel.safetyplugin.Modules
-import com.leobenkel.safetyplugin.Modules.{Dependency, ModuleDefaults, NameOfModule}
+import com.leobenkel.safetyplugin.Modules._
 import com.leobenkel.safetyplugin.Utils.Json.JsonDecode
 import com.leobenkel.safetyplugin.Utils.Json.JsonParserHelper._
 

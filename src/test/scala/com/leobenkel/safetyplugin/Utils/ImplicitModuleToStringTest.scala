@@ -30,28 +30,31 @@ class ImplicitModuleToStringTest extends ParentTest {
     val header = "this is a header"
     m.prettyString(
       new LoggerExtended() {
-        override def fail(message: String): Unit = ()
+        override def isSoftError: Boolean = {
+          fail("should not be called")
+          true
+        }
 
-        override def isSoftError: Boolean = true
-
-        override def setSoftError(softError: Boolean): LoggerExtended = this
-
-        override def separatorInfo(title: String): Unit = ()
-
-        override def separatorDebug(title: String): Unit = ()
+        override def setSoftError(softError: Boolean): LoggerExtended = {
+          fail("should not be called")
+          this
+        }
 
         override def separator(
           level: Level.Value,
           title: String
         ): Unit = {
-          ()
+          fail("should not be called")
         }
 
-        override def setLevel(level: Level.Value): LoggerExtended = this
+        override def setLevel(level: Level.Value): LoggerExtended = {
+          fail("should not be called")
+          this
+        }
 
-        override def trace(t: => Throwable): Unit = ()
+        override def trace(t: => Throwable): Unit = fail("should not be called")
 
-        override def success(message: => String): Unit = ()
+        override def success(message: => String): Unit = fail("should not be called")
 
         override def log(
           level:        Level.Value,
@@ -63,6 +66,8 @@ class ImplicitModuleToStringTest extends ParentTest {
           assert(prettyString.contains(name))
           assert(revisions.exists(prettyString.contains))
         }
+
+        override def criticalFailure(message: => String): Unit = fail("should not be called")
       },
       header
     )
@@ -76,28 +81,28 @@ class ImplicitModuleToStringTest extends ParentTest {
     val header = "this is a header"
     m.prettyString(
       new LoggerExtended() {
-        override def fail(message: String): Unit = ()
+        override def isSoftError: Boolean = {
+          fail("should not be called")
+          true
+        }
 
-        override def isSoftError: Boolean = true
-
-        override def setSoftError(softError: Boolean): LoggerExtended = this
-
-        override def separatorInfo(title: String): Unit = ()
-
-        override def separatorDebug(title: String): Unit = ()
+        override def setSoftError(softError: Boolean): LoggerExtended = {
+          fail("should not be called")
+          this
+        }
 
         override def separator(
           level: Level.Value,
           title: String
         ): Unit = {
-          ()
+          fail("should not be called")
         }
 
         override def setLevel(level: Level.Value): LoggerExtended = this
 
-        override def trace(t: => Throwable): Unit = ()
+        override def trace(t: => Throwable): Unit = fail("should not be called")
 
-        override def success(message: => String): Unit = ()
+        override def success(message: => String): Unit = fail("should not be called")
 
         override def log(
           level:        Level.Value,
@@ -109,6 +114,8 @@ class ImplicitModuleToStringTest extends ParentTest {
           assert(prettyString.contains(name))
           assert(revisions.exists(prettyString.contains))
         }
+
+        override def criticalFailure(message: => String): Unit = fail("should not be called")
       },
       header
     )

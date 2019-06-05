@@ -2,7 +2,7 @@ package com.leobenkel.safetyplugin.Transformations
 
 import com.leobenkel.safetyplugin.SafetyPluginKeys.{defaultAssemblyOption, safetyGetLog}
 import sbt._
-import sbtassembly.{Assembly, AssemblyKeys, AssemblyOption, MergeStrategy, ShadeRule}
+import sbtassembly._
 
 private[Transformations] trait TaskAssembly extends MergeStrategyConfiguration {
   def defaultAssemblyOptionExec: Def.Initialize[Task[AssemblyOption]] = {

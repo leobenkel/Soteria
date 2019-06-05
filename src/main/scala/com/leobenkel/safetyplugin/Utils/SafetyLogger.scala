@@ -33,8 +33,6 @@ case class SafetyLogger(
 
   override def success(message: => String): Unit = innerLog.success(message)
 
-  @inline def infoNotLazy(message: String): Unit = this.info(message)
-
   override def log(
     level:   Level.Value,
     message: => String
@@ -44,21 +42,9 @@ case class SafetyLogger(
     }
   }
 
-  override def fail(message: String): Unit = {
-    if (softError) {
-      error(prependHeader(message))
-    } else {
-      criticalFailure(message)
-    }
-  }
+  override def fail(message: => String): Unit = super.fail(prependHeader(message))
 
-  def criticalFailure(message: String): Unit = {
-    sys.error(prependHeader(message))
-  }
-
-  override def separatorInfo(title: String): Unit = separator(Level.Info, title)
-
-  override def separatorDebug(title: String): Unit = separator(Level.Debug, title)
+  override def criticalFailure(message: => String): Unit = sys.error(prependHeader(message))
 
   override def separator(
     level: Level.Value,
