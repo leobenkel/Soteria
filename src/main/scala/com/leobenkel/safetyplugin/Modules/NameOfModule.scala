@@ -1,8 +1,8 @@
 package com.leobenkel.safetyplugin.Modules
 
 import com.leobenkel.safetyplugin.Config.SerializedModule
-import sbt.{ExclusionRule, _}
 import sbt.librarymanagement.ModuleID
+import sbt.{ExclusionRule, _}
 
 object NameOfModule {
   def apply(module: ModuleID): NameOfModule = {

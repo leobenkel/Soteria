@@ -1,10 +1,10 @@
 package com.leobenkel.safetyplugin.Config
 
 import com.leobenkel.safetyplugin.Modules.{Dependency, NameOfModule}
+import com.leobenkel.safetyplugin.Utils.EitherUtils._
 import com.leobenkel.safetyplugin.Utils.Json.JsonDecode
 import com.leobenkel.safetyplugin.Utils.Json.JsonParserHelper._
 import sbt.librarymanagement.ModuleID
-import com.leobenkel.safetyplugin.Utils.EitherUtils._
 
 /**
   * What is read from the JSON config file

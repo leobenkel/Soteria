@@ -1,7 +1,7 @@
 package com.leobenkel.safetyplugin.Config
 
 import com.leobenkel.safetyplugin.Modules
-import com.leobenkel.safetyplugin.Modules.{Dependency, ModuleDefaults, NameOfModule}
+import com.leobenkel.safetyplugin.Modules._
 import com.leobenkel.safetyplugin.Utils.Json.JsonDecode
 import com.leobenkel.safetyplugin.Utils.Json.JsonParserHelper._
 
@@ -64,6 +64,17 @@ case class SerializedModule(
 
 object SerializedModule {
   val DefaultVersionString: String = "None"
+  val Empty: SerializedModule = SerializedModule(
+    version = "",
+    exactName = None,
+    excludeName = None,
+    needDoublePercent = None,
+    shouldBeProvided = None,
+    shouldDownload = None,
+    overrideIsEnough = None,
+    forbidden = None,
+    dependenciesToRemove = None
+  )
 
   implicit val parser: (String, String) => JsonDecode.Parser[SerializedModule] =
     (org: String, name: String) => {

@@ -4,8 +4,8 @@ import com.leobenkel.safetyplugin.Config.SafetyConfiguration
 import com.leobenkel.safetyplugin.Messages.CommonMessage._
 import com.leobenkel.safetyplugin.Modules.Dependency
 import com.leobenkel.safetyplugin.SafetyPluginKeys
-import com.leobenkel.safetyplugin.Utils.{LoggerExtended, SafetyLogger}
 import com.leobenkel.safetyplugin.Utils.ImplicitModuleToString._
+import com.leobenkel.safetyplugin.Utils.LoggerExtended
 import sbt.{ConfigRef, Configuration, ConfigurationReport, Def, Keys, Task, UpdateReport}
 
 private[Transformations] trait TaskUpdate extends CheckVersion {
@@ -37,7 +37,7 @@ private[Transformations] trait TaskUpdate extends CheckVersion {
   }
 
   private def checkUpdatedLibraries(
-    log:            SafetyLogger,
+    log:            LoggerExtended,
     safetyConfig:   SafetyConfiguration,
     configuration:  ConfigRef,
     updateReport:   UpdateReport,
@@ -56,8 +56,8 @@ private[Transformations] trait TaskUpdate extends CheckVersion {
       val allSafetyModule = combineModules(allModule)
 
       lastCheckUp(log, safetyConfig, allSafetyModule) match {
-        case Left(error)    => error.consume(log.fail)
-        case Right(success) => success.consume(log.infoNotLazy)
+        case Left(error)    => error.consume(s => log.fail(s))
+        case Right(success) => success.consume(s => log.info(s))
       }
     }
     updateReport
@@ -79,7 +79,7 @@ private[Transformations] trait TaskUpdate extends CheckVersion {
   }
 
   private def debugPrintScala(
-    log:                SafetyLogger,
+    log:                LoggerExtended,
     safetyConfig:       SafetyConfiguration,
     willPrintScalaCode: Boolean,
     debugValue:         (String, String),
@@ -95,7 +95,7 @@ private[Transformations] trait TaskUpdate extends CheckVersion {
   }
 
   private def printScalaCode(
-    log:          SafetyLogger,
+    log:          LoggerExtended,
     safetyConfig: SafetyConfiguration,
     allModule:    Seq[Dependency],
     debugModule:  Dependency
@@ -131,7 +131,7 @@ private[Transformations] trait TaskUpdate extends CheckVersion {
     * in the config file.
     */
   private def convertToConfigCopyPastable(
-    log:           SafetyLogger,
+    log:           LoggerExtended,
     dangerModules: Seq[Dependency],
     debugModule:   Dependency
   ): Unit = {
@@ -177,7 +177,7 @@ private[Transformations] trait TaskUpdate extends CheckVersion {
   }
 
   private def printDebug(
-    log:        SafetyLogger,
+    log:        LoggerExtended,
     debugValue: Option[(String, String)],
     allModule:  Seq[(String, Seq[Dependency])]
   ): Unit = {

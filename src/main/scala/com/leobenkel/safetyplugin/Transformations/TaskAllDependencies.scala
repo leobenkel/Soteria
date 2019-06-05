@@ -1,13 +1,12 @@
 package com.leobenkel.safetyplugin.Transformations
 
 import com.leobenkel.safetyplugin.Config.SafetyConfiguration
+import com.leobenkel.safetyplugin.Messages.CommonMessage._
 import com.leobenkel.safetyplugin.Messages.Errors
 import com.leobenkel.safetyplugin.Modules.{Dependency, NameOfModule}
 import com.leobenkel.safetyplugin.SafetyPluginKeys
-import com.leobenkel.safetyplugin.SafetyPluginKeys.safetyGetLog
-import com.leobenkel.safetyplugin.Utils.ImplicitModuleToString._
 import com.leobenkel.safetyplugin.Utils.EitherUtils._
-import com.leobenkel.safetyplugin.Messages.CommonMessage._
+import com.leobenkel.safetyplugin.Utils.ImplicitModuleToString._
 import com.leobenkel.safetyplugin.Utils.LoggerExtended
 import sbt._
 
@@ -41,7 +40,7 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
            rewriteLibAfterVersionCheck(log, safetyConfig, libraries, debugValue.isDefined)
          }) match {
           case Left(errors) =>
-            if (!log.isSoftError) errors.consume(log.fail)
+            if (!log.isSoftError) errors.consume(s => log.fail(s))
             Seq.empty
           case Right(rewroteLibraries) =>
             log.info(s"> 'allDependencies' have ${rewroteLibraries.size} libraries.")

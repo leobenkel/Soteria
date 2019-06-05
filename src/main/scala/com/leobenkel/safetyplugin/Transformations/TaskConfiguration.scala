@@ -1,7 +1,7 @@
 package com.leobenkel.safetyplugin.Transformations
 
-import com.leobenkel.safetyplugin.{Config, SafetyPluginKeys}
 import com.leobenkel.safetyplugin.SafetyPluginKeys.safetyConfPath
+import com.leobenkel.safetyplugin.{Config, SafetyPluginKeys}
 import sbt.Def
 
 private[Transformations] trait TaskConfiguration {

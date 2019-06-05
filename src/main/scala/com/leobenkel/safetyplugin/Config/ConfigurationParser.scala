@@ -1,13 +1,13 @@
 package com.leobenkel.safetyplugin.Config
 
 import com.leobenkel.safetyplugin.Utils.Json.JsonDecode
-import com.leobenkel.safetyplugin.Utils.SafetyLogger
+import com.leobenkel.safetyplugin.Utils.LoggerExtended
 
 import scala.io.Source
 import scala.util._
 
 private[safetyplugin] case class ConfigurationParser(
-  log:        SafetyLogger,
+  log:        LoggerExtended,
   configPath: String
 ) {
   if (!configPath.endsWith(".json")) {

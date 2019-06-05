@@ -29,4 +29,19 @@ class NameOfModuleTest extends FunSuite {
         )(filter.nameMatch(test))
     }
   }
+
+  test("Test failed to find module") {
+    val searchFor = "This is a broken name"
+    val result = NameOfModule.find(
+      data = Map(
+        "com.org" -> Map(
+          "artifactName" -> SerializedModule.Empty.copy(version = "1.0")
+        )
+      )
+    )(s = searchFor)
+
+    assert(result.isLeft)
+    val error = result.left.get
+    assert(error.contains(searchFor))
+  }
 }

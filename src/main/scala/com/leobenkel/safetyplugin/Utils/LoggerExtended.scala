@@ -3,20 +3,29 @@ package com.leobenkel.safetyplugin.Utils
 import sbt.util.{Level, Logger}
 
 private[safetyplugin] trait LoggerExtended extends Logger {
-  def fail(message: String): Unit
 
   def isSoftError: Boolean
 
   def setSoftError(softError: Boolean): LoggerExtended
 
-  def separatorInfo(title: String): Unit
+  def criticalFailure(message: => String): Unit
 
-  def separatorDebug(title: String): Unit
+  def setLevel(level: Level.Value): LoggerExtended
 
   def separator(
     level: Level.Value,
     title: String
   ): Unit
 
-  def setLevel(level: Level.Value): LoggerExtended
+  final def separatorInfo(title:  String): Unit = separator(Level.Info, title)
+  final def separatorDebug(title: String): Unit = separator(Level.Debug, title)
+
+  def fail(message: => String): Unit = {
+    if (isSoftError) {
+      error(message)
+    } else {
+      criticalFailure(message)
+    }
+  }
+
 }

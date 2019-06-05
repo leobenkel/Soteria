@@ -1,11 +1,11 @@
 package com.leobenkel.safetyplugin.Transformations
 
 import com.leobenkel.safetyplugin.Config.SafetyConfiguration
-import com.leobenkel.safetyplugin.Messages.ErrorMessage
-import com.leobenkel.safetyplugin.Utils.LoggerExtended
-import com.leobenkel.safetyplugin.Utils.ImplicitModuleToString._
 import com.leobenkel.safetyplugin.Messages.CommonMessage._
+import com.leobenkel.safetyplugin.Messages.ErrorMessage
 import com.leobenkel.safetyplugin.Modules.Dependency
+import com.leobenkel.safetyplugin.Utils.ImplicitModuleToString._
+import com.leobenkel.safetyplugin.Utils.LoggerExtended
 import sbt.ModuleID
 
 private[Transformations] trait CheckVersion {

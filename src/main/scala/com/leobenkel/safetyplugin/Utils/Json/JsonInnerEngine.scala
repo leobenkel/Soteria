@@ -1,7 +1,7 @@
 package com.leobenkel.safetyplugin.Utils.Json
 
-import scala.util.{Either, Left, Right, Try}
 import scala.util.parsing.json._
+import scala.util.{Either, Left, Right, Try}
 
 /**
   * Have to use native scala deprecated parser because no other libary worked.

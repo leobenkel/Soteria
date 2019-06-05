@@ -4,14 +4,14 @@ import com.leobenkel.safetyplugin.Config.SafetyConfiguration
 import com.leobenkel.safetyplugin.Modules.Dependency
 import com.leobenkel.safetyplugin.SafetyPluginKeys
 import com.leobenkel.safetyplugin.SafetyPluginKeys.safetyGetLog
-import com.leobenkel.safetyplugin.Utils.SafetyLogger
-import sbt.{Configuration, Def, Keys, ModuleID}
 import com.leobenkel.safetyplugin.Utils.ImplicitModuleToString._
+import com.leobenkel.safetyplugin.Utils.LoggerExtended
+import sbt.{Configuration, Def, Keys, ModuleID}
 
 private[Transformations] trait TaskLibraryDependencies {
 
   private def debugLibraryDependencies(
-    log:                 SafetyLogger,
+    log:                 LoggerExtended,
     conf:                Option[Configuration],
     libraryDependencies: Seq[ModuleID]
   ): Unit = {
@@ -48,7 +48,7 @@ private[Transformations] trait TaskLibraryDependencies {
   }
 
   private def processLibraryDependencies(
-    log:                 SafetyLogger,
+    log:                 LoggerExtended,
     config:              SafetyConfiguration,
     conf:                Option[Configuration],
     libraryDependencies: Seq[ModuleID]
