@@ -98,10 +98,7 @@ case class NameOfModule(
         Right(organization % name)
       }
     } else {
-      Left(
-        s"${this.toString}: The name was not exact ($exactName), " +
-          s"could not create a moduleID for name: '$name'."
-      )
+      Left(s"The name was not exact, could not create a moduleID for incomplete name: '$name'.")
     }
   }
 
