@@ -28,3 +28,17 @@ addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "1.6.0-RC4")
 
 // http://www.scalastyle.org/sbt.html
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
+
+// TODO: Remove when plugin is added to itself
+scalacOptions ++= Seq(
+  "-feature",
+  "-Yrangepos",
+  "-Ywarn-dead-code",
+  "-Ywarn-inaccessible",
+  "-Ywarn-unused",
+  "-Ywarn-unused-import",
+  "-Ywarn-value-discard",
+  "-deprecation",
+  "-encoding",
+  "utf8"
+)
