@@ -27,7 +27,6 @@ class DependencyTest extends ParentTest {
 
     assert(moduleEi.isLeft)
     val error = moduleEi.left.get
-    assert(error.contains(org))
     assert(error.contains(name))
   }
 

@@ -7,8 +7,29 @@ import com.leobenkel.safetyplugin.Utils.LoggerExtended
 import sbt._
 import sbt.util.Level
 
+// scalastyle:off magic.number
 class CheckVersionTest extends ParentTest with CheckVersion {
-  val test: CheckVersionTest = this
+  private val test: CheckVersionTest = this
+
+  private abstract class LogTest(test: CheckVersionTest) extends LoggerExtended {
+    override def isSoftError: Boolean = false
+
+    override def criticalFailure(message: => String): Unit = {
+      test.fail("Should not be called")
+    }
+
+    override def setSoftError(softError: Boolean): LoggerExtended = {
+      test.fail("Should not be called")
+    }
+
+    override def setLevel(level: Level.Value): LoggerExtended = {
+      test.fail("Should not be called")
+    }
+
+    override def trace(t: => Throwable): Unit = test.fail("Should not be called")
+
+    override def success(message: => String): Unit = test.fail("Should not be called")
+  }
 
   test("Test checkVersion - do nothing") {
     val libraryInput = Seq[ModuleID]()
@@ -19,16 +40,18 @@ class CheckVersionTest extends ParentTest with CheckVersion {
           level: Level.Value,
           title: String
         ): Unit = {
-          println(s"<LOG-$level-SEPARATOR> $title")
           test.assert(title.contains("checkVersion"))
+
+          ()
         }
 
         override def log(
           level:   Level.Value,
           message: => String
         ): Unit = {
-          println(s"<LOG-$level> $message")
           test.assert(message.contains(libraryInput.length.toString))
+
+          ()
         }
       },
       allCorrectLibraries = Seq(),
@@ -54,16 +77,18 @@ class CheckVersionTest extends ParentTest with CheckVersion {
           level: Level.Value,
           title: String
         ): Unit = {
-          println(s"<LOG-$level-SEPARATOR> $title")
           test.assert(title.contains("checkVersion"))
+
+          ()
         }
 
         override def log(
           level:   Level.Value,
           message: => String
         ): Unit = {
-          println(s"<LOG-$level> $message")
           test.assert(message.contains(libraryInput.length.toString))
+
+          ()
         }
       },
       allCorrectLibraries = Seq(),
@@ -90,15 +115,15 @@ class CheckVersionTest extends ParentTest with CheckVersion {
           level: Level.Value,
           title: String
         ): Unit = {
-          println(s"<LOG-$level-SEPARATOR> $title")
           test.assert(title.contains("checkVersion"))
+
+          ()
         }
 
         override def log(
           level:   Level.Value,
           message: => String
         ): Unit = {
-          println(s"<LOG-$level> $message")
           countLog match {
             case 0 => test.assert(message.contains(libraryInput.length.toString))
             case n =>
@@ -138,15 +163,15 @@ class CheckVersionTest extends ParentTest with CheckVersion {
           level: Level.Value,
           title: String
         ): Unit = {
-          println(s"<LOG-$level-SEPARATOR> $title")
           test.assert(title.contains("checkVersion"))
+
+          ()
         }
 
         override def log(
           level:   Level.Value,
           message: => String
         ): Unit = {
-          println(s"<LOG-$level> $message")
           countLog match {
             case 0 => test.assert(message.contains(knowledge.length.toString))
             case n =>
@@ -194,15 +219,15 @@ class CheckVersionTest extends ParentTest with CheckVersion {
           level: Level.Value,
           title: String
         ): Unit = {
-          println(s"<LOG-$level-SEPARATOR> $title")
           test.assert(title.contains("checkVersion"))
+
+          ()
         }
 
         override def log(
           level:   Level.Value,
           message: => String
         ): Unit = {
-          println(s"<LOG-$level> $message")
           countLog match {
             case 0 => test.assert(message.contains(overlap.length.toString))
             case n =>
@@ -222,7 +247,8 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     assert(result.isRight)
     result.right.get.consume { s =>
       assert(s.contains(overlap.length.toString))
-      println(s)
+
+      ()
     }
   }
 
@@ -250,15 +276,15 @@ class CheckVersionTest extends ParentTest with CheckVersion {
           level: Level.Value,
           title: String
         ): Unit = {
-          println(s"<LOG-$level-SEPARATOR> $title")
           test.assert(title.contains("checkVersion"))
+
+          ()
         }
 
         override def log(
           level:   Level.Value,
           message: => String
         ): Unit = {
-          println(s"<LOG-$level> $message")
           countLog match {
             case 0 => test.assert(message.contains(overlap.length.toString))
             case n =>
@@ -278,7 +304,8 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     assert(result.isRight)
     result.right.get.consume { s =>
       assert(s.contains(overlap.length.toString))
-      println(s)
+
+      ()
     }
   }
 
@@ -308,15 +335,15 @@ class CheckVersionTest extends ParentTest with CheckVersion {
           level: Level.Value,
           title: String
         ): Unit = {
-          println(s"<LOG-$level-SEPARATOR> $title")
           test.assert(title.contains("checkVersion"))
+
+          ()
         }
 
         override def log(
           level:   Level.Value,
           message: => String
         ): Unit = {
-          println(s"<LOG-$level> $message")
           countLog match {
             case 0 => test.assert(message.contains(overlap.length.toString))
             case n =>
@@ -335,19 +362,20 @@ class CheckVersionTest extends ParentTest with CheckVersion {
 
     assert(result.isLeft)
     result.left.get.consume { s =>
-      println(s)
       assert(s.contains("Wrong versions"))
       assert(s.contains(badDependency.name))
       assert(s.contains(badDependency.organization))
       assert(s.contains(badDependency.revision))
       assert(s.contains(goodVersion))
+
+      ()
     }
   }
 
   test("Test getLibraryToCheck - Empty") {
     val knowledge = Seq[Dependency]()
     val inputLib = Seq[ModuleID]()
-    val output = ZTestOnly.getLibraryToCheckTest(
+    val output = ZTestOnlyCheckVersion.getLibraryToCheckTest(
       knowledge,
       inputLib
     )
@@ -368,7 +396,7 @@ class CheckVersionTest extends ParentTest with CheckVersion {
       "com.org2" % "barfoo"    % "v3.0"
     )
 
-    val output = ZTestOnly.getLibraryToCheckTest(
+    val output = ZTestOnlyCheckVersion.getLibraryToCheckTest(
       knowledge,
       inputLib
     )
@@ -380,7 +408,7 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     val inputLib = Seq[ModuleID]()
     val knowledge = Dependency("com.org", "art").withName(_.copy(exactName = false))
     val correctVersion = "v1.0"
-    val output = ZTestOnly.buildErrorsTest(
+    val output = ZTestOnlyCheckVersion.buildErrorsTest(
       inputLib,
       knowledge,
       correctVersion
@@ -399,7 +427,7 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     )
     val knowledge = Dependency("com.org", "art").withName(_.copy(exactName = false))
     val correctVersion = "v1.0"
-    val output = ZTestOnly.buildErrorsTest(
+    val output = ZTestOnlyCheckVersion.buildErrorsTest(
       inputLib,
       knowledge,
       correctVersion
@@ -419,7 +447,7 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     )
     val knowledge = Dependency("com.org", "art").withName(_.copy(exactName = false))
     val correctVersion = "v1.0"
-    val output = ZTestOnly.buildErrorsTest(
+    val output = ZTestOnlyCheckVersion.buildErrorsTest(
       inputLib,
       knowledge,
       correctVersion
@@ -432,24 +460,4 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     assert(error.contains(badLib.organization))
   }
 }
-
-abstract class LogTest(test: CheckVersionTest) extends LoggerExtended {
-  override def isSoftError: Boolean = false
-
-  override def criticalFailure(message: => String): Unit = {
-    test.fail("Should not be called")
-  }
-
-  override def setSoftError(softError: Boolean): LoggerExtended = {
-    test.fail("Should not be called")
-  }
-
-  override def setLevel(level: Level.Value): LoggerExtended = {
-    test.fail("Should not be called")
-    this
-  }
-
-  override def trace(t: => Throwable): Unit = test.fail("Should not be called")
-
-  override def success(message: => String): Unit = test.fail("Should not be called")
-}
+// scalastyle:on magic.number

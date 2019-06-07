@@ -25,7 +25,7 @@ case class Dependency(
   @transient lazy val version: Either[String, String] = if (versions.size == 1) {
     Right(versions.head)
   } else {
-    Left(s"${this.toString}: Expect to have one item but had ${versions.size}")
+    Left(s"Expect to have one version but had ${versions.size}")
   }
   @transient lazy val tooManyVersions:   Boolean = versions.size > 1
   @transient lazy val key:               (String, String) = nameObj.key

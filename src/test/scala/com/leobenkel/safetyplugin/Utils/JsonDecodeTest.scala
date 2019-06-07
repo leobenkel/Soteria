@@ -73,7 +73,7 @@ class JsonDecodeTest extends ParentTest {
       "safetyPlugin_fail_bad_json.json" -> { result =>
         assert(result.isLeft)
         val error = result.left.get
-        assertEquals("Did not parse", error)
+        assert("Did not parse" == error)
       }
     ).map {
       case (filePath, test) =>

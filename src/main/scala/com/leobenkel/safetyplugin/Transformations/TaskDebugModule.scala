@@ -2,10 +2,14 @@ package com.leobenkel.safetyplugin.Transformations
 
 import com.leobenkel.safetyplugin.Modules.Dependency
 import com.leobenkel.safetyplugin.SafetyPluginKeys
+import com.leobenkel.safetyplugin.Utils.LoggerExtended
 import sbt.internal.util.complete.Parser
-import sbt.{Command, Keys, Project, Test}
+import sbt.librarymanagement.ModuleID
+import sbt.{Command, Keys, Project, State, Test}
+import xsbti.compile.CompileAnalysis
 
 private[Transformations] trait TaskDebugModule {
+  private val CommandName: String = "safetyDebugModuleWithCode"
 
   @transient lazy private val parseModule: Parser[Dependency] = {
     import sbt._
@@ -22,37 +26,68 @@ private[Transformations] trait TaskDebugModule {
       }
   }
 
+  private def executeDebugModuleCommand(
+    log:     LoggerExtended,
+    module:  Either[String, Dependency],
+    execute: ModuleID => Unit
+  ): Unit = {
+    module match {
+      case Right(module: Dependency) =>
+        val moduleId = module.toModuleID
+
+        moduleId match {
+          case Right(m) => execute(m)
+          case Left(e)  => log.fail(s"Module '$module' is invalid: $e")
+        }
+      case Left(e) => log.fail(e)
+    }
+  }
+
+  def executeCompilation(
+    state: State,
+    m:     ModuleID
+  ): (State, CompileAnalysis) = {
+    val newState = Project
+      .extract(state).appendWithoutSession(
+        Seq(
+          Keys.libraryDependencies += m,
+          SafetyPluginKeys.safetyDebugModule         := Some(m.organization, m.name),
+          SafetyPluginKeys.safetyDebugPrintScalaCode := true
+        ),
+        state
+      )
+
+    Project.extract(newState).runTask(Test / Keys.compile, newState)
+  }
+
   def debugModuleCommand: Command = {
     Command
-      .args("safetyDebugModuleWithCode", "") { (state, args) =>
-        val result = Parser.parse(args.mkString(" ").trim, parseModule)
+      .args(CommandName, "") { (state, args) =>
+        val result: Either[String, Dependency] = Parser.parse(args.mkString(" ").trim, parseModule)
         val log = Project.extract(state).get(SafetyPluginKeys.safetyGetLog)
 
-        result match {
-          case Right(module: Dependency) =>
-            val moduleId = module.toModuleID
-            val orgArtifact = module.toOrganizationArtifactName
-
-            (moduleId, orgArtifact) match {
-              case (Right(m), Right(_)) =>
-                val newState = Project
-                  .extract(state).appendWithoutSession(
-                    Seq(
-                      Keys.libraryDependencies += m,
-                      SafetyPluginKeys.safetyDebugModule         := Some(m.organization, m.name),
-                      SafetyPluginKeys.safetyDebugPrintScalaCode := true
-                    ),
-                    state
-                  )
-
-                Project.extract(newState).runTask(Test / Keys.compile, newState)
-                ()
-              case _ => log.fail(s"Module '$module' with revision '${module.version}' is invalid.")
-            }
-          case Left(e) => log.fail(e)
-        }
+        executeDebugModuleCommand(
+          log = log,
+          module = result,
+          execute = m => {
+            executeCompilation(state, m)
+            ()
+          }
+        )
 
         state
       }
+  }
+
+  object ZTestOnlyTaskDebugModule {
+    val parser = parseModule
+
+    def execute(
+      log:     LoggerExtended,
+      module:  Either[String, Dependency],
+      execute: ModuleID => Unit
+    ): Unit = {
+      executeDebugModuleCommand(log, module, execute)
+    }
   }
 }

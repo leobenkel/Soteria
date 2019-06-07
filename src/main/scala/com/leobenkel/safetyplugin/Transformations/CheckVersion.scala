@@ -80,7 +80,7 @@ private[Transformations] trait CheckVersion {
       }
   }
 
-  object ZTestOnly {
+  object ZTestOnlyCheckVersion {
     @inline def buildErrorsTest(
       librariesToCheck: Seq[ModuleID],
       correctModule:    Dependency,

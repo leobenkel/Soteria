@@ -46,8 +46,6 @@ class SerializedModuleTest extends ParentTest {
     assertEquals("artif", m3.name)
     assert(m3.version.isLeft)
     assert(m3.version.left.get.contains("0"))
-    assert(m3.version.left.get.contains("com.other.org"))
-    assert(m3.version.left.get.contains("artif"))
     assertEquals(false, m3Obj.exactName)
     assertEquals(Seq("artifactory", "artifice"), m3Obj.excludeName.sortBy(identity))
     assertEquals(1, m3.dependenciesToRemove.length)
