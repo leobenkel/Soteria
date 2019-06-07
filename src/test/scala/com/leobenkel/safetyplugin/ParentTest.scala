@@ -1,7 +1,7 @@
 package com.leobenkel.safetyplugin
 
 import org.scalactic.source.Position
-import org.scalatest.{Assertion, FunSuite, Tag}
+import org.scalatest.{FunSuite, Tag}
 
 /**
   * Common methods for all our tests.
@@ -12,8 +12,9 @@ trait ParentTest extends FunSuite {
     result:   T
   )(
     implicit pos: Position
-  ): Assertion = {
+  ): Unit = {
     assertResult(expected)(result)
+    ()
   }
 
   override protected def test(
