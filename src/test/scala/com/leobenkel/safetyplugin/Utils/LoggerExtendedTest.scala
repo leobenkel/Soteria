@@ -1,12 +1,58 @@
 package com.leobenkel.safetyplugin.Utils
 
-import java.util.function.Supplier
-
 import com.leobenkel.safetyplugin.ParentTest
 import sbt.util.Level
 
 class LoggerExtendedTest extends ParentTest {
   private val test: LoggerExtendedTest = this
+
+  private abstract class LogSeparatorTest(test: LoggerExtendedTest) extends LoggerExtended {
+    final override def isSoftError: Boolean = {
+      test.fail("Should not be called")
+    }
+
+    final override def setSoftError(softError: Boolean): LoggerExtended = {
+      test.fail("Should not be called")
+    }
+
+    final override def criticalFailure(message: => String): Unit = test.fail("Should not be called")
+
+    final override def setLevel(level: Level.Value): LoggerExtended = {
+      test.fail("Should not be called")
+    }
+
+    final override def trace(t: => Throwable): Unit = test.fail("Should not be called")
+
+    final override def success(message: => String): Unit = test.fail("Should not be called")
+
+    final override def log(
+      level:   Level.Value,
+      message: => String
+    ): Unit = {
+      test.fail("Should not be called")
+    }
+  }
+
+  private abstract class LogFailTest(test: LoggerExtendedTest) extends LoggerExtended {
+    final override def setSoftError(softError: Boolean): LoggerExtended = {
+      test.fail("should not be called")
+    }
+
+    final override def setLevel(level: Level.Value): LoggerExtended = {
+      test.fail("should not be called")
+    }
+
+    final override def separator(
+      level: Level.Value,
+      title: String
+    ): Unit = {
+      test.fail("should not be called")
+    }
+
+    final override def trace(t: => Throwable): Unit = test.fail("should not be called")
+
+    final override def success(message: => String): Unit = test.fail("should not be called")
+  }
 
   test("Test separator") {
     val titleInput = "Cool title"
@@ -91,58 +137,4 @@ class LoggerExtendedTest extends ParentTest {
 
     logTest.fail(messageInput)
   }
-}
-
-abstract class LogSeparatorTest(test: LoggerExtendedTest) extends LoggerExtended {
-  final override def isSoftError: Boolean = {
-    test.fail("Should not be called")
-    true
-  }
-
-  final override def setSoftError(softError: Boolean): LoggerExtended = {
-    test.fail("Should not be called")
-    this
-  }
-
-  final override def criticalFailure(message: => String): Unit = test.fail("Should not be called")
-
-  final override def setLevel(level: Level.Value): LoggerExtended = {
-    test.fail("Should not be called")
-    this
-  }
-
-  final override def trace(t: => Throwable): Unit = test.fail("Should not be called")
-
-  final override def success(message: => String): Unit = test.fail("Should not be called")
-
-  final override def log(
-    level:   Level.Value,
-    message: => String
-  ): Unit = {
-    test.fail("Should not be called")
-  }
-}
-
-abstract class LogFailTest(test: LoggerExtendedTest) extends LoggerExtended {
-  final override def setSoftError(softError: Boolean): LoggerExtended = {
-    test.fail("should not be called")
-    this
-  }
-
-  final override def setLevel(level: Level.Value): LoggerExtended = {
-    test.fail("should not be called")
-    this
-  }
-
-  final override def separator(
-    level: Level.Value,
-    title: String
-  ): Unit = {
-    test.fail("should not be called")
-
-  }
-
-  final override def trace(t: => Throwable): Unit = test.fail("should not be called")
-
-  final override def success(message: => String): Unit = test.fail("should not be called")
 }
