@@ -1,6 +1,5 @@
 package com.leobenkel.safetyplugin.Transformations
 
-import com.leobenkel.safetyplugin.Config.SafetyConfiguration
 import com.leobenkel.safetyplugin.SafetyPluginKeys
 import com.leobenkel.safetyplugin.SafetyPluginKeys.safetyGetLog
 import com.leobenkel.safetyplugin.Utils.ImplicitModuleToString._
@@ -11,7 +10,7 @@ private[Transformations] trait TaskDependencyOverrides {
   /**
     * Since this does not inject more libraries into the build but just override,
     * we always override the correct versions,
-    * coming from [[SafetyConfiguration.DependenciesOverride]].
+    * coming from [[com.leobenkel.safetyplugin.Config.SafetyConfiguration.DependenciesOverride]].
     */
   def dependencyOverrides(conf: Option[Configuration]): Def.Initialize[Seq[ModuleID]] = {
     Def.settingDyn {
