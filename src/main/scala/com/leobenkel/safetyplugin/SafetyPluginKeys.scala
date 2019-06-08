@@ -15,7 +15,6 @@ private[safetyplugin] object SafetyPluginKeys {
 
   val safetyConfPath = settingKey[String]("Path to the configuration file.")
   val safetyConfig = settingKey[SafetyConfiguration]("private")
-
   val safetyAssemblySettings = taskKey[AssemblyOption](
     "Use to set the Assemble option to the right values"
   )
@@ -30,16 +29,15 @@ private[safetyplugin] object SafetyPluginKeys {
     "If true, will not fail compilation on compiler warning."
   )
 
+  val safetyBuildConfig = taskKey[SafetyConfiguration]("Used for command. Do not call")
+
   val safetyDebugModule = settingKey[Option[(String, String)]](
     "When set, will print out the dependency of this module."
   )
   val safetyDebugWithScala = settingKey[Boolean](
     "If false, will also exclude scala from dependency."
   )
-  val safetyDebugPrintScalaCode = settingKey[Boolean](
-    "If true, will print out the code to copy paste to " +
-      "SafetyKnowledge#PackageKnownRiskDependencies"
-  )
+
   val safetySoft = settingKey[Boolean](
     "If true, won't fail compilation but throw warnings."
   )
@@ -54,5 +52,4 @@ private[safetyplugin] object SafetyPluginKeys {
   val safetyCheckScalaFmt = taskKey[Boolean]("Run ScalaFmtCheck.")
   val safetyCheckScalaCheckAll = taskKey[Unit]("Check all scala style.")
   val safetyCheckScalaFmtRun = taskKey[Unit]("Run ScalaFmt.")
-
 }

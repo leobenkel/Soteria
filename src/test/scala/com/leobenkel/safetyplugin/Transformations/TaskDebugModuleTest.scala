@@ -1,5 +1,6 @@
 package com.leobenkel.safetyplugin.Transformations
 
+import com.leobenkel.safetyplugin.Config.SafetyConfiguration
 import com.leobenkel.safetyplugin.Modules.Dependency
 import com.leobenkel.safetyplugin.ParentTest
 import com.leobenkel.safetyplugin.Utils.LoggerExtended
@@ -41,7 +42,7 @@ class TaskDebugModuleTest extends ParentTest with TaskDebugModule {
 
   test("Test parser - fail all") {
     val p = ZTestOnlyTaskDebugModule.parser
-    Seq(
+    val bad = Seq(
       "",
       "input",
       """ "or """,
@@ -51,25 +52,37 @@ class TaskDebugModuleTest extends ParentTest with TaskDebugModule {
       """ "com.org" % "artifact" % """,
       """ "com.org" % "artifact" % "version """,
       """ "com.org" % "artifact" %% "version" """,
+      """ "com.org % "artifact % "version """,
+      """ com.org" % artifact" % version" """,
       """ "com.org" %% " """,
       """ "com.org" %% "arti """,
       """ "com.org" %% "artifact" """,
       """ "com.org" %% "artifact" % """,
       """ "com.org" %% "artifact" % "version """,
+      """ "com.org %% "artifact % "version """,
+      """ com.org" %% artifact" % version" """,
       """ "com.org" %% "artifact" %% "version" """
-    ).map(_.trim)
+    )
+
+    (bad.map(_.trim) ++ bad)
       .map(i => (i, Parser.parse(i, p)))
       .map(r => assert(r._2.isLeft, s"'${r._1}' should have failed, but got: ${r._2}"))
   }
 
   test("Test parser - succeed") {
     val p = ZTestOnlyTaskDebugModule.parser
-    Seq(
+    val good = Seq(
       """ "com.org" % "artifact" % "version" """,
       """ "com.org" %% "artifact" % "version" """,
       """ "com.org" % "artifact" % "1.0" """,
-      """ "com.org" %% "artifact" % "2.0" """
-    ).map(_.trim)
+      """ "com.org" %% "artifact" % "2.0" """,
+      """ com.org % artifact % version """,
+      """ com.org %% artifact % version """,
+      """ com.org % artifact % 1.0 """,
+      """ com.org %% artifact % 2.0 """
+    )
+
+    (good.map(_.trim) ++ good)
       .map(i => (i, Parser.parse(i, p)))
       .map(r => assert(r._2.isRight, s"'${r._1}' should have succeed, but got: ${r._2}"))
   }
@@ -135,7 +148,7 @@ class TaskDebugModuleTest extends ParentTest with TaskDebugModule {
         assertEquals(dep.name, m.name)
         assertEquals(dep.version, Right(m.revision))
 
-        ()
+        SafetyConfiguration("", Set.empty, Seq.empty, Map.empty, None)
       }
     )
   }

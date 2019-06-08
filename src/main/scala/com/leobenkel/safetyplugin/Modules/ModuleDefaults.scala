@@ -16,7 +16,7 @@ object ModuleDefaults {
     if (defaultValue == currentValue) None else Some(currentValue)
   }
 
-  def toOption[A: ClassTag](currentArray: Seq[A]): Option[Array[A]] = {
-    if (currentArray.isEmpty) None else Some(currentArray.toArray)
+  def toOption[A: ClassTag](currentArray: Seq[A]): Option[Seq[A]] = {
+    if (currentArray.isEmpty) None else Some(currentArray)
   }
 }

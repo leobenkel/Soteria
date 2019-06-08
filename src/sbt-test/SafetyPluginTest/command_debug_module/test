@@ -1,0 +1,2 @@
+# check if the file gets created
+> safetyDebugModuleWithCode org.apache.spark % spark-core_2.11 % 2.3.1

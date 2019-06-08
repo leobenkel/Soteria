@@ -1,10 +1,13 @@
 package com.leobenkel.safetyplugin.Utils.Json
 
+import com.leobenkel.safetyplugin.Utils.Json.JsonDecode.Encoder
+
 import scala.util.parsing.json._
 import scala.util.{Either, Left, Right, Try}
+import FilterNulls._
 
 /**
-  * Have to use native scala deprecated parser because no other libary worked.
+  * Have to use native scala deprecated parser because no other library worked.
   * Open question:
   * * https://stackoverflow.com/questions/55895632/how-can-i-add-a-dependency-to-my-sbt-plugin
   * * https://github.com/circe/circe/issues/823#issuecomment-487418960
@@ -28,5 +31,32 @@ private[Json] object JsonInnerEngine {
             case Left(ex)  => Left(s"The parser failed: $ex")
           }
       }
+  }
+
+  private def unsafeConvert[A <: Encoder](input: A): Map[String, Any] = {
+    input.toJsonStructure.right.get
+  }
+
+  private def convert(input: Map[_, _]): Map[String, Any] = {
+    input.filterNullsOut
+      .mapValues {
+        case v: JsonDecode.Encoder => JSONObject(convert(unsafeConvert(v)))
+        case v: Map[_, _]          => JSONObject(convert(v))
+        case v: List[_]            => JSONArray(v)
+        case v => v
+      }
+  }
+
+  def encode[A <: Encoder](input: A): Either[String, String] = {
+    input.toJsonStructure.right
+      .flatMap(
+        inputMap =>
+          Try(
+            JSONObject
+              .apply(convert(inputMap))
+              .toString(JSONFormat.defaultFormatter)
+          ).toEither.left
+            .map(_.toString)
+      )
   }
 }
