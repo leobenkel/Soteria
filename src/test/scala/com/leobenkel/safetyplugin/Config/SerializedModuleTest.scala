@@ -51,5 +51,21 @@ class SerializedModuleTest extends ParentTest {
     assertEquals(1, m3.dependenciesToRemove.length)
     assertEquals(Seq(NameOfModule.apply("com.orgs", "name-of-library")), m3.dependenciesToRemove)
   }
+
+  test("test serialize/deserialize") {
+    val s = SerializedModule.Empty.copy(
+      version = "1.0",
+      shouldBeProvided = Some(true),
+      excludeName = Some(Seq("a", "b"))
+    )
+    val encodedEi = s.toJsonStructure
+    assert(encodedEi.isRight)
+    val encoded = encodedEi.right.get
+    println(encoded)
+    val sParsedEi = SerializedModule.parser("com.org", "arti")(encoded)
+    assert(sParsedEi.isRight)
+    val sParsed = sParsedEi.right.get
+    assertEquals(s, sParsed)
+  }
 }
 // scalastyle:on magic.number

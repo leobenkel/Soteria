@@ -57,10 +57,16 @@ case class Dependency(
       .toOptionWithDefault(ModuleDefaults.ShouldBeProvided, this.shouldBeProvided),
     dependenciesToRemove = ModuleDefaults.toOption(this.dependenciesToRemove.map(_.toPath))
   )
+  @transient lazy val toConfig: Map[String,Map[String, SerializedModule]] = Map(
+    this.organization -> Map (
+      this.name -> this.toSerializedModule
+    )
+  )
 
   @transient lazy val toModuleID: Either[String, ModuleID] = version.flatMap(nameObj.toModuleID)
   def toModuleID(revision: String): Either[String, ModuleID] = nameObj.toModuleID(revision)
   def ===(other:           Dependency): Boolean = this.nameObj === other.nameObj
+  def =!=(other:           Dependency): Boolean = !(this === other)
   def ===(other:           ModuleID): Boolean = this === Dependency(other)
   def =!=(other:           ModuleID): Boolean = !(this === Dependency(other))
   def |+|(other:           Dependency): Either[String, Dependency] = {

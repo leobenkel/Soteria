@@ -14,9 +14,6 @@ object SafetyPlugin extends AutoPlugin {
   // scalastyle:off object.name
   object autoImport {
     private val SafetyKeys: SafetyPluginKeys.type = SafetyPluginKeys
-    val safetyDebugModule = SafetyKeys.safetyDebugModule
-    val safetyDebugWithScala = SafetyKeys.safetyDebugWithScala
-    val safetyDebugPrintScalaCode = SafetyKeys.safetyDebugPrintScalaCode
     val safetySoft = SafetyKeys.safetySoft
     val safetyLogLevel = SafetyKeys.safetyLogLevel
     val safetyAssemblySettings = SafetyKeys.safetyAssemblySettings
@@ -152,11 +149,11 @@ object SafetyPlugin extends AutoPlugin {
   private val debugSettings: Seq[Def.Setting[_]] = {
     Seq(
       // For debugging:
-      safetyDebugWithScala      := true,
-      safetyDebugModule         := None,
-      safetyDebugPrintScalaCode := false,
-      safetyGetAllDependencies  := getAllDependencies.value,
-      Keys.commands += debugModuleCommand
+      SafetyPluginKeys.safetyDebugWithScala := true,
+      SafetyPluginKeys.safetyDebugModule    := None,
+      safetyGetAllDependencies              := getAllDependencies.value,
+      SafetyPluginKeys.safetyBuildConfig    := checkDependencies(Test).value,
+      Keys.commands ++= Seq(debugModuleCommand, debugAllModuleCommand)
     )
   }
 

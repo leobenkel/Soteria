@@ -11,14 +11,14 @@ import com.leobenkel.safetyplugin.Utils.Json.JsonParserHelper._
 case class SerializedModule(
   version:              String,
   exactName:            Option[Boolean],
-  excludeName:          Option[Array[String]],
+  excludeName:          Option[Seq[String]],
   needDoublePercent:    Option[Boolean],
   shouldDownload:       Option[Boolean],
   overrideIsEnough:     Option[Boolean],
   forbidden:            Option[String],
   shouldBeProvided:     Option[Boolean],
-  dependenciesToRemove: Option[Array[String]]
-) {
+  dependenciesToRemove: Option[Seq[String]]
+) extends JsonDecode.Encoder {
   @transient lazy val versions: Set[String] =
     if (version == SerializedModule.DefaultVersionString) {
       Set.empty
@@ -34,7 +34,7 @@ case class SerializedModule(
       organization = org,
       name = name,
       exactName = this.exactName.getOrElse(ModuleDefaults.ExactName),
-      excludeName = this.excludeName.getOrElse(Array.empty).toSeq,
+      excludeName = this.excludeName.getOrElse(Nil),
       needDoublePercent = this.needDoublePercent.getOrElse(ModuleDefaults.NeedDoublePercent)
     )
   }
@@ -44,7 +44,7 @@ case class SerializedModule(
     name:      String,
     retrieval: String => Either[String, NameOfModule]
   ): (Dependency, Seq[String]) = {
-    val parsed = this.dependenciesToRemove.getOrElse(Array.empty).map(retrieval)
+    val parsed = this.dependenciesToRemove.getOrElse(Nil).map(retrieval)
     val errors = parsed.filter(_.isLeft).map(_.left.get)
 
     (
@@ -60,6 +60,19 @@ case class SerializedModule(
       errors
     )
   }
+
+  lazy override protected val asMap: Map[String, Any] =
+    Map[String, Any](
+      "version"              -> this.version,
+      "exactName"            -> this.exactName,
+      "excludeName"          -> this.excludeName.map(_.toList),
+      "needDoublePercent"    -> this.needDoublePercent,
+      "shouldDownload"       -> this.shouldDownload,
+      "overrideIsEnough"     -> this.overrideIsEnough,
+      "forbidden"            -> this.forbidden,
+      "shouldBeProvided"     -> this.shouldBeProvided,
+      "dependenciesToRemove" -> this.dependenciesToRemove.map(_.toList)
+    )
 }
 
 object SerializedModule {
@@ -93,13 +106,13 @@ object SerializedModule {
           SerializedModule(
             version,
             exactName,
-            excludeName.map(_.toArray),
+            excludeName.map(_.toSeq),
             needDoublePercent,
             shouldDownload,
             overrideIsEnough,
             forbidden,
             shouldBeProvided,
-            dependenciesToRemove.map(_.toArray)
+            dependenciesToRemove.map(_.toSeq)
           )
         }).left.map(s => s"$s |in: org: '$org', name: '$name'")
       }

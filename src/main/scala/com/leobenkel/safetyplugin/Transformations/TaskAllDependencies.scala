@@ -50,6 +50,11 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
     }
   }
 
+  private val goodLibraries: Seq[String] = Seq(
+    "com.github.pathikrit",
+    "org.scala-lang"
+  )
+
   /**
     * Remove all but the wanted library.
     *
@@ -61,9 +66,8 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
     whatToKeep: Dependency,
     withScala:  Boolean
   ): Either[Errors, Seq[ModuleID]] = {
-    val organizationScala = "org.scala-lang"
     val output = libraries
-      .filter(m => (withScala && m.organization == organizationScala) || whatToKeep === m)
+      .filter(m => (withScala && goodLibraries.contains(m.organization)) || whatToKeep === m)
       .map(_.withConfigurations(None))
 
     log.debug(s"Found ${output.size} after filter libraries (${libraries.size}): ")
@@ -206,6 +210,5 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
           }
       }
   }
-
 
 }
