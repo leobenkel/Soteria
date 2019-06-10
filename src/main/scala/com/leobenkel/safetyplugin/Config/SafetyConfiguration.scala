@@ -94,7 +94,7 @@ private[safetyplugin] case class SafetyConfiguration(
 //    )
 //  }
 
-  def replaceModules(newModule: Dependency): SafetyConfiguration = {
+  def replaceModule(newModule: Dependency): SafetyConfiguration = {
     this.copy(
       modules = modules.updated(
         newModule.organization,
