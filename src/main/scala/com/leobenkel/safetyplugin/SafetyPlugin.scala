@@ -149,7 +149,6 @@ object SafetyPlugin extends AutoPlugin {
   private val debugSettings: Seq[Def.Setting[_]] = {
     Seq(
       // For debugging:
-      SafetyPluginKeys.safetyDebugWithScala := true,
       SafetyPluginKeys.safetyDebugModule    := None,
       safetyGetAllDependencies              := getAllDependencies.value,
       SafetyPluginKeys.safetyBuildConfig    := checkDependencies(Test).value,

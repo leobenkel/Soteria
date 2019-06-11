@@ -36,7 +36,7 @@ case class Dependency(
   @transient lazy val toOrganizationArtifactName: Either[String, Dependency.OrgArtifact] =
     nameObj.toOrganizationArtifactName
   @transient lazy val jsonKey: String = if (versions.nonEmpty) {
-    s"$nameObj % ${versions.mkString(" | ")}"
+    s"$nameObj % ${versions.map(v => s""" "$v" """.trim).mkString(" | ")}"
   } else {
     s"$nameObj"
   }

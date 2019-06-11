@@ -34,9 +34,6 @@ private[safetyplugin] object SafetyPluginKeys {
   val safetyDebugModule = settingKey[Option[(String, String)]](
     "When set, will print out the dependency of this module."
   )
-  val safetyDebugWithScala = settingKey[Boolean](
-    "If false, will also exclude scala from dependency."
-  )
 
   val safetySoft = settingKey[Boolean](
     "If true, won't fail compilation but throw warnings."

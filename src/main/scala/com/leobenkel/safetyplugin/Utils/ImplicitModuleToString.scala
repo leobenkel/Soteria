@@ -42,5 +42,4 @@ private[safetyplugin] object ImplicitModuleToString {
         .foreach(m => log.debug(s"[$header] ${m.toString}"))
     }
   }
-
 }
