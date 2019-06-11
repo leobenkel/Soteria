@@ -31,9 +31,8 @@ case class Dependency(
   @transient lazy val key:               (String, String) = nameObj.key
   @transient lazy override val toString: String = s"[$jsonKey]"
   @transient lazy val needToBeReplaced:  Boolean = !overrideIsEnough && exclusionRule.isRight
-  @transient lazy val isCorrectVersion: Boolean =
-    version.isRight
-  @transient lazy val exclusionRule: Either[String, ExclusionRule] = nameObj.exclusionRule
+  @transient lazy val isCorrectVersion:  Boolean = version.isRight
+  @transient lazy val exclusionRule:     Either[String, ExclusionRule] = nameObj.exclusionRule
   @transient lazy val toOrganizationArtifactName: Either[String, Dependency.OrgArtifact] =
     nameObj.toOrganizationArtifactName
   @transient lazy val jsonKey: String = if (versions.nonEmpty) {
@@ -57,8 +56,8 @@ case class Dependency(
       .toOptionWithDefault(ModuleDefaults.ShouldBeProvided, this.shouldBeProvided),
     dependenciesToRemove = ModuleDefaults.toOption(this.dependenciesToRemove.map(_.toPath))
   )
-  @transient lazy val toConfig: Map[String,Map[String, SerializedModule]] = Map(
-    this.organization -> Map (
+  @transient lazy val toConfig: Map[String, Map[String, SerializedModule]] = Map(
+    this.organization -> Map(
       this.name -> this.toSerializedModule
     )
   )
