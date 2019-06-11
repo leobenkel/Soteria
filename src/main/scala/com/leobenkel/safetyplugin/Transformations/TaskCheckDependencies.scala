@@ -105,7 +105,7 @@ private[Transformations] trait TaskCheckDependencies {
         moduleFromBuildWithKnowledge.filter(_ =!= debugModule).map(_.nameObj)
       )
 
-    config.replaceModules(newDependency)
+    config.replaceModule(newDependency)
   }
 
   private def getAllModuleForConfigurations(
