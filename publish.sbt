@@ -5,4 +5,6 @@ updateOptions := updateOptions.value.withGigahorse(false)
 
 publishArtifact in Test := false
 
-pomIncludeRepository := { _ => false }
+pomIncludeRepository := { _ =>
+  false
+}

@@ -121,7 +121,7 @@ private[Transformations] trait TaskUpdate extends CheckVersion {
     }
 
     @inline def printDebugTest(
-      log: LoggerExtended,
+      log:       LoggerExtended,
       allModule: Seq[(String, Seq[Dependency])]
     ): Unit = {
       printDebug(log, allModule)

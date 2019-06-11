@@ -8,6 +8,7 @@ import com.leobenkel.safetyplugin.Utils.LoggerExtended
 import sbt.{ConfigRef, Configuration, ConfigurationReport, Def, Keys, Task, UpdateReport}
 
 private[Transformations] trait TaskCheckDependencies {
+
   /**
     * Does not do anything special without the debugging enable.
     */
@@ -101,8 +102,8 @@ private[Transformations] trait TaskCheckDependencies {
     debugModule:                  Dependency
   ): SafetyConfiguration = {
     val newDependency: Dependency =
-      debugModule.copy(dependenciesToRemove =
-        moduleFromBuildWithKnowledge.filter(_ =!= debugModule).map(_.nameObj)
+      debugModule.copy(
+        dependenciesToRemove = moduleFromBuildWithKnowledge.filter(_ =!= debugModule).map(_.nameObj)
       )
 
     config.replaceModule(newDependency)
