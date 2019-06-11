@@ -76,13 +76,9 @@ private[Transformations] trait TaskDebugModule {
     val newState = Project
       .extract(state).appendWithoutSession(
         Seq(
-          Keys.libraryDependencies ++= Seq(
-            m,
-            "com.github.pathikrit" %% "better-files" % "3.8.0"
-          ),
+          Keys.libraryDependencies += m,
           SafetyPluginKeys.safetyDebugModule    := Some(m.organization, m.name),
           SafetyPluginKeys.safetySoft           := true,
-          SafetyPluginKeys.safetyDebugWithScala := true,
           SafetyPluginKeys.safetyConfig         := config
         ),
         state
