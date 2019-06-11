@@ -1,7 +1,7 @@
 
 default: test
 
-deep_clean:
+deep_clean: clean
 	(rm -fr ./target ; rm -fr ./project/project ; rm -fr ./project/target) || echo "it's clean"
 
 clean:

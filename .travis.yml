@@ -6,19 +6,20 @@ scala:
 jdk:
   - oraclejdk8
 
-after_success:
-  - sbt coveralls
-
 before_install:
   - git fetch --tags
 
 stages:
+  - name: clean
   - name: test
   - name: release
     if: ((branch = master AND type = push) OR (tag IS present)) AND NOT fork
 
 jobs:
   include:
+    - stage: clean
+      name: clean
+      script: make deep_clean
     - stage: test
       name: compile
       script: sbt compile
@@ -30,7 +31,9 @@ jobs:
       script: make test_plugin
     -
       name: unit-test
-      script: make test_coverage test_coverage_report
+      script:
+        - make test_coverage test_coverage_report
+        - sbt coveralls
     - stage: release
       name: release
       script: sbt ci-release
