@@ -23,7 +23,7 @@ test_unit_test:
 	sbt test
 
 # https://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html
-test_plugin:
+test_plugin: publishLocal
 	sbt 'set isSnapshot := true' scripted
 
 test_coverage_run:
