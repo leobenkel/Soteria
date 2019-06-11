@@ -1,3 +1,4 @@
+VERSION=$$(cat VERSION)
 
 default: test
 
@@ -11,16 +12,14 @@ fmt:
 	sbt safetyCheckScalaFmtRun || echo ">> Need to add the plugin to itself !"
 
 publishLocal:
-	 sbt 'set isSnapshot := true' publishLocal && sbt 'set isSnapshot := true' publishLocal
+	 sbt 'set isSnapshot := true' publishLocal
 
-publish: have_right_version test
-	sbt publish
+publish: test
+	git tag -a $(VERSION) -m $(VERSION)
+	git push origin $(VERSION)
 
 have_right_version:
 	cat ./project/safety.sbt | grep `cat ./VERSION`
-
-test_unit_test:
-	sbt test
 
 # https://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html
 test_plugin: publishLocal
@@ -39,7 +38,10 @@ test_coverage_report:
 check_style:
 	sbt safetyCheckScalaFmt || echo ">> Need to add the plugin to itself !"
 
-test: deep_clean publishLocal check_style test_coverage test_plugin test_coverage_report
+unit_test:
+	sbt clean test
+
+test: deep_clean publishLocal check_style unit_test test_plugin
 
 mutator_test:
 	export SBT_OPTS="-XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=4G -Xmx4G"
