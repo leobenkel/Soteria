@@ -6,6 +6,11 @@ scala:
 jdk:
   - oraclejdk8
 
+
+# https://travis-ci.community/t/solved-oraclejdk8-installation-failing-still-again/3428
+dist: trusty
+
+
 before_install:
   - git fetch --tags
 
