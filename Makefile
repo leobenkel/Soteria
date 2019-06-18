@@ -14,7 +14,9 @@ fmt:
 publishLocal:
 	 sbt 'set isSnapshot := true' publishLocal
 
-publish: test
+publish: test publish_only
+
+publish_only:
 	git tag -a $(VERSION) -m $(VERSION)
 	git push origin $(VERSION)
 
