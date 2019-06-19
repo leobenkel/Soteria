@@ -32,6 +32,9 @@ jobs:
       name: scalafmt
       script: ./bin/scalafmt --test
     -
+      name: mutators-test
+      script: make mutator_test
+    -
       name: plugin-test
       script: make test_plugin
     -
