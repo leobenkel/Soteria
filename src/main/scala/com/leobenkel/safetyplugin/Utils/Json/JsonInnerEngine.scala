@@ -1,10 +1,10 @@
 package com.leobenkel.safetyplugin.Utils.Json
 
+import com.leobenkel.safetyplugin.Utils.Json.FilterNulls._
 import com.leobenkel.safetyplugin.Utils.Json.JsonDecode.Encoder
 
 import scala.util.parsing.json._
 import scala.util.{Either, Left, Right, Try}
-import FilterNulls._
 
 /**
   * Have to use native scala deprecated parser because no other library worked.

@@ -1,14 +1,16 @@
 package com.leobenkel.safetyplugin.Utils
 
 import com.leobenkel.safetyplugin.Config.SafetyConfiguration
-import com.leobenkel.safetyplugin.ParentTest
 import com.leobenkel.safetyplugin.Utils.Json.JsonDecode
 import com.leobenkel.safetyplugin.Utils.Json.JsonParserHelper._
+import com.leobenkel.safetyplugin.{LogTest, ParentTest}
 import org.scalatest.Assertion
 
 import scala.io.Source
 
 class JsonDecodeTest extends ParentTest {
+  private val safetyLog: LogTest = new LogTest(this)
+
   test("Test decode json") {
     val value: Int = 12
     case class MyJson(key: Int)
@@ -81,10 +83,10 @@ class JsonDecodeTest extends ParentTest {
         val content = file.mkString
         file.close()
 
-        println(s"Reading '$filePath'")
+        log.debug(s"Reading '$filePath'")
 
         val result: Either[String, SafetyConfiguration] =
-          JsonDecode.parse[SafetyConfiguration](content)
+          JsonDecode.parse[SafetyConfiguration](content)(SafetyConfiguration.parser(safetyLog))
 
         test(result)
     }

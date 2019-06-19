@@ -2,43 +2,11 @@ package com.leobenkel.safetyplugin.Transformations
 
 import com.leobenkel.safetyplugin.Config.SafetyConfiguration
 import com.leobenkel.safetyplugin.Modules.Dependency
-import com.leobenkel.safetyplugin.ParentTest
-import com.leobenkel.safetyplugin.Utils.LoggerExtended
+import com.leobenkel.safetyplugin.{LogTest, ParentTest}
 import sbt.internal.util.complete.Parser
-import sbt.util.Level
 
 class TaskDebugModuleTest extends ParentTest with TaskDebugModule {
   private val test: TaskDebugModuleTest = this
-
-  private abstract class LogTest(test: TaskDebugModuleTest) extends LoggerExtended {
-    final override def isSoftError: Boolean = false
-
-    final override def setSoftError(softError: Boolean): LoggerExtended = {
-      test.fail("Should not be called")
-    }
-
-    final override def setLevel(level: Level.Value): LoggerExtended = {
-      test.fail("Should not be called")
-    }
-
-    final override def separator(
-      level: Level.Value,
-      title: String
-    ): Unit = {
-      test.fail("Should not be called")
-    }
-
-    final override def trace(t: => Throwable): Unit = test.fail("Should not be called")
-
-    final override def success(message: => String): Unit = test.fail("Should not be called")
-
-    final override def log(
-      level:   Level.Value,
-      message: => String
-    ): Unit = {
-      test.fail("Should not be called")
-    }
-  }
 
   test("Test parser - fail all") {
     val p = ZTestOnlyTaskDebugModule.parser
@@ -136,19 +104,21 @@ class TaskDebugModuleTest extends ParentTest with TaskDebugModule {
 
   test("Test command - good") {
     val dep = Dependency("com.org", "artif-").withVersion("1.0")
+    val log = new LogTest(test) {
+      override def criticalFailure(message: => String): Unit = {
+        test.fail("Should not be called")
+      }
+    }
+
     ZTestOnlyTaskDebugModule.execute(
-      log = new LogTest(test) {
-        override def criticalFailure(message: => String): Unit = {
-          test.fail("Should not be called")
-        }
-      },
+      log = log,
       module = Right(dep),
       execute = m => {
         assertEquals(dep.organization, m.organization)
         assertEquals(dep.name, m.name)
         assertEquals(dep.version, Right(m.revision))
 
-        SafetyConfiguration("", Set.empty, Seq.empty, Map.empty, None)
+        SafetyConfiguration(log, "", Set.empty, Seq.empty, Map.empty, None)
       }
     )
   }

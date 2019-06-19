@@ -1,30 +1,58 @@
 package com.leobenkel.safetyplugin.Config
 
 import com.leobenkel.safetyplugin.Modules.NameOfModule
-import com.leobenkel.safetyplugin.ParentTest
 import com.leobenkel.safetyplugin.Utils.Json.JsonDecode
+import com.leobenkel.safetyplugin.{LogTest, ParentTest}
+import sbt.util.Level
 
 import scala.io.Source
 
 // scalastyle:off magic.number
 class SerializedModuleTest extends ParentTest {
+  private val test: SerializedModuleTest = this
+
+  private class LogTestWithBuffer extends LogTest(test) {
+    private var allMessages: String = ""
+    override def log(
+      level:   Level.Value,
+      message: => String
+    ): Unit = {
+      test.log.debug(message)
+      assertEquals(Level.Error, level)
+      allMessages += message + "\n"
+    }
+
+    def getMessages: String = allMessages
+  }
+
   test("Test parsing to NameOfModule") {
     val pathToFile = "safetyPlugin_succeed_4.json"
+    val safetyLog = new LogTestWithBuffer
 
     val file = Source.fromResource(pathToFile)
     val content = file.mkString
     file.close()
 
-    println(s"Reading '$pathToFile'")
+    log.debug(s"Reading '$pathToFile'")
 
     val result: Either[String, SafetyConfiguration] =
-      JsonDecode.parse[SafetyConfiguration](content)
+      JsonDecode.parse[SafetyConfiguration](content)(SafetyConfiguration.parser(safetyLog))
 
     assert(result.isRight)
 
     val serializedModule = result.right.get
 
+    assert(safetyLog.getMessages.isEmpty)
+
     val modules = serializedModule.AllModules.sortBy(s => s.key)
+
+    val modulesWithDependanceErrors = serializedModule.ZTestOnly.RawModulesTest
+      .filter(_._2.nonEmpty)
+    modulesWithDependanceErrors.foreach {
+      case (module, errors) =>
+        assert(safetyLog.getMessages.contains(module.toString))
+        errors.foreach(e => assert(safetyLog.getMessages.contains(e)))
+    }
 
     assertEquals(3, modules.length)
 
@@ -61,7 +89,7 @@ class SerializedModuleTest extends ParentTest {
     val encodedEi = s.toJsonStructure
     assert(encodedEi.isRight)
     val encoded = encodedEi.right.get
-    println(encoded)
+    log.debug(encoded)
     val sParsedEi = SerializedModule.parser("com.org", "arti")(encoded)
     assert(sParsedEi.isRight)
     val sParsed = sParsedEi.right.get

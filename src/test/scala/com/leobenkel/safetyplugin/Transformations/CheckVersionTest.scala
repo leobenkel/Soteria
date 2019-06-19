@@ -143,7 +143,7 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     assert(result.isRight)
     result.right.get.consume { s =>
       assert(s.contains(libraryInput.length.toString))
-      println(s)
+      test.log.debug(s)
     }
   }
 
@@ -191,7 +191,7 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     assert(result.isRight)
     result.right.get.consume { s =>
       assert(s.contains(knowledge.length.toString))
-      println(s)
+      log.debug(s)
     }
   }
 

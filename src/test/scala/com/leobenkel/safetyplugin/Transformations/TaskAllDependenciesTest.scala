@@ -3,10 +3,10 @@ package com.leobenkel.safetyplugin.Transformations
 import com.leobenkel.safetyplugin.Config.{SafetyConfiguration, SerializedModule}
 import com.leobenkel.safetyplugin.Modules.{Dependency, NameOfModule}
 import com.leobenkel.safetyplugin.ParentTest
-import com.leobenkel.safetyplugin.Utils.LoggerExtended
-import sbt.util.Level
 import com.leobenkel.safetyplugin.Utils.ImplicitModuleToString._
+import com.leobenkel.safetyplugin.Utils.LoggerExtended
 import sbt._
+import sbt.util.Level
 
 class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   private val test: TaskAllDependenciesTest = this
@@ -39,7 +39,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
       level:   Level.Value,
       message: => String
     ): Unit = {
-      println(s"[$level] $message")
+      test.log.debug(s"[$level] $message")
       allMessage += s"[$level] $message\n"
     }
 
@@ -356,6 +356,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
     }
 
     val safetyConfig: SafetyConfiguration = SafetyConfiguration(
+      log,
       sbtVersion = "1.2.7",
       scalaVersions = Set("2.12"),
       scalaCFlags = Seq(),
@@ -398,6 +399,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
     }
 
     val safetyConfig: SafetyConfiguration = SafetyConfiguration(
+      log,
       sbtVersion = "1.2.7",
       scalaVersions = Set("2.12"),
       scalaCFlags = Seq(),
@@ -453,6 +455,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
     }
 
     val safetyConfig: SafetyConfiguration = SafetyConfiguration(
+      log,
       sbtVersion = "1.2.7",
       scalaVersions = Set("2.12"),
       scalaCFlags = Seq(),
@@ -502,6 +505,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
     }
 
     val safetyConfig: SafetyConfiguration = SafetyConfiguration(
+      log,
       sbtVersion = "1.2.7",
       scalaVersions = Set("2.12"),
       scalaCFlags = Seq(),
@@ -550,6 +554,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
     }
 
     val safetyConfig: SafetyConfiguration = SafetyConfiguration(
+      log,
       sbtVersion = "1.2.7",
       scalaVersions = Set("2.12"),
       scalaCFlags = Seq(),
@@ -607,6 +612,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
     }
 
     val safetyConfig: SafetyConfiguration = SafetyConfiguration(
+      log,
       sbtVersion = "1.2.7",
       scalaVersions = Set("2.12"),
       scalaCFlags = Seq(),
@@ -660,6 +666,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
     }
 
     val safetyConfig: SafetyConfiguration = SafetyConfiguration(
+      log,
       sbtVersion = "1.2.7",
       scalaVersions = Set("2.12"),
       scalaCFlags = Seq(),
