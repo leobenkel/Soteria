@@ -28,7 +28,7 @@ private[safetyplugin] case class ConfigurationParser(
   }
 
   @transient lazy private val conf: SafetyConfiguration = {
-    JsonDecode.parse[SafetyConfiguration](fileContent) match {
+    JsonDecode.parse[SafetyConfiguration](fileContent)(SafetyConfiguration.parser(log)) match {
       case Left(err: String) =>
         log.criticalFailure(err)
         throw new Exception(err)

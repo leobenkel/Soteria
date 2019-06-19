@@ -1,5 +1,6 @@
 package com.leobenkel.safetyplugin
 
+import org.apache.commons.logging.{Log, LogFactory}
 import org.scalactic.source.Position
 import org.scalatest.{FunSuite, Tag}
 
@@ -7,6 +8,8 @@ import org.scalatest.{FunSuite, Tag}
   * Common methods for all our tests.
   */
 trait ParentTest extends FunSuite {
+  lazy val log: Log = LogFactory.getLog(this.getClass)
+
   protected def assertEquals[T](
     expected: T,
     result:   T
@@ -26,7 +29,7 @@ trait ParentTest extends FunSuite {
     implicit pos: Position
   ): Unit = {
     super.test(testName, testTags: _*) {
-      println(s">>> Starting - $testName")
+      log.debug(s">>> Starting - $testName")
       testFun
     }
   }

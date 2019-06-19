@@ -1,13 +1,16 @@
 package com.leobenkel.safetyplugin.Config
 
 import com.leobenkel.safetyplugin.Modules.Dependency
-import com.leobenkel.safetyplugin.ParentTest
 import com.leobenkel.safetyplugin.Utils.Json.JsonDecode
+import com.leobenkel.safetyplugin.{LogTest, ParentTest}
 
 class SafetyConfigurationTest extends ParentTest {
+  private val test:      SafetyConfigurationTest = this
+  private val safetyLog: LogTest = new LogTest(test)
 
   test("test serialize/deserialize") {
     val s = SafetyConfiguration(
+      safetyLog,
       sbtVersion = "sbtV1",
       scalaVersions = Set(
         "scala1",
@@ -29,8 +32,8 @@ class SafetyConfigurationTest extends ParentTest {
     val encodedEi = s.toJsonStructure
     assert(encodedEi.isRight)
     val encoded = encodedEi.right.get
-    println(encoded)
-    val sParsedEi = SafetyConfiguration.parser(encoded)
+    log.debug(encoded)
+    val sParsedEi = SafetyConfiguration.parser(safetyLog)(encoded)
     assert(sParsedEi.isRight)
     val sParsed = sParsedEi.right.get
     assertEquals(s, sParsed)
@@ -38,6 +41,7 @@ class SafetyConfigurationTest extends ParentTest {
 
   test("test serialize/deserialize json") {
     val s = SafetyConfiguration(
+      safetyLog,
       sbtVersion = "sbtV1",
       scalaVersions = Set(
         "scala1",
@@ -59,8 +63,9 @@ class SafetyConfigurationTest extends ParentTest {
     val encodedEi = JsonDecode.encode(s)
     assert(encodedEi.isRight)
     val encoded = encodedEi.right.get
-    println(encoded)
-    val sParsedEi = JsonDecode.parse[SafetyConfiguration](encoded)
+    log.debug(encoded)
+    val sParsedEi = JsonDecode
+      .parse[SafetyConfiguration](encoded)(SafetyConfiguration.parser(safetyLog))
     assert(sParsedEi.isRight)
     val sParsed = sParsedEi.right.get
     assertEquals(s, sParsed)
@@ -68,6 +73,7 @@ class SafetyConfigurationTest extends ParentTest {
 
   test("test replace module - replace") {
     val s1 = SafetyConfiguration(
+      safetyLog,
       sbtVersion = "sbtV1",
       scalaVersions = Set(
         "scala1",
@@ -94,6 +100,7 @@ class SafetyConfigurationTest extends ParentTest {
 
   test("test replace module - new artifact") {
     val s1 = SafetyConfiguration(
+      safetyLog,
       sbtVersion = "sbtV1",
       scalaVersions = Set(
         "scala1",
@@ -121,6 +128,7 @@ class SafetyConfigurationTest extends ParentTest {
 
   test("test replace module - new org") {
     val s1 = SafetyConfiguration(
+      safetyLog,
       sbtVersion = "sbtV1",
       scalaVersions = Set(
         "scala1",

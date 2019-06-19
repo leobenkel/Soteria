@@ -121,4 +121,6 @@ case class NameOfModule(
     this.organization == other.organization &&
     nameMatch(other.name)
   }
+
+  def =!=(other: NameOfModule): Boolean = !(this === other)
 }

@@ -1,7 +1,8 @@
 package com.leobenkel.safetyplugin.Utils.Json
 
+import com.leobenkel.safetyplugin.Utils.Json.FilterNulls._
+
 import scala.util._
-import FilterNulls._
 
 private[safetyplugin] object JsonDecode {
   type Parser[A] = Map[String, Any] => Either[String, A]
