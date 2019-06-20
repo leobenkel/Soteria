@@ -9,7 +9,7 @@ clean:
 	sbt clean
 
 fmt:
-	sbt safetyCheckScalaFmtRun || echo ">> Need to add the plugin to itself !"
+	sbt safetyCheckScalaFmtRun
 
 publishLocal:
 	 sbt 'set isSnapshot := true' publishLocal
@@ -21,7 +21,8 @@ publish_only:
 	git push origin $(VERSION)
 
 have_right_version:
-	cat ./project/safety.sbt | grep `cat ./VERSION`
+	cat ./project/safety.sbt | grep `cat ./VERSION | cut -d "v" -f 2` && \
+	echo "Plugin have right version!"
 
 # https://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html
 test_plugin: publishLocal
@@ -38,7 +39,7 @@ test_coverage_report:
 	sbt coverageReport && sbt coverageAggregate
 
 check_style:
-	sbt safetyCheckScalaFmt || echo ">> Need to add the plugin to itself !"
+	sbt safetyCheckScalaFmt
 
 unit_test:
 	sbt clean test
