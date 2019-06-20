@@ -22,6 +22,29 @@
 
 If you have any question [submit an issue](https://github.com/leobenkel/safety_plugin/issues/new).
 
+## Table of Contents
+
+  * [Setup steps](#setup-steps)
+  * [safetyPlugin.json](#safetypluginjson)
+     * [Root level](#root-level)
+     * [Modules](#modules)
+        * [How to make sure library A is always version x.y and Provided ?](#how-to-make-sure-library-a-is-always-version-xy-and-provided-)
+        * [How to remove a dependency D completely from a library A ?](#how-to-remove-a-dependency-d-completely-from-a-library-a-)
+        * [Is there an easy way to build the dependenciesToRemove tree ?](#is-there-an-easy-way-to-build-the-dependenciestoremove-tree-)
+  * [Features](#features)
+     * [Scala Style](#scala-style)
+     * [For fat-jar assembly build](#for-fat-jar-assembly-build)
+     * [!!!Dangerous!!! Allow compilation even with vulnerability](#dangerous-allow-compilation-even-with-vulnerability)
+        * [Vulnerability by-pass](#vulnerability-by-pass)
+        * [Compilation warning by pass](#compilation-warning-by-pass)
+     * [Debug](#debug)
+  * [Publishing](#publishing)
+  * [Authors](#authors)
+     * [Leo Benkel](#leo-benkel)
+
+Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+
+
 ## Setup steps
 
 1. Make sure you are using `SBT 1.2.x`.
