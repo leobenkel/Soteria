@@ -1,5 +1,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Gitter](https://badges.gitter.im/safety_plugin/community.svg)](https://gitter.im/safety_plugin/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fleobenkel%2Fsafety_plugin.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fleobenkel%2Fsafety_plugin?ref=badge_shield)
 [![release-badge][]][release]
 
 [![Build Status](https://travis-ci.org/leobenkel/safety_plugin.svg?branch=master)](https://travis-ci.org/leobenkel/safety_plugin)
@@ -262,3 +263,7 @@ safetyLogLevel := Level.Error
 * [![leobenkel-github-badge][]][leobenkel-github-link]
 * [![leobenkel-linkedin-badge][]][leobenkel-linkedin-link]
 * [![leobenkel-personal-badge][]][leobenkel-personal-link]
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fleobenkel%2Fsafety_plugin.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fleobenkel%2Fsafety_plugin?ref=badge_large)
