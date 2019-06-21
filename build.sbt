@@ -13,6 +13,9 @@ addSbtPlugin("com.eed3si9n"      % "sbt-assembly" % "0.14.9")
 addSbtPlugin("se.marcuslonnberg" % "sbt-docker"   % "1.5.0")
 ///
 
+// For testing
+addSbtPlugin("io.stryker-mutator" % "sbt-stryker4s" % "0.6.0")
+
 // For SourceClear
 // https://github.com/jrudolph/sbt-dependency-graph
 addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.0")
@@ -29,16 +32,9 @@ addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "1.6.0-RC4")
 // http://www.scalastyle.org/sbt.html
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
 
-// TODO: Remove when plugin is added to itself
-scalacOptions ++= Seq(
-  "-feature",
-  "-Yrangepos",
-  "-Ywarn-dead-code",
-  "-Ywarn-inaccessible",
-  "-Ywarn-unused",
-  "-Ywarn-unused-import",
-  "-Ywarn-value-discard",
-  "-deprecation",
-  "-encoding",
-  "utf8"
+// TODO: Remove when we are able to use Circe for JSON parsing
+val silencerVersion = "1.4.1"
+libraryDependencies ++= Seq(
+  compilerPlugin("com.github.ghik" %% "silencer-plugin" % silencerVersion),
+  "com.github.ghik" %% "silencer-lib" % silencerVersion % Provided
 )

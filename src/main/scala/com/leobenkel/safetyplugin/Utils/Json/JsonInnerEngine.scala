@@ -1,5 +1,6 @@
 package com.leobenkel.safetyplugin.Utils.Json
 
+import com.github.ghik.silencer.silent
 import com.leobenkel.safetyplugin.Utils.Json.FilterNulls._
 import com.leobenkel.safetyplugin.Utils.Json.JsonDecode.Encoder
 
@@ -11,7 +12,9 @@ import scala.util.{Either, Left, Right, Try}
   * Open question:
   * * https://stackoverflow.com/questions/55895632/how-can-i-add-a-dependency-to-my-sbt-plugin
   * * https://github.com/circe/circe/issues/823#issuecomment-487418960
+  * @deprecated "This should be replaced by a better json library like Circe"
   */
+@silent("deprecated")
 private[Json] object JsonInnerEngine {
   def parse[A](
     input:  String,
