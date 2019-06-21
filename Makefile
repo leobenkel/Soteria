@@ -48,7 +48,7 @@ test: deep_clean publishLocal check_style unit_test test_plugin
 
 mutator_test:
 	export SBT_OPTS="-XX:+CMSClassUnloadingEnabled -Xmx4G"
-	sbt 'set logLevel in Test := Level.Error' 'set parallelExecution in Test := true' stryker
+	sbt 'set logLevel in Test := Level.Error' 'set parallelExecution in Test := true' 'set safetySoftOnCompilerWarning := true' stryker
 
 mutator_open_results:
 	open `find ./target/stryker4s* -type f -iname "*index.html"`
