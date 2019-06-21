@@ -13,6 +13,7 @@ dist: trusty
 
 before_install:
   - git fetch --tags
+  - (./scripts/should_run_test.sh && TEST_SHOULD_RUN=true && echo "Test will run") || (TEST_SHOULD_RUN=false && echo "Test will not run")
 
 stages:
   - name: clean
@@ -27,22 +28,22 @@ jobs:
       script: make deep_clean
     - stage: test
       name: compile
-      script: sbt compile
+      script: ($TEST_SHOULD_RUN && sbt compile)
     -
       name: scalafmt
       script: ./bin/scalafmt --test
     -
       name: mutators-test
-      script: make mutator_test
+      script: ($TEST_SHOULD_RUN && make mutator_test)
       if: branch = master AND type = push AND NOT fork
     -
       name: plugin-test
-      script: make test_plugin
+      script: ($TEST_SHOULD_RUN && make test_plugin)
     -
       name: unit-test
       script:
-        - make test_coverage test_coverage_report
-        - sbt coveralls
+        - ($TEST_SHOULD_RUN && make test_coverage test_coverage_report)
+        - ($TEST_SHOULD_RUN && sbt coveralls)
     - stage: release
       name: release
       script: sbt ci-release
