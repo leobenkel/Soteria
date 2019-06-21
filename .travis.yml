@@ -28,22 +28,22 @@ jobs:
       script: make deep_clean
     - stage: test
       name: compile
-      script: ($TEST_SHOULD_RUN && sbt compile)
+      script: if $TEST_SHOULD_RUN; then sbt compile; fi
     -
       name: scalafmt
       script: ./bin/scalafmt --test
     -
       name: mutators-test
-      script: ($TEST_SHOULD_RUN && make mutator_test)
+      script: if $TEST_SHOULD_RUN; then make mutator_test; fi
       if: branch = master AND type = push AND NOT fork
     -
       name: plugin-test
-      script: ($TEST_SHOULD_RUN && make test_plugin)
+      script: if $TEST_SHOULD_RUN; then make test_plugin; fi
     -
       name: unit-test
       script:
-        - ($TEST_SHOULD_RUN && make test_coverage test_coverage_report)
-        - ($TEST_SHOULD_RUN && sbt coveralls)
+        - if $TEST_SHOULD_RUN; then make test_coverage test_coverage_report; fi
+        - if $TEST_SHOULD_RUN; then sbt coveralls; fi
     - stage: release
       name: release
       script: sbt ci-release

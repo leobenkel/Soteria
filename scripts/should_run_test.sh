@@ -5,7 +5,8 @@ if [[ -z ${TRAVIS_COMMIT} ]]; then
    exit 0
 fi
 
-FILES=$(git diff --name-only master...${TRAVIS_COMMIT})
+# https://stackoverflow.com/a/41159710/3357831
+FILES=$(git diff --name-only origin/master  $TRAVIS_COMMIT)
 
 if [[ -z ${FILES} ]]; then
     echo "Did not find any file changed for commit hash: '${TRAVIS_COMMIT}'. No need to run test."
