@@ -12,6 +12,7 @@ private[Transformations] trait TaskConfiguration {
 
       Def.setting {
         val conf = Config.ConfigurationParser(log, path)
+        log.info(s"Got configuration from '$path'")
         conf.getConf
       }
     }
