@@ -17,15 +17,23 @@ private[safetyplugin] case class ConfigurationParser(
     )
   }
 
-  @transient lazy private val fileContent: String = Try(Source.fromFile(configPath)) match {
-    case Success(file) =>
-      val content = file.mkString
-      file.close()
-      content
-    case Failure(exception) =>
-      log.criticalFailure(exception.toString)
-      throw exception
-  }
+  @transient lazy private val isWeb: Boolean = configPath.startsWith("http://") || configPath
+    .startsWith("https://")
+
+  @transient lazy private val fileContent: String =
+    Try(if (isWeb) {
+      Source.fromURL(configPath)
+    } else {
+      Source.fromFile(configPath)
+    }) match {
+      case Success(file) =>
+        val content = file.mkString
+        file.close()
+        content
+      case Failure(exception) =>
+        log.criticalFailure(exception.toString)
+        throw exception
+    }
 
   @transient lazy private val conf: SafetyConfiguration = {
     JsonDecode.parse[SafetyConfiguration](fileContent)(SafetyConfiguration.parser(log)) match {

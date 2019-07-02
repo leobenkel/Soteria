@@ -96,7 +96,7 @@ Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 
 ### Root level
 
-To override where the config file is read from, update the setting `safetyConfPath` in your `build.sbt`.
+To override where the config file is read from, update the setting `safetyConfPath` in your `build.sbt`. This setting can be a URL starting by `http://` or `https://` or a local file path. 
 By default it will search for `./safetyPlugin.json`.
 
 Root level:
