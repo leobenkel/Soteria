@@ -3,7 +3,7 @@
 [![release-badge][]][release]
 [![maven-central-badge][]][maven-central-link]
 
-[![Build Status](https://travis-ci.org/leobenkel/safety_plugin.svg?branch=master)](https://travis-ci.org/leobenkel/safety_plugin)
+[![Build Status](https://travis-ci.com/leobenkel/safety_plugin.svg?branch=master)](https://travis-ci.com/leobenkel/safety_plugin)
 [![BCH compliance](https://bettercodehub.com/edge/badge/leobenkel/safety_plugin?branch=master)](https://bettercodehub.com/)
 [![Coverage Status](https://coveralls.io/repos/github/leobenkel/safety_plugin/badge.svg?branch=master)](https://coveralls.io/github/leobenkel/safety_plugin?branch=master)
 [![Mutation testing badge](https://badge.stryker-mutator.io/github.com/leobenkel/safety_plugin/master)](https://stryker-mutator.github.io)
