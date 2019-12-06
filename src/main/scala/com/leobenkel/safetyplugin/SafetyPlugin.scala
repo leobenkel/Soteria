@@ -67,10 +67,18 @@ object SafetyPlugin extends AutoPlugin {
         .sequential(
           org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmt.in(Compile),
           org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmt.in(Test)
-        ).value
-    ) ++
-      // https://stackoverflow.com/a/53824265/3357831
-      Vector(addCompilerPlugin(scalafix.sbt.ScalafixPlugin.autoImport.scalafixSemanticdb))
+        ).value,
+      Keys.libraryDependencies := addScalaFixCompilerPlugin().value
+    )
+    /*
+   * https://stackoverflow.com/a/53824265/3357831
+   * Removed the line below so scala 2.13 is not failing anymore.
+   * https://github.com/leobenkel/safety_plugin/issues/37
+   * It might have to be added manually if you want to use the Scalafix
+   * rewrite feature with scala 2.13.
+   *
+   * Vector(addCompilerPlugin(scalafix.sbt.ScalafixPlugin.autoImport.scalafixSemanticdb))
+   */
   }
 
   private val logSettings: Seq[Def.Setting[_]] = {

@@ -44,7 +44,7 @@ check_style:
 unit_test:
 	sbt clean test
 
-test: deep_clean publishLocal check_style unit_test test_plugin
+test: deep_clean check_style publishLocal unit_test test_plugin
 
 mutator_test:
 	export SBT_OPTS="-XX:+CMSClassUnloadingEnabled -Xmx4G"
