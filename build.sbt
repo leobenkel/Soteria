@@ -1,11 +1,9 @@
-// commented out until the plugin is pushed out the maven
-//safetySoftOnCompilerWarning := true
-
 // Test
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % Test
 
 // https://github.com/scoverage/sbt-scoverage
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.6.0-M3")
+addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.2.7")
 //
 
 // ASSEMBLY
