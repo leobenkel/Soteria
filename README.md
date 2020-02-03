@@ -39,6 +39,7 @@ If you have any question [submit an issue](https://github.com/leobenkel/safety_p
         * [Is there an easy way to build the dependenciesToRemove tree ?](#is-there-an-easy-way-to-build-the-dependenciestoremove-tree-)
   * [Features](#features)
      * [Scala Style](#scala-style)
+     * [Coveralls](#coveralls)
      * [For fat-jar assembly build](#for-fat-jar-assembly-build)
      * [!!!Dangerous!!! Allow compilation even with vulnerability](#dangerous-allow-compilation-even-with-vulnerability)
         * [Vulnerability by-pass](#vulnerability-by-pass)
@@ -221,6 +222,30 @@ The sbt plugin includes [ScalaFix](https://github.com/scalacenter/scalafix), [Sc
         * `sbt safetyCheckScalaFix`
         * `sbt safetyCheckScalaFmt`
 3. To apply the fix for [ScalaFmt](https://scalameta.org/scalafmt/), you can run `sbt safetyCheckScalaFmtRun`
+
+### Coveralls
+
+#### Locally
+
+You can run 
+```
+sbt safetyRunTestCoverage
+```
+to generate local reporting.
+
+Just open:
+```
+./target/scala-2.xx/sbt-1.0/scoverage-report/index.html
+```
+
+#### Submit to coveralls
+
+To submit to coveralls
+```
+sbt safetyRunSubmitCoverage
+```
+
+This will generate the reports and submit it to coveralls using your COVERALLS token, set in the env var: `COVERALLS_REPO_TOKEN`. 
 
 ### For fat-jar assembly build
 

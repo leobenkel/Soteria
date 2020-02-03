@@ -1,10 +1,13 @@
 package com.leobenkel.safetyplugin
 
+import com.leobenkel.safetyplugin.SafetyPluginKeys.FancySettings
 import com.leobenkel.safetyplugin.Transformations.SafetyExecutionLogic._
 import com.leobenkel.safetyplugin.Utils.SafetyLogger
+import org.scoverage.coveralls.CoverallsPlugin
 import sbt.util.Level
-import sbt.{Def, _}
+import sbt.{Def, addCommandAlias, _}
 import sbtassembly._
+import scoverage.ScoverageKeys
 
 object SafetyPlugin extends AutoPlugin {
 
@@ -25,20 +28,38 @@ object SafetyPlugin extends AutoPlugin {
     val safetyCheckScalaCheckAll = SafetyKeys.safetyCheckScalaCheckAll
     val safetyGetAllDependencies = SafetyKeys.safetyGetAllDependencies
     val safetyConfPath = SafetyKeys.safetyConfPath
+    val safetyTestCoverage = SafetyKeys.safetyTestCoverage.setting
+    val safetySubmitCoverage = SafetyKeys.safetySubmitCoverage.setting
+    val safetyCheckCoverallEnvVar = SafetyKeys.safetyCheckCoverallEnvVar
   }
 
   // scalastyle:on
 
   import autoImport._
 
-  override def trigger: PluginTrigger = allRequirements
+  lazy final override val trigger: PluginTrigger = allRequirements
 
-  override def buildSettings: Seq[Def.Setting[_]] = {
-    sys.props += "packaging.type" -> "jar"
-    Seq()
+  private def coverallMakeCommand(task: FancySettings[_]): String = {
+    "; set coverageEnabled in ThisBuild := true " +
+      s"; Test/${task.nameAsString} " +
+      "; set coverageEnabled in ThisBuild := false "
   }
 
-  private val scalaStyleSettings: Seq[Def.Setting[_]] = {
+  lazy final override val buildSettings: Seq[Def.Setting[_]] = super.buildSettings ++ {
+    sys.props += "packaging.type" -> "jar"
+    Seq()
+  } ++
+    addCommandAlias(
+      "safetyRunTestCoverage",
+      s"; ${coverallMakeCommand(SafetyPluginKeys.safetyTestCoverage)} "
+    ) ++
+    addCommandAlias(
+      "safetyRunSubmitCoverage",
+      "; safetyCheckCoverallEnvVar " +
+        s"; ${coverallMakeCommand(SafetyPluginKeys.safetySubmitCoverage)} "
+    )
+
+  lazy private val scalaStyleSettings: Seq[Def.Setting[_]] = {
     Seq(
       // Scalastyle
       safetyCheckScalaStyle := Def
@@ -81,7 +102,7 @@ object SafetyPlugin extends AutoPlugin {
    */
   }
 
-  private val logSettings: Seq[Def.Setting[_]] = {
+  lazy private val logSettings: Seq[Def.Setting[_]] = {
     Seq(
       // Log
       safetyLogLevel                := Level.Info,
@@ -91,7 +112,7 @@ object SafetyPlugin extends AutoPlugin {
     )
   }
 
-  private val assemblyRules: Seq[Def.Setting[_]] = {
+  lazy private val assemblyRules: Seq[Def.Setting[_]] = {
     import sbtdocker.DockerPlugin.autoImport._
     Seq(
       // Assembly rules
@@ -114,24 +135,24 @@ object SafetyPlugin extends AutoPlugin {
         val log = SafetyPluginKeys.safetyGetLog.value
         val artifactTargetPath = s"/app/${artifact.name}"
 
+        def makeDocker(imageName: String): Dockerfile = {
+          new sbtdocker.Dockerfile {
+            from(imageName)
+            add(artifact, artifactTargetPath)
+            entryPoint("java", "-jar", artifactTargetPath)
+          }
+        }
+
         conf.dockerImageOpt match {
           case Some(dockerImage) =>
-            new sbtdocker.Dockerfile {
-              from(dockerImage)
-              add(artifact, artifactTargetPath)
-              entryPoint("java", "-jar", artifactTargetPath)
-            }
+            makeDocker(dockerImage)
           case None =>
             val defaultDockerImage = "openjdk:8-jre"
             log.error(
               s"'dockerImage' was not set in the configuration file. " +
                 s"Using Default value: '$defaultDockerImage'."
             )
-            new sbtdocker.Dockerfile {
-              from(defaultDockerImage)
-              add(artifact, artifactTargetPath)
-              entryPoint("java", "-jar", artifactTargetPath)
-            }
+            makeDocker(defaultDockerImage)
         }
       },
       Keys.version in docker := Keys.version.value,
@@ -139,7 +160,7 @@ object SafetyPlugin extends AutoPlugin {
     )
   }
 
-  private val testSettings: Seq[Def.Setting[_]] = {
+  lazy private val testSettings: Seq[Def.Setting[_]] = {
     Seq(
       // Only one test at a time ( Easier to read log )
       Keys.testOptions in Test += Tests.Argument("-oD"),
@@ -149,11 +170,24 @@ object SafetyPlugin extends AutoPlugin {
         "-XX:+CMSClassUnloadingEnabled"
       ),
       Keys.parallelExecution in Test := false,
-      Keys.fork in Test              := true
+      Keys.fork in Test              := true,
+      safetyCheckCoverallEnvVar      := checkEnvVar("COVERALLS_REPO_TOKEN").value,
+      safetyTestCoverage in Test := Def
+        .sequential(
+          Keys.clean,
+          Keys.test in Test,
+          ScoverageKeys.coverageReport in Test,
+          ScoverageKeys.coverageAggregate in Test
+        ).value,
+      safetySubmitCoverage in Test := Def
+        .sequential(
+          safetyTestCoverage in Test,
+          CoverallsPlugin.coveralls in Test
+        ).value
     )
   }
 
-  private val debugSettings: Seq[Def.Setting[_]] = {
+  lazy private val debugSettings: Seq[Def.Setting[_]] = {
     Seq(
       // For debugging:
       SafetyPluginKeys.safetyDebugModule := None,
@@ -163,14 +197,14 @@ object SafetyPlugin extends AutoPlugin {
     )
   }
 
-  private val configurations: Seq[Def.Setting[_]] = {
+  lazy private val configurations: Seq[Def.Setting[_]] = {
     Seq[Def.Setting[_]](
       safetyConfPath                := "./safetyPlugin.json",
       SafetyPluginKeys.safetyConfig := safetyConfigurationExec().value
     )
   }
 
-  override def projectSettings: Seq[Def.Setting[_]] = {
+  lazy final override val projectSettings: Seq[Def.Setting[_]] = {
     configurations ++
       logSettings ++
       debugSettings ++

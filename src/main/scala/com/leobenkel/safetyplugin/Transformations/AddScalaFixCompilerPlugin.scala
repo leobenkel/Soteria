@@ -1,9 +1,10 @@
 package com.leobenkel.safetyplugin.Transformations
 
 import sbt._
+
 import scala.util.matching.Regex
 
-trait AddScalaFixCompilerPlugin {
+private[Transformations] trait AddScalaFixCompilerPlugin {
 
   private[Transformations] def shouldAddCompilerPlugin(scalaVersion: String): Boolean = {
     val pattern: Regex = "^2\\.1[012]\\..*$".r
