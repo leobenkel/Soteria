@@ -1,5 +1,6 @@
 package com.leobenkel.safetyplugin.Transformations
 
+import com.leobenkel.safetyplugin.SafetyPluginKeys
 import sbt._
 
 import scala.util.matching.Regex
@@ -11,13 +12,20 @@ private[Transformations] trait AddScalaFixCompilerPlugin {
     pattern.pattern.matcher(scalaVersion).find()
   }
 
-  def addScalaFixCompilerPlugin(): Def.Initialize[Seq[ModuleID]] = {
+  def getDefaultAddSemanticValue: Def.Initialize[Boolean] = {
     Def.settingDyn {
       val scalaVersion = Keys.scalaVersion.value
+      Def.setting(shouldAddCompilerPlugin(scalaVersion))
+    }
+  }
+
+  def addScalaFixCompilerPlugin(): Def.Initialize[Seq[ModuleID]] = {
+    Def.settingDyn {
+      val safetyAddSemantic = SafetyPluginKeys.safetyAddSemantic.value
       val libraries = Keys.libraryDependencies.value
 
       Def.setting {
-        if (shouldAddCompilerPlugin(scalaVersion)) {
+        if (safetyAddSemantic) {
           libraries :+ compilerPlugin(scalafix.sbt.ScalafixPlugin.autoImport.scalafixSemanticdb)
         } else {
           libraries
