@@ -31,6 +31,7 @@ object SafetyPlugin extends AutoPlugin {
     val safetyTestCoverage = SafetyKeys.safetyTestCoverage.setting
     val safetySubmitCoverage = SafetyKeys.safetySubmitCoverage.setting
     val safetyCheckCoverallEnvVar = SafetyKeys.safetyCheckCoverallEnvVar
+    val safetyAddSemantic = SafetyKeys.safetyAddSemantic
   }
 
   // scalastyle:on
@@ -89,6 +90,7 @@ object SafetyPlugin extends AutoPlugin {
           org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmt.in(Compile),
           org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmt.in(Test)
         ).value,
+      safetyAddSemantic        := getDefaultAddSemanticValue.value,
       Keys.libraryDependencies := addScalaFixCompilerPlugin().value
     )
     /*

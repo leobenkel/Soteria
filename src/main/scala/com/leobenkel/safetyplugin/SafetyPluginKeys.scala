@@ -48,6 +48,10 @@ private[safetyplugin] object SafetyPluginKeys {
     "Set the level of logs for the safety Plugin."
   )
 
+  lazy val safetyAddSemantic = settingKey[Boolean](
+    "If true, semanticdb will be added"
+  )
+
   // Scala style
   lazy val safetyCheckScalaStyle = taskKey[Unit]("Run ScalaStyle.")
   lazy val safetyCheckScalaFix = taskKey[Unit]("Run ScalaFix.")
