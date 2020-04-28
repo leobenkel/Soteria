@@ -77,7 +77,7 @@ private[Transformations] trait TaskDebugModule {
       .extract(state).appendWithoutSession(
         Seq(
           Keys.libraryDependencies += m,
-          SafetyPluginKeys.safetyDebugModule := Some(m.organization, m.name),
+          SafetyPluginKeys.safetyDebugModule := Some(m),
           SafetyPluginKeys.safetySoft        := true,
           SafetyPluginKeys.safetyConfig      := config
         ),

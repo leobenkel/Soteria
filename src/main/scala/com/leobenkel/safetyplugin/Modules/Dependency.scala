@@ -63,12 +63,13 @@ case class Dependency(
   )
 
   @transient lazy val toModuleID: Either[String, ModuleID] = version.flatMap(nameObj.toModuleID)
-  def toModuleID(revision: String): Either[String, ModuleID] = nameObj.toModuleID(revision)
+  def toModuleID(revision: String):     Either[String, ModuleID] = nameObj.toModuleID(revision)
   def ===(other:           Dependency): Boolean = this.nameObj === other.nameObj
   def =!=(other:           Dependency): Boolean = !(this === other)
-  def ===(other:           ModuleID): Boolean = this === Dependency(other)
-  def =!=(other:           ModuleID): Boolean = !(this === Dependency(other))
-  def |+|(other:           Dependency): Either[String, Dependency] = {
+  def ===(other:           ModuleID):   Boolean = this === Dependency(other)
+  def =!=(other:           ModuleID):   Boolean = !(this === Dependency(other))
+
+  def |+|(other: Dependency): Either[String, Dependency] = {
     if (this === other) {
       Right(this.copy(versions = this.versions ++ other.versions))
     } else {
@@ -77,6 +78,11 @@ case class Dependency(
           s"1: ${this.toString} | 2: ${other.toString}"
       )
     }
+  }
+  def |+|(other: Option[Dependency]): Either[String, Dependency] = {
+    other
+      .map(this |+| _)
+      .getOrElse(Right(this))
   }
 
   def withName(f: NameOfModule => NameOfModule): Dependency = this.copy(nameObj = f(this.nameObj))
@@ -118,6 +124,10 @@ object Dependency {
       dependenciesToRemove = Seq.empty,
       forbidden = None
     )
+  }
+
+  def apply(input: (String, String)): Dependency = {
+    apply(input._1, input._2)
   }
 
   def apply(
