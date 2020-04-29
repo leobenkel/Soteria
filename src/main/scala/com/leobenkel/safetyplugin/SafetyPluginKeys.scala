@@ -36,7 +36,7 @@ private[safetyplugin] object SafetyPluginKeys {
 
   lazy val safetyBuildConfig = taskKey[SafetyConfiguration]("Used for command. Do not call")
 
-  lazy val safetyDebugModule = settingKey[Option[(String, String)]](
+  lazy val safetyDebugModule = settingKey[Option[ModuleID]](
     "When set, will print out the dependency of this module."
   )
 

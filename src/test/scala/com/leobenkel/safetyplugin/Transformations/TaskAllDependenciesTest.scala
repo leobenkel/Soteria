@@ -368,7 +368,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
       )
     )
     val libraries:  Seq[ModuleID] = Seq()
-    val debugValue: Option[(String, String)] = None
+    val debugValue: Option[ModuleID] = None
     val output = ZTestOnlyTaskAllDependencies.execAllDependenciesTest(
       log,
       safetyConfig = safetyConfig,
@@ -414,7 +414,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
       "com.org"  % "artifact"  % "v1.0",
       "com.org2" % "artifact2" % "v2.0"
     )
-    val debugValue: Option[(String, String)] = Some(("com.org", "artifact"))
+    val debugValue: Option[ModuleID] = Some(("com.org" %% "artifact" % "1.0.0"))
     val output = ZTestOnlyTaskAllDependencies.execAllDependenciesTest(
       log,
       safetyConfig = safetyConfig,
@@ -426,8 +426,8 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
     assert(log.getAllMessages.contains(libraries.length.toString))
     assert(log.getAllMessages.contains(libraries.head.prettyString))
     assert(log.getAllMessages.contains("Found"))
-    assert(log.getAllMessages.contains(debugValue.get._1))
-    assert(log.getAllMessages.contains(debugValue.get._2))
+    assert(log.getAllMessages.contains(debugValue.get.organization))
+    assert(log.getAllMessages.contains(debugValue.get.name))
 
     assert(output.length == 1)
     assert(output.head.prettyString == libraries.head.prettyString)
@@ -469,7 +469,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
     val libraries: Seq[ModuleID] = Seq(
       "com.org" % "artifact" % "v1.0"
     )
-    val debugValue: Option[(String, String)] = Some(("com.org2", "artifact2"))
+    val debugValue: Option[ModuleID] = Some(("com.org2" % "artifact2" % "0.0.0"))
     val output = ZTestOnlyTaskAllDependencies.execAllDependenciesTest(
       log,
       safetyConfig = safetyConfig,
@@ -481,8 +481,8 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
     assert(log.getAllMessages.contains(libraries.length.toString))
     assert(log.getAllMessages.contains(libraries.head.prettyString))
     assert(log.getAllMessages.contains("Could not find"))
-    assert(log.getAllMessages.contains(debugValue.get._1))
-    assert(log.getAllMessages.contains(debugValue.get._2))
+    assert(log.getAllMessages.contains(debugValue.get.organization))
+    assert(log.getAllMessages.contains(debugValue.get.name))
 
     assert(output.isEmpty)
   }
@@ -520,7 +520,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
       "com.org"  % "artifact"  % "v1.0",
       "com.org2" % "artifact2" % "v2.0"
     )
-    val debugValue: Option[(String, String)] = None
+    val debugValue: Option[ModuleID] = None
     val output = ZTestOnlyTaskAllDependencies.execAllDependenciesTest(
       log,
       safetyConfig = safetyConfig,

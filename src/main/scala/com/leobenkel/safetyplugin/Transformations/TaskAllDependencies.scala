@@ -33,20 +33,19 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
     log:          LoggerExtended,
     safetyConfig: SafetyConfiguration,
     libraries:    Seq[ModuleID],
-    debugValue:   Option[(String, String)]
+    debugValue:   Option[ModuleID]
   ): Seq[sbt.ModuleID] = {
     log.separatorDebug("allDependencies")
     log.debug(s"> Start 'allDependencies' with ${libraries.size} libraries.")
     libraries.prettyString(log, "allDependencies")
 
-    (debugValue match {
-      case Some((org, name)) =>
-        val debugModule = Dependency(org, name)
+    debugValue
+      .map(Dependency(_))
+      .map { debugModule =>
         log.info(s"> Debug mode, filter with ${debugModule.toString}")
         filterLibraries(log, libraries, debugModule)
-      case None =>
-        rewriteLibAndVersionCheck(log, safetyConfig, libraries)
-    }) match {
+      }
+      .getOrElse(rewriteLibAndVersionCheck(log, safetyConfig, libraries)) match {
       case Left(errors) =>
         errors.consume(s => log.fail(s))
         Seq.empty
@@ -253,7 +252,7 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
       log:          LoggerExtended,
       safetyConfig: SafetyConfiguration,
       libraries:    Seq[ModuleID],
-      debugValue:   Option[(String, String)]
+      debugValue:   Option[ModuleID]
     ): Seq[sbt.ModuleID] = {
       execAllDependencies(
         log,
