@@ -59,11 +59,11 @@ private[safetyplugin] case class SafetyConfiguration(
 
   lazy override protected val asMap: Map[String, Any] = {
     Map[String, Any](
-      "sbtVersion"     -> this.sbtVersion,
-      "scalaVersions"  -> this.scalaVersions.toList,
-      "scalaCFlags"    -> this.scalaCFlags.toList,
-      "dockerImageOpt" -> this.dockerImageOpt,
-      "modules"        -> this.modules.mapValues(_.mapValues(_.toJsonStructure.right.get))
+      "sbtVersion"    -> this.sbtVersion,
+      "scalaVersions" -> this.scalaVersions.toList,
+      "scalaCFlags"   -> this.scalaCFlags.toList,
+      "dockerImage"   -> this.dockerImageOpt,
+      "modules"       -> this.modules.mapValues(_.mapValues(_.toJsonStructure.right.get))
     )
   }
 

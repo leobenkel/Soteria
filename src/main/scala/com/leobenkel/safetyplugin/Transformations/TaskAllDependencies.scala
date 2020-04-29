@@ -135,15 +135,25 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
     libraryToEdit
       .map {
         case (m, thingsToRemove) =>
-          thingsToRemove
-            .foldLeft((m, Seq[ModuleID]())) {
-              case ((module, acc), toRemove) =>
-                removeBadDependencies(log, needToBeReplaced, module, acc, toRemove)
-            }
+          thingsToRemove.foldLeft((m, Seq[ModuleID]())) {
+            case ((module, acc), toRemove) =>
+              removeBadDependencies(
+                log = log,
+                needToBeReplaced = needToBeReplaced,
+                module = module,
+                acc = acc,
+                toRemove = toRemove
+              )
+          }
       }
       .flatMap { case (m, listModule) => listModule :+ m }
       .groupBy(m => (m.organization, m.name))
-      .map(_._2.maxBy(_.exclusions.length))
+      .map {
+        case (_, modules) =>
+          val module = modules.maxBy(_.exclusions.length)
+          val exclusions = modules.map(_.exclusions).reduce(_ ++ _).distinct
+          module.withExclusions(exclusions)
+      }
       .toSeq
       .distinct
   }
@@ -170,16 +180,17 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
     acc:              Seq[ModuleID],
     toRemove:         NameOfModule
   ): (ModuleID, Seq[ModuleID]) = {
-    val depsToReplace: Option[ModuleID] = needToBeReplaced
-      .filter(_.key == toRemove.key)
-      .map(_.toModuleID)
-      .flattenEI
-      .map(removeAllDependencies(needToBeReplaced, _))
-      .flattenEI
-      .headOption
-
     toRemove.exclusionRule match {
       case Right(er) =>
+        val depsToReplace: Option[ModuleID] = needToBeReplaced
+          .filter(_.key == toRemove.key)
+          .filter(_.overrideIsEnough)
+          .map(_.toModuleID)
+          .flattenEI
+          .map(removeAllDependencies(needToBeReplaced, _))
+          .flattenEI
+          .headOption
+
         log.debug(s"> For ${module.prettyString} - Exclude ${toRemove.toString}")
 
         depsToReplace match {
@@ -187,7 +198,7 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
           case None      => log.debug(s">> removing entirely.")
         }
 
-        (module.excludeAll(er), acc ++ depsToReplace)
+        (module.excludeAll(er), depsToReplace.map(acc :+ _).getOrElse(acc))
       case Left(ex) =>
         log
           .setSoftError(true)
