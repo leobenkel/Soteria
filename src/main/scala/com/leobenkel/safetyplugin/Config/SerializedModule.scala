@@ -20,7 +20,7 @@ case class SerializedModule(
   dependenciesToRemove: Option[Seq[String]]
 ) extends JsonDecode.Encoder {
   @transient lazy val versions: Set[String] =
-    if (version == SerializedModule.DefaultVersionString) {
+    if (version.toLowerCase == SerializedModule.DefaultVersionString.toLowerCase) {
       Set.empty
     } else {
       Set(version)
