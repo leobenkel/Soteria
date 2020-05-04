@@ -11,7 +11,7 @@ object NameOfModule {
       module.name,
       exactName = ModuleDefaults.ExactName,
       excludeName = Seq.empty,
-      needDoublePercent = ModuleDefaults.NeedDoublePercent
+      needDoublePercent = module.crossVersion.isInstanceOf[CrossVersion.Binary]
     )
   }
 
