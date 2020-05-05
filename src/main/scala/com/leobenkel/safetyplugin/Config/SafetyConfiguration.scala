@@ -38,7 +38,7 @@ private[safetyplugin] case class SafetyConfiguration(
       module
   }
 
-  @transient lazy val NeedOverriden:    Seq[Dependency] = AllModules.filter(!_.overrideIsEnough)
+  @transient lazy val NeedOverridden:   Seq[Dependency] = AllModules.filter(!_.overrideIsEnough)
   @transient lazy val AsProvided:       Seq[Dependency] = AllModules.filter(_.shouldBeProvided)
   @transient lazy val ShouldDownload:   Seq[Dependency] = AllModules.filter(_.shouldDownload)
   @transient lazy val NeedToBeReplaced: Seq[Dependency] = AllModules.filter(_.needToBeReplaced)

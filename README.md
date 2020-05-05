@@ -129,6 +129,7 @@ A module can accept those keys:
 * `forbidden`: Default is null. If this is set, and the library is added, the message will be displayed as a build failure. For instance you can use it to forbid one MySQL library and advise to use a different one.
 * `shouldBeProvided`: Default is false. If true, the compilation will fail if the library is not set to `Provided` in `build.sbt`. It is used for Spark.
 * `dependenciesToRemove`: This is a list of `groupID | artifactName` libraries to remove from this library. This is when `overrideIsEnough` come into play.
+* `scalaVersionsFilter`: This field is a list of scala versions, following this format: `[+-][MajorVersion].[MinorVersion]<.[SmallVersion]>`.
 
 #### How to make sure library A is always version x.y and Provided ?
 

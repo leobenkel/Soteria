@@ -1,6 +1,6 @@
 package com.leobenkel.safetyplugin.Transformations
 
-import com.leobenkel.safetyplugin.Modules.Dependency
+import com.leobenkel.safetyplugin.Modules.{Dependency, ScalaV}
 import com.leobenkel.safetyplugin.SafetyPluginKeys
 import com.leobenkel.safetyplugin.SafetyPluginKeys.safetyGetLog
 import com.leobenkel.safetyplugin.Utils.EitherUtils._
@@ -16,47 +16,28 @@ private[Transformations] trait TaskGetAllDependencies {
     config:       Seq[Dependency],
     scalaVersion: String
   ): Seq[ModuleID] = {
-    val scalaMainVersion: String = scalaVersion
-      .split('.')
-      .dropRight(1)
-      .mkString(".")
+    val scalaV: ScalaV = ScalaV(scalaVersion) match {
+      case Left(err) =>
+        log.criticalFailure(s"Failed to parse ScalaVersion: '$scalaVersion': $err")
+        throw new RuntimeException(err)
+      case Right(v) => v
+    }
 
-    val allDependenciesTmp = config.map(_.toModuleID)
+    val allDependenciesTmp = config.map(c => c.toModuleID.right.map(m => (c, m)))
+    allDependenciesTmp.flattenLeft.foreach(log.debug(_))
 
-    allDependenciesTmp
-      .filter(_.isLeft)
-      .map(_.left.get)
-      .foreach(log.debug(_))
-
-    lazy val converter: ModuleID => ModuleID = CrossVersion.apply(scalaVersion, scalaMainVersion)
-
-    val allDependencies = allDependenciesTmp.flattenEI
-      .filter {
-        case m if (m.name.contains("_") || m.crossVersion.isInstanceOf[CrossVersion.Binary]) =>
-          val m2 = converter(m)
-          val nameBlocks = m2.name.split("_")
-          val moduleScalaVersion = nameBlocks.last
-          val output = moduleScalaVersion == scalaMainVersion
-          log.debug(
-            s"For module '$m2': " +
-              s"ModuleScalaVersion: $moduleScalaVersion ; " +
-              s"CurrentScalaVersion: $scalaMainVersion ; " +
-              s"output: $output"
-          )
-          output
-        case _ => true
-      }
+    val allDependencies: Seq[ModuleID] = allDependenciesTmp.flattenEI
+      .filter { case (d, m) => d.shouldBeDownloaded(log, scalaV, m) }
+      .map(_._2)
 
     (allDependencies :+ javaX).sortBy(m => (m.organization, m.name))
   }
 
-  def getAllDependencies: Def.Initialize[Seq[ModuleID]] = {
-    Def.settingDyn {
-      val log = safetyGetLog.value
-      val scalaVersion = Keys.scalaVersion.value
-      val config = SafetyPluginKeys.safetyConfig.value
+  def getAllDependencies: Def.Initialize[Seq[ModuleID]] = Def.settingDyn {
+    val log = safetyGetLog.value
+    val scalaVersion = Keys.scalaVersion.value
+    val config = SafetyPluginKeys.safetyConfig.value
 
-      Def.setting(processDependencies(log, config.ShouldDownload, scalaVersion))
-    }
+    Def.setting(processDependencies(log, config.ShouldDownload, scalaVersion))
   }
 }

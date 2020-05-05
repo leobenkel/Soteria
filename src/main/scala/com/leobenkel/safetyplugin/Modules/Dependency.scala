@@ -1,6 +1,8 @@
 package com.leobenkel.safetyplugin.Modules
 
 import com.leobenkel.safetyplugin.Config.SerializedModule
+import com.leobenkel.safetyplugin.Modules.ScalaVersionHandler._
+import com.leobenkel.safetyplugin.Utils.SafetyLogger
 import sbt._
 import sbt.librarymanagement.{DependencyBuilders, ModuleID}
 
@@ -11,7 +13,8 @@ case class Dependency(
   overrideIsEnough:     Boolean,
   forbidden:            Option[String],
   dependenciesToRemove: Seq[NameOfModule],
-  shouldBeProvided:     Boolean = false
+  shouldBeProvided:     Boolean = false,
+  scalaVersionsFilter:  Seq[ScalaVersionHandler]
 ) {
   @transient lazy val name:                 String = nameObj.name
   @transient lazy val organization:         String = nameObj.organization
@@ -54,7 +57,8 @@ case class Dependency(
     forbidden = this.forbidden,
     shouldBeProvided = ModuleDefaults
       .toOptionWithDefault(ModuleDefaults.ShouldBeProvided, this.shouldBeProvided),
-    dependenciesToRemove = ModuleDefaults.toOption(this.dependenciesToRemove.map(_.toPath))
+    dependenciesToRemove = ModuleDefaults.toOption(this.dependenciesToRemove.map(_.toPath)),
+    scalaVersionsFilter = ModuleDefaults.toOption(this.scalaVersionsFilter.map(_.serialized))
   )
   @transient lazy val toConfig: Map[String, Map[String, SerializedModule]] = Map(
     this.organization -> Map(
@@ -88,6 +92,42 @@ case class Dependency(
   def withName(f: NameOfModule => NameOfModule): Dependency = this.copy(nameObj = f(this.nameObj))
 
   def withVersion(version: String): Dependency = this.copy(versions = Set(version))
+
+  private def shouldBeTestedForInclusion(m: ModuleID): Boolean = {
+    ((m.name.contains("_") || m.crossVersion.isInstanceOf[CrossVersion.Binary]) ||
+    this.nameObj.needDoublePercent || this.scalaVersionsFilter.nonEmpty) && this.shouldDownload
+  }
+
+  def shouldBeDownloaded(
+    log:    SafetyLogger,
+    scalaV: ScalaV,
+    m:      ModuleID
+  ): Boolean = {
+    if (shouldBeTestedForInclusion(m)) {
+      val isRightScalaVersion = this.scalaVersionsFilter.applyTo(scalaV)
+      if (isRightScalaVersion) {
+        val m2 = scalaV.crossVersion(m)
+        if (m2.name.contains("_")) {
+          val nameBlocks = m2.name.split("_")
+          val moduleScalaVersion = nameBlocks.last
+          val output = scalaV === moduleScalaVersion
+          log.debug(
+            s"For module '$m2': " +
+              s"ModuleScalaVersion: $moduleScalaVersion ; " +
+              s"CurrentScalaVersion: $scalaV ; " +
+              s"output: $output"
+          )
+          output
+        } else {
+          true
+        }
+      } else {
+        false
+      }
+    } else {
+      this.shouldDownload
+    }
+  }
 }
 
 object Dependency {
@@ -100,7 +140,8 @@ object Dependency {
       versions = Set(module.revision),
       overrideIsEnough = ModuleDefaults.OverrideIsEnough,
       forbidden = None,
-      dependenciesToRemove = Seq.empty
+      dependenciesToRemove = Seq.empty,
+      scalaVersionsFilter = Seq.empty
     )
   }
 
@@ -122,7 +163,8 @@ object Dependency {
       versions = Set(version),
       overrideIsEnough = ModuleDefaults.OverrideIsEnough,
       dependenciesToRemove = Seq.empty,
-      forbidden = None
+      forbidden = None,
+      scalaVersionsFilter = Seq.empty
     )
   }
 
@@ -140,7 +182,8 @@ object Dependency {
       versions = Set.empty,
       overrideIsEnough = ModuleDefaults.OverrideIsEnough,
       dependenciesToRemove = Seq.empty,
-      forbidden = None
+      forbidden = None,
+      scalaVersionsFilter = Seq.empty
     )
   }
 }
