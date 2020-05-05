@@ -1,6 +1,6 @@
 package com.leobenkel.safetyplugin.Config
 
-import com.leobenkel.safetyplugin.Modules.{Dependency, NameOfModule}
+import com.leobenkel.safetyplugin.Modules._
 import com.leobenkel.safetyplugin.Utils.EitherUtils._
 import com.leobenkel.safetyplugin.Utils.Json.JsonDecode
 import com.leobenkel.safetyplugin.Utils.Json.JsonParserHelper._
@@ -65,6 +65,15 @@ private[safetyplugin] case class SafetyConfiguration(
       "dockerImage"   -> this.dockerImageOpt,
       "modules"       -> this.modules.mapValues(_.mapValues(_.toJsonStructure.right.get))
     )
+  }
+
+  def getValidModule(scalaVersion: String): Set[ModuleID] = {
+    val scalaV = ScalaV(scalaVersion).right.get
+    this.AllModules
+      .filter(_.shouldBeDownloaded(scalaV))
+      .map(_.toModuleID)
+      .flattenEI
+      .toSet
   }
 
   def replaceModule(newModule: Dependency): SafetyConfiguration = {

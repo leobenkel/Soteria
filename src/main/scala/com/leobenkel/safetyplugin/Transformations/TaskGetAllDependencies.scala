@@ -27,7 +27,7 @@ private[Transformations] trait TaskGetAllDependencies {
     allDependenciesTmp.flattenLeft.foreach(log.debug(_))
 
     val allDependencies: Seq[ModuleID] = allDependenciesTmp.flattenEI
-      .filter { case (d, m) => d.shouldBeDownloaded(log, scalaV, m) }
+      .filter { case (d, m) => d.shouldBeDownloaded(scalaV, m) }
       .map(_._2)
 
     (allDependencies :+ javaX).sortBy(m => (m.organization, m.name))
