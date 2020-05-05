@@ -69,14 +69,16 @@ private[Transformations] trait TaskDebugModule {
   }
 
   def executeCompilation(
-    state:  State,
-    config: SafetyConfiguration,
-    m:      ModuleID
+    state:        State,
+    scalaVersion: String,
+    config:       SafetyConfiguration,
+    m:            ModuleID
   ): (State, SafetyConfiguration) = {
     val newState = Project
       .extract(state).appendWithoutSession(
         Seq(
           Keys.libraryDependencies += m,
+          Keys.scalaVersion                  := scalaVersion,
           SafetyPluginKeys.safetyDebugModule := Some(m),
           SafetyPluginKeys.safetySoft        := true,
           SafetyPluginKeys.safetyConfig      := config
@@ -93,11 +95,19 @@ private[Transformations] trait TaskDebugModule {
         val result: Either[String, Dependency] = Parser.parse(args.mkString(" ").trim, parseModule)
         val config = Project.extract(state).get(SafetyPluginKeys.safetyConfig)
         val log = Project.extract(state).get(SafetyPluginKeys.safetyGetLog)
+        val scalaVersion = Project.extract(state).get(Keys.scalaVersion)
 
         val fullConfigOpt = executeDebugModuleCommand(
           log = log,
           module = result,
-          execute = m => { executeCompilation(state, config, m)._2 }
+          execute = m => {
+            executeCompilation(
+              state = state,
+              scalaVersion = scalaVersion,
+              config = config,
+              m = m
+            )._2
+          }
         )
 
         fullConfigOpt match {
@@ -124,12 +134,23 @@ private[Transformations] trait TaskDebugModule {
         val log = Project.extract(state).get(SafetyPluginKeys.safetyGetLog)
         val libraries = Project.extract(state).get(Keys.libraryDependencies)
         val config = Project.extract(state).get(SafetyPluginKeys.safetyConfig)
+        val scalaVersions = Project.extract(state).get(Keys.crossScalaVersions)
+        val scalaVersion = Project.extract(state).get(Keys.scalaVersion)
 
-        val allModules: Set[ModuleID] = config.AllModuleID ++ libraries
+        val allScalaVersions = (scalaVersions :+ scalaVersion).toSet
 
-        val (_, fullConfig) = allModules.foldLeft((state, config)) {
-          case ((currentState, conf), module) =>
-            executeCompilation(currentState, conf, module)
+        val (_, fullConfig) = allScalaVersions.foldLeft((state, config)) {
+          case ((currentState, conf), scalaVersion) =>
+            val allModules: Set[ModuleID] = conf.getValidModule(scalaVersion) ++ libraries
+            allModules.foldLeft((currentState, conf)) {
+              case ((currentState, conf), module) =>
+                executeCompilation(
+                  state = currentState,
+                  scalaVersion = scalaVersion,
+                  config = conf,
+                  m = module
+                )
+            }
         }
 
         log.info("Final configuration: ")

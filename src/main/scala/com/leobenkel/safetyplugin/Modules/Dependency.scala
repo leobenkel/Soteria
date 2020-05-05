@@ -2,7 +2,6 @@ package com.leobenkel.safetyplugin.Modules
 
 import com.leobenkel.safetyplugin.Config.SerializedModule
 import com.leobenkel.safetyplugin.Modules.ScalaVersionHandler._
-import com.leobenkel.safetyplugin.Utils.SafetyLogger
 import sbt._
 import sbt.librarymanagement.{DependencyBuilders, ModuleID}
 
@@ -57,7 +56,7 @@ case class Dependency(
     forbidden = this.forbidden,
     shouldBeProvided = ModuleDefaults
       .toOptionWithDefault(ModuleDefaults.ShouldBeProvided, this.shouldBeProvided),
-    dependenciesToRemove = ModuleDefaults.toOption(this.dependenciesToRemove.map(_.toPath)),
+    dependenciesToRemove = ModuleDefaults.toOption(this.dependenciesToRemove.map(_.toPath).sorted),
     scalaVersionsFilter = ModuleDefaults.toOption(this.scalaVersionsFilter.map(_.serialized))
   )
   @transient lazy val toConfig: Map[String, Map[String, SerializedModule]] = Map(
@@ -98,8 +97,11 @@ case class Dependency(
     this.nameObj.needDoublePercent || this.scalaVersionsFilter.nonEmpty) && this.shouldDownload
   }
 
+  def shouldBeDownloaded(scalaV: ScalaV): Boolean = {
+    this.toModuleID.right.map(shouldBeDownloaded(scalaV, _)).right.getOrElse(false)
+  }
+
   def shouldBeDownloaded(
-    log:    SafetyLogger,
     scalaV: ScalaV,
     m:      ModuleID
   ): Boolean = {
@@ -110,14 +112,7 @@ case class Dependency(
         if (m2.name.contains("_")) {
           val nameBlocks = m2.name.split("_")
           val moduleScalaVersion = nameBlocks.last
-          val output = scalaV === moduleScalaVersion
-          log.debug(
-            s"For module '$m2': " +
-              s"ModuleScalaVersion: $moduleScalaVersion ; " +
-              s"CurrentScalaVersion: $scalaV ; " +
-              s"output: $output"
-          )
-          output
+          scalaV === moduleScalaVersion
         } else {
           true
         }

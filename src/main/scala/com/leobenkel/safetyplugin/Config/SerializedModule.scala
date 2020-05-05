@@ -69,14 +69,14 @@ case class SerializedModule(
     Map[String, Any](
       "version"              -> this.version,
       "exactName"            -> this.exactName,
-      "excludeName"          -> this.excludeName.map(_.toList),
+      "excludeName"          -> this.excludeName.map(_.toList.sorted),
       "needDoublePercent"    -> this.needDoublePercent,
       "shouldDownload"       -> this.shouldDownload,
       "overrideIsEnough"     -> this.overrideIsEnough,
       "forbidden"            -> this.forbidden,
       "shouldBeProvided"     -> this.shouldBeProvided,
-      "dependenciesToRemove" -> this.dependenciesToRemove.map(_.toList),
-      "scalaVersionsFilter"  -> this.scalaVersionsFilter.map(_.toList)
+      "dependenciesToRemove" -> this.dependenciesToRemove.map(_.toList.sorted),
+      "scalaVersionsFilter"  -> this.scalaVersionsFilter.map(_.toList.sorted)
     )
 }
 
