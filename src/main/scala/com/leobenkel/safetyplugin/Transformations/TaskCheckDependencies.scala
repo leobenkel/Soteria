@@ -94,7 +94,7 @@ private[Transformations] trait TaskCheckDependencies {
       .sortBy(_.key)
 
     for {
-      moduleWeKnowOf              <- safetyConfig.NeedOverriden
+      moduleWeKnowOf              <- safetyConfig.NeedOverridden
       moduleFromBuildThanWeKnowOf <- dependenciesFromBuild
       if moduleWeKnowOf === moduleFromBuildThanWeKnowOf
     } yield {

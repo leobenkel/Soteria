@@ -2,6 +2,7 @@ package com.leobenkel.safetyplugin.Config
 
 import com.leobenkel.safetyplugin.Modules
 import com.leobenkel.safetyplugin.Modules._
+import com.leobenkel.safetyplugin.Utils.EitherUtils._
 import com.leobenkel.safetyplugin.Utils.Json.JsonDecode
 import com.leobenkel.safetyplugin.Utils.Json.JsonParserHelper._
 
@@ -17,7 +18,8 @@ case class SerializedModule(
   overrideIsEnough:     Option[Boolean],
   forbidden:            Option[String],
   shouldBeProvided:     Option[Boolean],
-  dependenciesToRemove: Option[Seq[String]]
+  dependenciesToRemove: Option[Seq[String]],
+  scalaVersionsFilter:  Option[Seq[String]]
 ) extends JsonDecode.Encoder {
   @transient lazy val versions: Set[String] =
     if (version.toLowerCase == SerializedModule.DefaultVersionString.toLowerCase) {
@@ -44,8 +46,9 @@ case class SerializedModule(
     name:      String,
     retrieval: String => Either[String, NameOfModule]
   ): (Dependency, Seq[String]) = {
-    val parsed = this.dependenciesToRemove.getOrElse(Nil).map(retrieval)
-    val errors = parsed.filter(_.isLeft).map(_.left.get)
+    val parsedDependencies = this.dependenciesToRemove.getOrElse(Nil).map(retrieval)
+    val parsedScalaVersion = this.scalaVersionsFilter.getOrElse(Nil).map(ScalaVersionHandler(_))
+    val errors = parsedDependencies.flattenLeft ++ parsedScalaVersion.flattenLeft
 
     (
       Modules.Dependency(
@@ -55,7 +58,8 @@ case class SerializedModule(
         shouldBeProvided = this.shouldBeProvided.getOrElse(ModuleDefaults.ShouldBeProvided),
         overrideIsEnough = this.overrideIsEnough.getOrElse(ModuleDefaults.OverrideIsEnough),
         forbidden = this.forbidden,
-        dependenciesToRemove = parsed.filter(_.isRight).map(_.right.get)
+        dependenciesToRemove = parsedDependencies.flattenEI,
+        scalaVersionsFilter = parsedScalaVersion.flattenEI
       ),
       errors
     )
@@ -71,7 +75,8 @@ case class SerializedModule(
       "overrideIsEnough"     -> this.overrideIsEnough,
       "forbidden"            -> this.forbidden,
       "shouldBeProvided"     -> this.shouldBeProvided,
-      "dependenciesToRemove" -> this.dependenciesToRemove.map(_.toList)
+      "dependenciesToRemove" -> this.dependenciesToRemove.map(_.toList),
+      "scalaVersionsFilter"  -> this.scalaVersionsFilter.map(_.toList)
     )
 }
 
@@ -86,7 +91,8 @@ object SerializedModule {
     shouldDownload = None,
     overrideIsEnough = None,
     forbidden = None,
-    dependenciesToRemove = None
+    dependenciesToRemove = None,
+    scalaVersionsFilter = None
   )
 
   implicit val parser: (String, String) => JsonDecode.Parser[SerializedModule] =
@@ -102,6 +108,7 @@ object SerializedModule {
           forbidden            <- input.getOption[String]("forbidden")
           shouldBeProvided     <- input.getOption[Boolean]("shouldBeProvided")
           dependenciesToRemove <- input.getOption[List[String]]("dependenciesToRemove")
+          scalaVersionsFilter  <- input.getOption[List[String]]("scalaVersionsFilter")
         } yield {
           SerializedModule(
             version,
@@ -112,7 +119,8 @@ object SerializedModule {
             overrideIsEnough,
             forbidden,
             shouldBeProvided,
-            dependenciesToRemove.map(_.toSeq)
+            dependenciesToRemove.map(_.toSeq),
+            scalaVersionsFilter.map(_.toSeq)
           )
         }).left.map(s => s"$s |in: org: '$org', name: '$name'")
       }
