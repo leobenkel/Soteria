@@ -21,7 +21,7 @@ publish_only:
 	git push origin $(VERSION)
 
 have_right_version:
-	cat ./project/safety.sbt | grep `cat ./VERSION | cut -d "v" -f 2` && \
+	cat ./project/soteria.sbt | grep `cat ./VERSION | cut -d "v" -f 2` && \
 	echo "Plugin have right version!"
 
 # https://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html
@@ -48,7 +48,7 @@ test: deep_clean check_style publishLocal unit_test test_plugin
 
 mutator_test:
 	export SBT_OPTS="-XX:+CMSClassUnloadingEnabled -Xmx4G"
-	sbt 'set logLevel in Test := Level.Error' 'set parallelExecution in Test := true' 'set safetySoftOnCompilerWarning := true' stryker
+	sbt 'set logLevel in Test := Level.Error' 'set parallelExecution in Test := true' 'set soteriaSoftOnCompilerWarning := true' stryker
 
 mutator_open_results:
 	open `find ./target/stryker4s* -type f -iname "*index.html"`

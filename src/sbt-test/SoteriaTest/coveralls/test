@@ -1,0 +1,3 @@
+# check if the file gets created
+> soteriaRunTestCoverage
+$ exists target/scala-2.11/scoverage-report/index.html

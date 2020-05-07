@@ -1,17 +1,17 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Gitter](https://badges.gitter.im/safety_plugin/community.svg)](https://gitter.im/safety_plugin/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Gitter](https://badges.gitter.im/soteria/community.svg)](https://gitter.im/soteria/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![release-badge][]][release]
 [![maven-central-badge][]][maven-central-link]
 
-[![Build Status](https://travis-ci.com/leobenkel/safety_plugin.svg?branch=master)](https://travis-ci.com/leobenkel/safety_plugin)
-[![BCH compliance](https://bettercodehub.com/edge/badge/leobenkel/safety_plugin?branch=master)](https://bettercodehub.com/)
-[![Coverage Status](https://coveralls.io/repos/github/leobenkel/safety_plugin/badge.svg?branch=master)](https://coveralls.io/github/leobenkel/safety_plugin?branch=master)
-[![Mutation testing badge](https://badge.stryker-mutator.io/github.com/leobenkel/safety_plugin/master)](https://stryker-mutator.github.io)
+[![Build Status](https://travis-ci.com/leobenkel/soteria.svg?branch=master)](https://travis-ci.com/leobenkel/soteria)
+[![BCH compliance](https://bettercodehub.com/edge/badge/leobenkel/soteria?branch=master)](https://bettercodehub.com/)
+[![Coverage Status](https://coveralls.io/repos/github/leobenkel/soteria/badge.svg?branch=master)](https://coveralls.io/github/leobenkel/soteria?branch=master)
+[![Mutation testing badge](https://badge.stryker-mutator.io/github.com/leobenkel/soteria/master)](https://stryker-mutator.github.io)
 
 
-[release]:              https://github.com/leobenkel/safety_plugin/releases
-[release-badge]:        https://img.shields.io/github/tag/leobenkel/safety_plugin.svg?label=version&color=blue
-[maven-search]:         https://search.maven.org/search?q=g:com.leobenkel%20a:safety_plugin
+[release]:              https://github.com/leobenkel/soteria/releases
+[release-badge]:        https://img.shields.io/github/tag/leobenkel/soteria.svg?label=version&color=blue
+[maven-search]:         https://search.maven.org/search?q=g:com.leobenkel%20a:soteria
 [leobenkel-github-badge]:     https://img.shields.io/badge/-Github-yellowgreen.svg?style=social&logo=GitHub&logoColor=black
 [leobenkel-github-link]:      https://github.com/leobenkel
 [leobenkel-linkedin-badge]:     https://img.shields.io/badge/-Linkedin-yellowgreen.svg?style=social&logo=LinkedIn&logoColor=black
@@ -20,18 +20,20 @@
 [leobenkel-personal-link]:      https://leobenkel.com
 [leobenkel-patreon-link]:            https://www.patreon.com/leobenkel
 [leobenkel-patreon-badge]: https://img.shields.io/badge/-Patreon-yellowgreen.svg?style=social&logo=Patreon&logoColor=black
-[maven-central-link]:                             https://maven-badges.herokuapp.com/maven-central/com.leobenkel/safety_plugin
-[maven-central-badge]:          https://maven-badges.herokuapp.com/maven-central/com.leobenkel/safety_plugin/badge.svg
+[maven-central-link]:                             https://maven-badges.herokuapp.com/maven-central/com.leobenkel/soteria
+[maven-central-badge]:          https://maven-badges.herokuapp.com/maven-central/com.leobenkel/soteria/badge.svg
 
 
-# sbt_safety_plugin
+# Soteria
 
-If you have any question [submit an issue](https://github.com/leobenkel/safety_plugin/issues/new).
+Information about [who was Soteria](https://www.wikiwand.com/en/Soteria_(mythology)).
+
+If you have any question [submit an issue](https://github.com/leobenkel/soteria/issues/new).
 
 ## Table of Contents
 
   * [Setup steps](#setup-steps)
-  * [safetyPlugin.json](#safetypluginjson)
+  * [soteria.json](#soteriajson)
      * [Root level](#root-level)
      * [Modules](#modules)
         * [How to make sure library A is always version x.y and Provided ?](#how-to-make-sure-library-a-is-always-version-xy-and-provided-)
@@ -55,16 +57,16 @@ Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 ## Setup steps
 
 1. Make sure you are using `SBT 1.2.x`.
-1. Add to `./project/safety.sbt` in your project:
+1. Add to `./project/soteria.sbt` in your project:
     ```
-    addSbtPlugin("com.leobenkel" % "safety_plugin" % safetyPluginVersion)
+    addSbtPlugin("com.leobenkel" % "soteria" % soteriaVersion)
     ```
     The latest release is [![release-badge][]][release] [![maven-central-badge][]][maven-central-link]
-1. Make sure to have a config file. Take a look at [safetyPlugin.json](https://github.com/leobenkel/safety_plugin/blob/master/safetyPlugin.json) for examples
+1. Make sure to have a config file. Take a look at [soteria.json](https://github.com/leobenkel/soteria/blob/master/soteria.json) for examples
 1. If you need a **fat-jar**:
      1. Add to your `build.sbt` the following lines:
          ```
-         assemblyOption in assembly := safetyAssemblySettings.value
+         assemblyOption in assembly := soteriaAssemblySettings.value
          enablePlugins(DockerPlugin)
          ```
 1. Clean up your `build.sbt` by removing all pre-set settings:
@@ -85,29 +87,29 @@ Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
      1. `sbt-scalafmt`
      1. `scalastyle-sbt-plugin`
 1. You can run your project the same as before. There can be compilation issues due to vulnerable dependencies.
-1. *Dangerous!* If you are not able to fix compiler issues, add: `safetySoftOnCompilerWarning := true`
-1. *Dangerous!* If you are not able to fix dependencies issues, add: `safetySoft := true`
+1. *Dangerous!* If you are not able to fix compiler issues, add: `soteriaSoftOnCompilerWarning := true`
+1. *Dangerous!* If you are not able to fix dependencies issues, add: `soteriaSoft := true`
 1. You can now then fix scala style issues:
-    1. Run `sbt safetyCheckScalaStyle`
-    1. Run `sbt safetyCheckScalaFix`
-    1. Run `sbt safetyCheckScalaFmt`
+    1. Run `sbt soteriaCheckScalaStyle`
+    1. Run `sbt soteriaCheckScalaFix`
+    1. Run `sbt soteriaCheckScalaFmt`
         1. If you are ready to rewrite the broken files:
             1. Create a clean branch
-            1. Run `sbt safetyCheckScalaFmtRun`
+            1. Run `sbt soteriaCheckScalaFmtRun`
 
-## safetyPlugin.json
+## soteria.json
 
 ### Root level
 
-To override where the config file is read from, update the setting `safetyConfPath` in your `build.sbt`. This setting can be a URL starting by `http://` or `https://` or a local file path. 
-By default it will search for `./safetyPlugin.json`.
+To override where the config file is read from, update the setting `soteriaConfPath` in your `build.sbt`. This setting can be a URL starting by `http://` or `https://` or a local file path. 
+By default it will search for `./soteria.json`.
 
 Root level:
 
 * `dockerImage`: To set in which image the fat-jar will be built.
 * `sbtVersion`: SBTVersion to enforce. If a project is trying to compile with a different version, it will break.
 * `scalaVersions`: Is an array of authorized scala Version. This is an array and not a value to allow Spark/Play project on different version.
-* `scalaCFlags`: The list of compile flag to add to the build process. If `safetySoftOnCompilerWarning` is **not** true, then `-Xfatal-warnings` will be added as well to trigger a compilation failure.
+* `scalaCFlags`: The list of compile flag to add to the build process. If `soteriaSoftOnCompilerWarning` is **not** true, then `-Xfatal-warnings` will be added as well to trigger a compilation failure.
 * `modules`: This is where the bulk of the settings are living.
   * The structure is `groupId|com.organization` -> `artifactName` -> description of the constraints
   
@@ -122,7 +124,7 @@ A module can accept those keys:
 * `exactName`: Default is True if absent. If false, the `artifactName` can just be a start. It is used for instance where you want to enforce a version for a library and related ones. `circe` or `spark-` can be good examples.
 * `excludeName`: Default empty. It is used to exclude libraries that would be catch by the `name` + `exactName`:false. It is used for instance in Play project where you would enforce something for all libraries starting by `play-` except a few that are behind on version numbers.
 * `needDoublePercent`: By default is false. If true, the conversion to `sbt.ModuleID` will be with `%%` instead of `%`. The same way it would be in the `build.sbt`.
-* `shouldDownload`: Is true by default and is only used for `sbt safetyGetAllDependencies`.
+* `shouldDownload`: Is true by default and is only used for `sbt soteriaGetAllDependencies`.
 * `overrideIsEnough`: Default is true. This is related to `dependenciesToRemove`. 
   * If `overrideIsEnough` is true, the library will be added to `dependencyOverrides`. 
   * If `overrideIsEnough` is false, the library will be converted to an exclusion rule.
@@ -198,7 +200,7 @@ First assemble your json:
 }
 ```
 
-Then run `sbt safetyDebugAllModules`.
+Then run `sbt soteriaDebugAllModules`.
 
 This will:
  
@@ -215,14 +217,14 @@ This will:
 The sbt plugin includes [ScalaFix](https://github.com/scalacenter/scalafix), [ScalaStyle](http://www.scalastyle.org/) and [ScalaFmt](https://scalameta.org/scalafmt/).
 
 
-1. Check that you have [.scalafix.conf](https://github.com/leobenkel/safety_plugin/blob/master/.scalafix.conf), [.scalafmt.conf](https://github.com/leobenkel/safety_plugin/blob/master/.scalafmt.conf) and [scalastyle-config.xml](https://github.com/leobenkel/safety_plugin/blob/master/scalastyle-config.xml) in your project
+1. Check that you have [.scalafix.conf](https://github.com/leobenkel/soteria/blob/master/.scalafix.conf), [.scalafmt.conf](https://github.com/leobenkel/soteria/blob/master/.scalafmt.conf) and [scalastyle-config.xml](https://github.com/leobenkel/soteria/blob/master/scalastyle-config.xml) in your project
    * Feel free to copy the one present in this repo to follow the same style guides
-2. Run `sbt safetyCheckScalaCheckAll` to check that everything is correct.
+2. Run `sbt soteriaCheckScalaCheckAll` to check that everything is correct.
     * You can run each system independently with:
-        * `sbt safetyCheckScalaStyle`
-        * `sbt safetyCheckScalaFix`
-        * `sbt safetyCheckScalaFmt`
-3. To apply the fix for [ScalaFmt](https://scalameta.org/scalafmt/), you can run `sbt safetyCheckScalaFmtRun`
+        * `sbt soteriaCheckScalaStyle`
+        * `sbt soteriaCheckScalaFix`
+        * `sbt soteriaCheckScalaFmt`
+3. To apply the fix for [ScalaFmt](https://scalameta.org/scalafmt/), you can run `sbt soteriaCheckScalaFmtRun`
 
 ### Coveralls
 
@@ -230,7 +232,7 @@ The sbt plugin includes [ScalaFix](https://github.com/scalacenter/scalafix), [Sc
 
 You can run 
 ```
-sbt safetyRunTestCoverage
+sbt soteriaRunTestCoverage
 ```
 to generate local reporting.
 
@@ -243,7 +245,7 @@ Just open:
 
 To submit to coveralls
 ```
-sbt safetyRunSubmitCoverage
+sbt soteriaRunSubmitCoverage
 ```
 
 This will generate the reports and submit it to coveralls using your COVERALLS token, set in the env var: `COVERALLS_REPO_TOKEN`. 
@@ -252,7 +254,7 @@ This will generate the reports and submit it to coveralls using your COVERALLS t
 
 You need to add
 ```
-assemblyOption in assembly := safetyAssemblySettings.value
+assemblyOption in assembly := soteriaAssemblySettings.value
 enablePlugins(DockerPlugin)
 ```
 
@@ -260,7 +262,7 @@ to your `build.sbt` file.
 
 You can now call `sbt docker` to create the fat-jar. It will be located at `./target/docker/0/*.jar`.
 
-To change in which docker image the build is ran, you can change `dockerImage` in [safetyPlugin.json](https://github.com/leobenkel/safety_plugin/blob/master/safetyPlugin.json).
+To change in which docker image the build is ran, you can change `dockerImage` in [soteria.json](https://github.com/leobenkel/soteria/blob/master/soteria.json).
 
 ### !!!Dangerous!!! Allow compilation even with vulnerability
 
@@ -271,7 +273,7 @@ By default, you won't be able to compile if you have errors in your build.
 If you need time to fix several issues, you can add:
 
 ```
-safetySoft := true
+soteriaSoft := true
 ```
 
 to your `build.sbt` file while you are fixing them.
@@ -281,32 +283,32 @@ to your `build.sbt` file while you are fixing them.
 If you also want to allow compiler warning, you will need to add:
 
 ```
-safetySoftOnCompilerWarning := true
+soteriaSoftOnCompilerWarning := true
 ```
 
 to your `build.sbt` file while you are fixing them
 
 ### Debug
 
-To print more or less logs for this plugin, you can set `safetyLogLevel`.
+To print more or less logs for this plugin, you can set `soteriaLogLevel`.
 
 For `Debug`:
 
 ```
-safetyLogLevel := Level.Debug
+soteriaLogLevel := Level.Debug
 ```
 
 For `Error` only:
 
 ```
-safetyLogLevel := Level.Error
+soteriaLogLevel := Level.Error
 ```
 
 ## Publishing
 
 * Update version number in `VERSION` file.
 * Deploy the updated plugin locally: `make publishLocal`
-* Update version number in `./project/safety.sbt`.
+* Update version number in `./project/soteria.sbt`.
 * Run the plugin on itself with `make publishLocal`
 * Publish: `make publish`
 
