@@ -9,7 +9,7 @@ clean:
 	sbt clean
 
 fmt:
-	sbt safetyCheckScalaFmtRun
+	sbt soteriaCheckScalaFmtRun
 
 publishLocal:
 	 sbt 'set isSnapshot := true' publishLocal
@@ -39,7 +39,7 @@ test_coverage_report:
 	sbt coverageReport && sbt coverageAggregate
 
 check_style:
-	sbt safetyCheckScalaFmt
+	sbt soteriaCheckScalaFmt
 
 unit_test:
 	sbt clean test

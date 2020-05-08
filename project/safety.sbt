@@ -1,2 +1,2 @@
-// https://github.com/leobenkel/sbt_safety_plugin
-addSbtPlugin("com.leobenkel" % "safety_plugin" % "0.1.9")
+// https://github.com/leobenkel/soteria
+addSbtPlugin("com.leobenkel" % "soteria" % "0.3.0")
