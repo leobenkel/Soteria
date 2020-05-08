@@ -72,7 +72,7 @@ case class SoteriaLogger(
 }
 
 object SoteriaLogger {
-  val Header:             String = "SoteriaPlugin"
+  val Header:             String = "Soteria"
   val SeparatorLength:    Int = 70
   val SeparatorCharacter: String = "-"
 }
