@@ -4,7 +4,7 @@
 [![maven-central-badge][]][maven-central-link]
 
 [![Build Status](https://travis-ci.com/leobenkel/soteria.svg?branch=master)](https://travis-ci.com/leobenkel/soteria)
-[![BCH compliance](https://bettercodehub.com/edge/badge/leobenkel/soteria?branch=master)](https://bettercodehub.com/)
+[![BCH compliance](https://bettercodehub.com/edge/badge/leobenkel/Soteria?branch=master)](https://bettercodehub.com/)
 [![Coverage Status](https://coveralls.io/repos/github/leobenkel/Soteria/badge.svg?branch=master)](https://coveralls.io/github/leobenkel/Soteria?branch=master)
 [![Mutation testing badge](https://badge.stryker-mutator.io/github.com/leobenkel/soteria/master)](https://stryker-mutator.github.io)
 
