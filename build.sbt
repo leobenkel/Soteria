@@ -1,5 +1,4 @@
-safetyAddSemantic := false
-safetyConfPath    := "soteria.json"
+soteriaAddSemantic := false
 
 // Test
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % Test
