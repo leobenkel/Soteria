@@ -83,6 +83,12 @@
         "version": "None"
       }
     },
+    "commons-logging": {
+      "commons-logging": {
+        "overrideIsEnough": false,
+        "version": "1.2"
+      }
+    },
     "io.netty": {
       "netty-all": {
         "overrideIsEnough": false,
@@ -198,7 +204,7 @@
     "org.scalatest": {
       "scalatest": {
         "needDoublePercent": true,
-        "version": "3.0.5"
+        "version": "3.0.8"
       }
     }
   },
@@ -216,7 +222,7 @@
     "utf8"
   ],
   "scalaVersions": [
-    "2.12.7",
+    "2.12.11",
     "2.11.12"
   ]
 }
