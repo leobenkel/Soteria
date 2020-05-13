@@ -6,7 +6,7 @@
       }
     }
   },
-  "sbtVersion": "1.2.6",
+  "sbtVersion": "1.2.8",
   "scalaVersions": [
     "2.12.11",
     "2.11.12"
