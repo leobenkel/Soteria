@@ -1,8 +1,10 @@
+![Soteria_animated](https://raw.githubusercontent.com/leobenkel/Soteria/master/assets/Soteria_animated.gif)
+
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Gitter](https://badges.gitter.im/soteria/community.svg)](https://gitter.im/soteria/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![release-badge][]][release]
 [![maven-central-badge][]][maven-central-link]
-
 [![Build Status](https://travis-ci.com/leobenkel/soteria.svg?branch=master)](https://travis-ci.com/leobenkel/soteria)
 [![BCH compliance](https://bettercodehub.com/edge/badge/leobenkel/Soteria?branch=master)](https://bettercodehub.com/)
 [![Coverage Status](https://coveralls.io/repos/github/leobenkel/Soteria/badge.svg?branch=master)](https://coveralls.io/github/leobenkel/Soteria?branch=master)
