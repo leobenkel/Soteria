@@ -15,3 +15,6 @@ Logos made by [Gerard Benkel](https://www.linkedin.com/in/gerard-benkel-21283013
 
 ## Soteria Small Color
 ![Soteria_small_color](https://raw.githubusercontent.com/leobenkel/Soteria/master/assets/Soteria_small_color.png)
+
+## Soteria Small Black
+![Soteria_small_black](https://raw.githubusercontent.com/leobenkel/Soteria/master/assets/Soteria_small_black.png)
