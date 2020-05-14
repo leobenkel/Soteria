@@ -2,7 +2,7 @@
 
 Folder for assets such as gif and png of the logo. 
 
-Logo was made by [Gerard Benkel](https://www.linkedin.com/in/gerard-benkel-21283013/)
+Logos made by [Gerard Benkel](https://www.linkedin.com/in/gerard-benkel-21283013/)
 
 ## Soteria Animated
 ![Soteria_animated](https://raw.githubusercontent.com/leobenkel/Soteria/master/assets/Soteria_animated.gif)
