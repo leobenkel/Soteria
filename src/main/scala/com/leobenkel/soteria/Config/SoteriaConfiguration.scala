@@ -19,6 +19,10 @@ private[soteria] case class SoteriaConfiguration(
   modules:        Map[String, Map[String, SerializedModule]],
   dockerImageOpt: Option[String]
 ) extends Encoder {
+  @transient lazy val dockerImage: String =
+    dockerImageOpt.getOrElse(SoteriaConfiguration.defaultDockerImage)
+  @transient lazy val dockerImageWasSet: Boolean = dockerImageOpt.isDefined
+
   @transient lazy private val retrieveModule: String => Either[String, NameOfModule] =
     NameOfModule.find(modules)
 
@@ -95,6 +99,8 @@ private[soteria] case class SoteriaConfiguration(
 }
 
 private[soteria] object SoteriaConfiguration {
+  val defaultDockerImage: String = "openjdk:8-jre"
+
   implicit val parser: LoggerExtended => JsonDecode.Parser[SoteriaConfiguration] =
     (log: LoggerExtended) =>
       (input: Map[String, Any]) => {

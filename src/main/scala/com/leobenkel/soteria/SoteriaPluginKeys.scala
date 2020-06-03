@@ -37,6 +37,11 @@ private[soteria] object SoteriaPluginKeys {
 
   lazy val soteriaBuildConfig = taskKey[SoteriaConfiguration]("Used for command. Do not call")
 
+  lazy val soteriaDockerImage = settingKey[String](
+    "The docker image from the configuration " +
+      "and use to build with sbt-docker"
+  )
+
   lazy val soteriaDebugModule = settingKey[Option[ModuleID]](
     "When set, will print out the dependency of this module."
   )

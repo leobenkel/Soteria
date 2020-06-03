@@ -37,6 +37,7 @@ private[Transformations] trait MergeStrategyConfiguration {
       case PathList("jersey", "repackaged", _ @_*)    => MergeStrategy.last
       case PathList("io", "netty", _ @_*)             => MergeStrategy.last
       case PathList("mozilla", _ @_*)                 => MergeStrategy.last
+      case PathList("software", "amazon", _ @_*)      => MergeStrategy.last
       case x                                          => oldStrategy(x)
     }
   }
