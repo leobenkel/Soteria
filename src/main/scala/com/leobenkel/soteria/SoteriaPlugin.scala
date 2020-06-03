@@ -31,6 +31,7 @@ object SoteriaPlugin extends AutoPlugin {
     val soteriaTestCoverage = SoteriaKeys.soteriaTestCoverage.setting
     val soteriaSubmitCoverage = SoteriaKeys.soteriaSubmitCoverage.setting
     val soteriaCheckCoverallEnvVar = SoteriaKeys.soteriaCheckCoverallEnvVar
+    val soteriaDockerImage = SoteriaKeys.soteriaDockerImage
     val soteriaAddSemantic = SoteriaKeys.soteriaAddSemantic
   }
 
@@ -134,11 +135,13 @@ object SoteriaPlugin extends AutoPlugin {
       Test / Keys.scalaSource                    := Keys.baseDirectory.value / "src/test/scala",
       AssemblyKeys.assembly / Keys.fullClasspath := (Compile / Keys.fullClasspath).value,
       // Docker
+      soteriaDockerImage := SoteriaPluginKeys.soteriaConfig.value.dockerImage,
       dockerfile in docker := {
         // The assembly task generates a fat JAR file
         val artifact: File = AssemblyKeys.assembly.value
         val conf = SoteriaPluginKeys.soteriaConfig.value
         val log = SoteriaPluginKeys.soteriaGetLog.value
+        val dockerImage = soteriaDockerImage.value
         val artifactTargetPath = s"/app/${artifact.name}"
 
         def makeDocker(imageName: String): Dockerfile = {
@@ -149,17 +152,13 @@ object SoteriaPlugin extends AutoPlugin {
           }
         }
 
-        conf.dockerImageOpt match {
-          case Some(dockerImage) =>
-            makeDocker(dockerImage)
-          case None =>
-            val defaultDockerImage = "openjdk:8-jre"
-            log.error(
-              s"'dockerImage' was not set in the configuration file. " +
-                s"Using Default value: '$defaultDockerImage'."
-            )
-            makeDocker(defaultDockerImage)
+        if (!conf.dockerImageWasSet) {
+          log.error(
+            s"'dockerImage' was not set in the configuration file. Using value: '$dockerImage'."
+          )
         }
+
+        makeDocker(dockerImage)
       },
       Keys.version in docker := Keys.version.value,
       buildOptions in docker := sbtdocker.BuildOptions(cache = false)
