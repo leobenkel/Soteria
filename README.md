@@ -34,6 +34,7 @@ If you have any question [submit an issue](https://github.com/leobenkel/soteria/
 
 ## Table of Contents
 
+  * [Presentations](#presentations)
   * [Setup steps](#setup-steps)
   * [soteria.json](#soteriajson)
      * [Root level](#root-level)
@@ -55,6 +56,9 @@ If you have any question [submit an issue](https://github.com/leobenkel/soteria/
 
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 
+## Presentations
+
+Feel free to watch the talk given at [Scala in the city (2020-05-28)](https://www.youtube.com/watch?v=NYSVF7uCJOA) with [the slide deck](https://docs.google.com/presentation/d/1aS1KCKItcaHYRJLuK_9eZ9ZN2oU_6FsOWQJxymUZm_0).
 
 ## Setup steps
 
