@@ -18,7 +18,7 @@ addSbtPlugin("io.stryker-mutator" % "sbt-stryker4s" % "0.6.0")
 
 // For SourceClear
 // https://github.com/jrudolph/sbt-dependency-graph
-addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.0")
+addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.2")
 
 // SCALA STYLE
 
