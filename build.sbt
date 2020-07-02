@@ -33,7 +33,7 @@ addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "1.6.0-RC4")
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
 
 // TODO: Remove when we are able to use Circe for JSON parsing
-val silencerVersion = "1.4.1"
+val silencerVersion = "1.4.2"
 libraryDependencies ++= Seq(
   compilerPlugin("com.github.ghik" %% "silencer-plugin" % silencerVersion),
   "com.github.ghik" %% "silencer-lib" % silencerVersion % Provided
