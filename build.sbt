@@ -9,16 +9,16 @@ addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.2.7")
 //
 
 // ASSEMBLY
-addSbtPlugin("com.eed3si9n"      % "sbt-assembly" % "0.14.9")
+addSbtPlugin("com.eed3si9n"      % "sbt-assembly" % "0.14.10")
 addSbtPlugin("se.marcuslonnberg" % "sbt-docker"   % "1.6.0")
 ///
 
 // For testing
-addSbtPlugin("io.stryker-mutator" % "sbt-stryker4s" % "0.6.0")
+addSbtPlugin("io.stryker-mutator" % "sbt-stryker4s" % "0.6.1")
 
 // For SourceClear
 // https://github.com/jrudolph/sbt-dependency-graph
-addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.0")
+addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.2")
 
 // SCALA STYLE
 
@@ -27,13 +27,13 @@ resolvers += Resolver.sonatypeRepo("releases")
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.9.1")
 
 resolvers += Resolver.bintrayRepo("scalameta", "maven")
-addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "1.6.0-RC4")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.0.0")
 
 // http://www.scalastyle.org/sbt.html
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
 
 // TODO: Remove when we are able to use Circe for JSON parsing
-val silencerVersion = "1.4.1"
+val silencerVersion = "1.4.2"
 libraryDependencies ++= Seq(
   compilerPlugin("com.github.ghik" %% "silencer-plugin" % silencerVersion),
   "com.github.ghik" %% "silencer-lib" % silencerVersion % Provided
