@@ -10,11 +10,11 @@ addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.2.7")
 
 // ASSEMBLY
 addSbtPlugin("com.eed3si9n"      % "sbt-assembly" % "0.14.10")
-addSbtPlugin("se.marcuslonnberg" % "sbt-docker"   % "1.5.0")
+addSbtPlugin("se.marcuslonnberg" % "sbt-docker"   % "1.6.0")
 ///
 
 // For testing
-addSbtPlugin("io.stryker-mutator" % "sbt-stryker4s" % "0.6.1")
+addSbtPlugin("io.stryker-mutator" % "sbt-stryker4s" % "0.9.1")
 
 // For SourceClear
 // https://github.com/jrudolph/sbt-dependency-graph
@@ -27,7 +27,7 @@ resolvers += Resolver.sonatypeRepo("releases")
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.9.1")
 
 resolvers += Resolver.bintrayRepo("scalameta", "maven")
-addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.0.0")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.0")
 
 // http://www.scalastyle.org/sbt.html
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
