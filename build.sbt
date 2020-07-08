@@ -1,7 +1,7 @@
 soteriaAddSemantic := false
 
 // Test
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % Test
 
 // https://github.com/scoverage/sbt-scoverage
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.6.1")
