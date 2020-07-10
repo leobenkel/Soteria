@@ -10,7 +10,7 @@ addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.2.7")
 
 // ASSEMBLY
 addSbtPlugin("com.eed3si9n"      % "sbt-assembly" % "0.14.10")
-addSbtPlugin("se.marcuslonnberg" % "sbt-docker"   % "1.6.0")
+addSbtPlugin("se.marcuslonnberg" % "sbt-docker"   % "1.7.0")
 ///
 
 // For testing
