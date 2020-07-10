@@ -198,11 +198,11 @@
     "org.scalatest": {
       "scalatest": {
         "needDoublePercent": true,
-        "version": "3.0.5"
+        "version": "3.0.8"
       }
     }
   },
-  "sbtVersion": "1.2.6",
+  "sbtVersion": "1.2.8",
   "scalaCFlags": [
     "-feature",
     "-Yrangepos",
