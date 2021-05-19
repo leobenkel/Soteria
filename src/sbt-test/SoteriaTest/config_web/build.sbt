@@ -7,4 +7,4 @@ lazy val root = (project in file("."))
 
 // TODO: Replace with soteria when merged
 soteriaConfPath :=
-  "https://raw.githubusercontent.com/leobenkel/soteria/master/soteria.json"
+  "https://raw.githubusercontent.com/leobenkel/soteria/main/soteria.json"

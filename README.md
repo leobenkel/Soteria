@@ -1,14 +1,14 @@
-![Soteria_animated](https://raw.githubusercontent.com/leobenkel/Soteria/master/assets/Soteria_animated.gif)
+![Soteria_animated](https://raw.githubusercontent.com/leobenkel/Soteria/main/assets/Soteria_animated.gif)
 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Gitter](https://badges.gitter.im/soteria/community.svg)](https://gitter.im/soteria/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![release-badge][]][release]
 [![maven-central-badge][]][maven-central-link]
-[![Build Status](https://travis-ci.com/leobenkel/soteria.svg?branch=master)](https://travis-ci.com/leobenkel/soteria)
-[![BCH compliance](https://bettercodehub.com/edge/badge/leobenkel/Soteria?branch=master)](https://bettercodehub.com/)
-[![Coverage Status](https://coveralls.io/repos/github/leobenkel/Soteria/badge.svg?branch=master)](https://coveralls.io/github/leobenkel/Soteria?branch=master)
-[![Mutation testing badge](https://badge.stryker-mutator.io/github.com/leobenkel/Soteria/master)](https://stryker-mutator.github.io)
+[![Build Status](https://travis-ci.com/leobenkel/soteria.svg?branch=main)](https://travis-ci.com/leobenkel/soteria)
+[![BCH compliance](https://bettercodehub.com/edge/badge/leobenkel/Soteria?branch=main)](https://bettercodehub.com/)
+[![Coverage Status](https://coveralls.io/repos/github/leobenkel/Soteria/badge.svg?branch=main)](https://coveralls.io/github/leobenkel/Soteria?branch=main)
+[![Mutation testing badge](https://badge.stryker-mutator.io/github.com/leobenkel/Soteria/main)](https://stryker-mutator.github.io)
 
 
 [release]:              https://github.com/leobenkel/soteria/releases
@@ -68,7 +68,7 @@ Feel free to watch the talk given at [Scala in the city (2020-05-28)](https://ww
     addSbtPlugin("com.leobenkel" % "soteria" % soteriaVersion)
     ```
     The latest release is [![release-badge][]][release] [![maven-central-badge][]][maven-central-link]
-1. Make sure to have a config file. Take a look at [soteria.json](https://github.com/leobenkel/soteria/blob/master/soteria.json) for examples
+1. Make sure to have a config file. Take a look at [soteria.json](https://github.com/leobenkel/soteria/blob/main/soteria.json) for examples
 1. If you need a **fat-jar**:
      1. Add to your `build.sbt` the following lines:
          ```
@@ -223,7 +223,7 @@ This will:
 The sbt plugin includes [ScalaFix](https://github.com/scalacenter/scalafix), [ScalaStyle](http://www.scalastyle.org/) and [ScalaFmt](https://scalameta.org/scalafmt/).
 
 
-1. Check that you have [.scalafix.conf](https://github.com/leobenkel/soteria/blob/master/.scalafix.conf), [.scalafmt.conf](https://github.com/leobenkel/soteria/blob/master/.scalafmt.conf) and [scalastyle-config.xml](https://github.com/leobenkel/soteria/blob/master/scalastyle-config.xml) in your project
+1. Check that you have [.scalafix.conf](https://github.com/leobenkel/soteria/blob/main/.scalafix.conf), [.scalafmt.conf](https://github.com/leobenkel/soteria/blob/main/.scalafmt.conf) and [scalastyle-config.xml](https://github.com/leobenkel/soteria/blob/main/scalastyle-config.xml) in your project
    * Feel free to copy the one present in this repo to follow the same style guides
 2. Run `sbt soteriaCheckScalaCheckAll` to check that everything is correct.
     * You can run each system independently with:
@@ -268,7 +268,7 @@ to your `build.sbt` file.
 
 You can now call `sbt docker` to create the fat-jar. It will be located at `./target/docker/0/*.jar`.
 
-To change in which docker image the build is ran, you can change `dockerImage` in [soteria.json](https://github.com/leobenkel/soteria/blob/master/soteria.json).
+To change in which docker image the build is ran, you can change `dockerImage` in [soteria.json](https://github.com/leobenkel/soteria/blob/main/soteria.json).
 
 ### !!!Dangerous!!! Allow compilation even with vulnerability
 
