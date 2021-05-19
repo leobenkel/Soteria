@@ -16,7 +16,7 @@ jobs:
       - name: clean
         run: make deep_clean
       - name: test
-        run:
+        run: |
           make unit_test
           make test_plugin 
       - name: build
