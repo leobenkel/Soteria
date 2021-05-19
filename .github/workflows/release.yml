@@ -1,0 +1,30 @@
+name: Release
+on:
+  push:
+    branches: [ main ]
+    tags: [ "*" ]
+jobs:
+  publish:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: olafurpg/setup-scala@v10
+      - uses: olafurpg/setup-gpg@v3
+      - name: test
+          make test_plugin 
+          make test_coverage test_coverage_report
+          sbt coveralls
+      - name: release-staging
+        run: |
+          sbt ";set isSnapshot := true' ; clean ; ci-release"
+        if: startsWith(github.ref, 'refs/tags/') != true
+
+      - name: release-production
+        run: |
+          sbt "; clean ; ci-release"
+        if: startsWith(github.ref, 'refs/tags/v')
+    env:
+      PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+      PGP_SECRET: ${{ secrets.PGP_SECRET }}
+      SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+      SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
