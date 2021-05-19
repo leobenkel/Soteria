@@ -2,6 +2,7 @@ package com.leobenkel.soteria.Transformations
 
 import com.leobenkel.soteria.SoteriaPluginKeys.{defaultAssemblyOption, soteriaGetLog}
 import sbt._
+import sbtassembly.AssemblyPlugin.autoImport.ShadeRule
 import sbtassembly._
 
 private[Transformations] trait TaskAssembly extends MergeStrategyConfiguration {
