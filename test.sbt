@@ -6,4 +6,4 @@ scriptedLaunchOpts ++= Seq("-Dplugin.version=" + version.value)
 
 scriptedBufferLog := false
 
-logLevel in stryker := Level.Debug
+stryker / logLevel := Level.Debug

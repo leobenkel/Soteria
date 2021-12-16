@@ -28,14 +28,20 @@ object ScalaVersionHandler {
                 .flatMap(_.scalaVersion is scalaV)
                 .toOption
                 .flatMap(_.minOption)
-                .map(sim => (Some(sim), true))
+                .map { sim =>
+                  (Some(sim), true)
+                }
                 .getOrElse((Some(Wildcard), false))
             case (false, filters) =>
               (filters.flatMap(_.scalaVersion is scalaV).minOption, false)
           }
-          .filter(_._1.isDefined)
+          .filter { f =>
+            f._1.isDefined
+          }
           .toOption
-          .forall(_.minBy(_._1.get)._2)
+          .forall { f =>
+            f.minBy(_._1.get)._2
+          }
       }
     }
   }
@@ -91,10 +97,14 @@ case class ScalaV(
 
   def is(input: ScalaV): Option[Sim] = {
     input match {
-      case StrongEqual(true)  => Some(ExactSame)
-      case CouldBeEqual(true) => Some(MightBeExact)
-      case MajorEqual(true)   => Some(MajorSame)
-      case _                  => None
+      case StrongEqual(true) =>
+        Some(ExactSame)
+      case CouldBeEqual(true) =>
+        Some(MightBeExact)
+      case MajorEqual(true) =>
+        Some(MajorSame)
+      case _ =>
+        None
     }
   }
 

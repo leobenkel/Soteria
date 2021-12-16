@@ -66,19 +66,19 @@ object SoteriaPlugin extends AutoPlugin {
       // Scalastyle
       soteriaCheckScalaStyle := Def
         .sequential(
-          org.scalastyle.sbt.ScalastylePlugin.autoImport.scalastyle.in(Compile).toTask(""),
-          org.scalastyle.sbt.ScalastylePlugin.autoImport.scalastyle.in(Test).toTask("")
+          (Compile / org.scalastyle.sbt.ScalastylePlugin.autoImport.scalastyle).toTask(""),
+          (Test / org.scalastyle.sbt.ScalastylePlugin.autoImport.scalastyle).toTask("")
         ).value,
       // ScalaFix
       soteriaCheckScalaFix := Def
         .sequential(
-          scalafix.sbt.ScalafixPlugin.autoImport.scalafix.in(Compile).toTask(" --check"),
-          scalafix.sbt.ScalafixPlugin.autoImport.scalafix.in(Test).toTask(" --check")
+          (Compile / scalafix.sbt.ScalafixPlugin.autoImport.scalafix).toTask(" --check"),
+          (Test / scalafix.sbt.ScalafixPlugin.autoImport.scalafix).toTask(" --check")
         ).value,
       soteriaCheckScalaFmt := Def
         .sequential(
-          org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmtCheck.in(Compile),
-          org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmtCheck.in(Test)
+          (Compile / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmtCheck),
+          (Test / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmtCheck)
         ).value,
       soteriaCheckScalaCheckAll := Def
         .sequential(
@@ -88,8 +88,8 @@ object SoteriaPlugin extends AutoPlugin {
         ).value,
       soteriaCheckScalaFmtRun := Def
         .sequential(
-          org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmt.in(Compile),
-          org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmt.in(Test)
+          (Compile / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmt),
+          (Test / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmt)
         ).value,
       soteriaAddSemantic       := getDefaultAddSemanticValue.value,
       Keys.libraryDependencies := addScalaFixCompilerPlugin().value
@@ -136,7 +136,7 @@ object SoteriaPlugin extends AutoPlugin {
       AssemblyKeys.assembly / Keys.fullClasspath := (Compile / Keys.fullClasspath).value,
       // Docker
       soteriaDockerImage := SoteriaPluginKeys.soteriaConfig.value.dockerImage,
-      dockerfile in docker := {
+      docker / dockerfile := {
         // The assembly task generates a fat JAR file
         val artifact: File = AssemblyKeys.assembly.value
         val conf = SoteriaPluginKeys.soteriaConfig.value
@@ -160,34 +160,36 @@ object SoteriaPlugin extends AutoPlugin {
 
         makeDocker(dockerImage)
       },
-      Keys.version in docker := Keys.version.value,
-      buildOptions in docker := sbtdocker.BuildOptions(cache = false)
+      docker / Keys.version := Keys.version.value,
+      docker / buildOptions := sbtdocker.BuildOptions(cache = false)
     )
   }
 
   lazy private val testSettings: Seq[Def.Setting[_]] = {
     Seq(
       // Only one test at a time ( Easier to read log )
-      Keys.testOptions in Test += Tests.Argument("-oD"),
-      Keys.javaOptions in Test ++= Seq(
+      Test / Keys.testOptions += Tests.Argument("-oD"),
+      Test / Keys.javaOptions ++= Seq(
         "-Xms512M",
         "-Xmx2048M",
         "-XX:+CMSClassUnloadingEnabled"
       ),
-      Keys.parallelExecution in Test := false,
-      Keys.fork in Test              := true,
-      soteriaCheckCoverallEnvVar     := checkEnvVar("COVERALLS_REPO_TOKEN").value,
-      soteriaTestCoverage in Test := Def
+      Test / Keys.parallelExecution := false,
+      Test / Keys.fork              := true,
+      soteriaCheckCoverallEnvVar    := checkEnvVar("COVERALLS_REPO_TOKEN").value,
+      Test / soteriaTestCoverage := Def
         .sequential(
           Keys.clean,
-          Keys.test in Test,
-          ScoverageKeys.coverageReport in Test,
-          ScoverageKeys.coverageAggregate in Test
+          Test / Keys.test,
+          Test / ScoverageKeys.coverageReport,
+          Test
+            / ScoverageKeys.coverageAggregate
         ).value,
-      soteriaSubmitCoverage in Test := Def
+      Test / soteriaSubmitCoverage := Def
         .sequential(
-          soteriaTestCoverage in Test,
-          CoverallsPlugin.coveralls in Test
+          Test / soteriaTestCoverage,
+          Test
+            / CoverallsPlugin.coveralls
         ).value
     )
   }
