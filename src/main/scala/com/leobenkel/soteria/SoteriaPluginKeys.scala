@@ -9,8 +9,8 @@ import sbtassembly.AssemblyOption
 
 private[soteria] object SoteriaPluginKeys {
   case class FancySettings[A](
-    setting:      A,
-    nameAsString: String
+      setting: A,
+      nameAsString: String
   )
 
   // Upper case SettingKey and TaskKey does not work.

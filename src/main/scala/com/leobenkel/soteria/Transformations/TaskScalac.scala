@@ -1,12 +1,15 @@
 package com.leobenkel.soteria.Transformations
 
 import com.leobenkel.soteria.SoteriaPluginKeys
-import com.leobenkel.soteria.SoteriaPluginKeys.{soteriaGetLog, soteriaSoftOnCompilerWarning}
+import com.leobenkel.soteria.SoteriaPluginKeys.{
+  soteriaGetLog,
+  soteriaSoftOnCompilerWarning
+}
 import sbt.{Configuration, Def, Keys, Task}
 
 private[Transformations] trait TaskScalac {
   def extraScalacOptions(
-    conf: Option[Configuration]
+      conf: Option[Configuration]
   ): Def.Initialize[Task[Seq[String]]] =
     Def.taskDyn {
       val log = soteriaGetLog.value
@@ -19,7 +22,8 @@ private[Transformations] trait TaskScalac {
         val compilerFlags = configuration.scalaCFlags
 
         (
-          origin ++ compilerFlags ++ (if (shouldNotFail) Seq.empty else Seq("-Xfatal-warnings"))
+          origin ++ compilerFlags ++ (if (shouldNotFail) Seq.empty
+                                      else Seq("-Xfatal-warnings"))
         ).distinct
       }
     }

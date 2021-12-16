@@ -19,27 +19,30 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
     override def setSoftError(softError: Boolean): LoggerExtended =
       test.fail("Should not be called")
 
-    final override def criticalFailure(message: => String): Unit = test.fail("Should not be called")
+    final override def criticalFailure(message: => String): Unit =
+      test.fail("Should not be called")
 
     final override def setLevel(level: Level.Value): LoggerExtended =
       test.fail("Should not be called")
 
     override def separator(
-      level: Level.Value,
-      title: String
+        level: Level.Value,
+        title: String
     ): Unit = test.fail("Should not be called")
 
     final override def log(
-      level:   Level.Value,
-      message: => String
+        level: Level.Value,
+        message: => String
     ): Unit = {
       test.log.debug(s"[$level] $message")
       allMessage += s"[$level] $message\n"
     }
 
-    final override def trace(t: => Throwable): Unit = test.fail("Should not be called")
+    final override def trace(t: => Throwable): Unit =
+      test.fail("Should not be called")
 
-    final override def success(message: => String): Unit = test.fail("Should not be called")
+    final override def success(message: => String): Unit =
+      test.fail("Should not be called")
 
     final def getAllMessages: String = allMessage
   }
@@ -70,8 +73,8 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   test("test filterLibraries") {
     val version = "v1.0"
     val inputLib = Seq(
-      "com.org"  % "artifact" % version,
-      "com.org2" % "foo"      % "v2.0"
+      "com.org" % "artifact" % version,
+      "com.org2" % "foo" % "v2.0"
     )
     val dependencySearched = Dependency("com.org", "artifact")
     val log = new LogTest()
@@ -85,8 +88,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
     assert(log.getAllMessages.contains("1")) // intersect of inputLib and dependencySearched
     assert(log.getAllMessages.contains(inputLib.length.toString))
     assert(
-      log
-        .getAllMessages
+      log.getAllMessages
         .contains(
           dependencySearched.toModuleID(version).right.get.prettyString
         )
@@ -103,9 +105,9 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   test("test filterLibraries - with scala") {
     val version = "v1.0"
     val inputLib = Seq(
-      "com.org"        % "artifact" % version,
-      "com.org2"       % "foo"      % "v2.0",
-      "org.scala-lang" % "scala"    % "2.12"
+      "com.org" % "artifact" % version,
+      "com.org2" % "foo" % "v2.0",
+      "org.scala-lang" % "scala" % "2.12"
     )
     val dependencySearched = Dependency("com.org", "artifact")
     val log = new LogTest()
@@ -119,8 +121,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
     assert(log.getAllMessages.contains("2")) // intersect inputLib and depSearched plus scala
     assert(log.getAllMessages.contains(inputLib.length.toString))
     assert(
-      log
-        .getAllMessages
+      log.getAllMessages
         .contains(
           dependencySearched.toModuleID(version).right.get.prettyString
         )
@@ -131,14 +132,16 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
       case Right(result) =>
         assert(result.length == 2)
         assert(
-          result.exists(m => dependencySearched.toModuleID(version).right.get === m)
+          result.exists(
+            m => dependencySearched.toModuleID(version).right.get === m
+          )
         )
     }
   }
 
   test("test getLibraryFiltered - empty") {
     val packageKnownRiskDependencies: Map[Dependency, Seq[NameOfModule]] = Map()
-    val libraries:                    Seq[ModuleID] = Seq()
+    val libraries: Seq[ModuleID] = Seq()
     val log = new LogTest()
     val output = ZTestOnlyTaskAllDependencies.getLibraryFilteredTest(
       log,
@@ -178,9 +181,9 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
       Dependency("com.org2", "foo"),
       Dependency("com.org", "artifact")
     )
-    val module:      ModuleID = "com.org" % "artifact" % "v1.0"
+    val module: ModuleID = "com.org" % "artifact" % "v1.0"
     val accumulator: Seq[ModuleID] = Seq()
-    val toRemove:    NameOfModule = NameOfModule("com.org2", "baz")
+    val toRemove: NameOfModule = NameOfModule("com.org2", "baz")
 
     val output = ZTestOnlyTaskAllDependencies.removeBadDependenciesTest(
       log,
@@ -212,7 +215,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
       Dependency("com.org2", "foo"),
       Dependency("com.org", "artifact")
     )
-    val module:      ModuleID = "com.org" % "artifact" % "v1.0"
+    val module: ModuleID = "com.org" % "artifact" % "v1.0"
     val accumulator: Seq[ModuleID] = Seq()
     val toRemove: NameOfModule =
       NameOfModule("com.org2", "baz-").copy(exactName = false)
@@ -242,9 +245,9 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
       Dependency("com.org", "artifact"),
       replacement
     )
-    val module:      ModuleID = "com.org" % "artifact" % "v1.0"
+    val module: ModuleID = "com.org" % "artifact" % "v1.0"
     val accumulator: Seq[ModuleID] = Seq()
-    val toRemove:    NameOfModule = NameOfModule("com.org2", "baz")
+    val toRemove: NameOfModule = NameOfModule("com.org2", "baz")
 
     val output = ZTestOnlyTaskAllDependencies.removeBadDependenciesTest(
       log,
@@ -264,7 +267,9 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
 
     assert(output._2.length == 1)
     assert(
-      output._2.map(_.toString).contains(replacement.toModuleID.right.get.toString)
+      output._2
+        .map(_.toString)
+        .contains(replacement.toModuleID.right.get.toString)
     )
     assert(
       output._2.head.prettyString == replacement.toModuleID.right.get.prettyString
@@ -273,7 +278,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
 
   test("test excludeBadDependencies - empty") {
     val log = new LogTest()
-    val libraryToEdit:    Seq[(ModuleID, Seq[NameOfModule])] = Seq()
+    val libraryToEdit: Seq[(ModuleID, Seq[NameOfModule])] = Seq()
     val needToBeReplaced: Seq[Dependency] = Seq()
     val output = ZTestOnlyTaskAllDependencies.excludeBadDependenciesTest(
       log,
@@ -363,12 +368,14 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   test("test execAllDependencies - empty") {
     val log = new LogTest() {
       override def separator(
-        level: Level.Value,
-        title: String
+          level: Level.Value,
+          title: String
       ): Unit = {
         test.assert(
           title.contains("allDependencies") || title.contains("checkVersion") ||
-            title.contains("rewriteLibraries") || title.contains("TaskAllDependencies")
+            title.contains("rewriteLibraries") || title.contains(
+            "TaskAllDependencies"
+          )
         )
 
         ()
@@ -388,7 +395,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
           )
       )
     )
-    val libraries:  Seq[ModuleID] = Seq()
+    val libraries: Seq[ModuleID] = Seq()
     val debugValue: Option[ModuleID] = None
     val output = ZTestOnlyTaskAllDependencies.execAllDependenciesTest(
       log,
@@ -405,12 +412,14 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   test("test execAllDependencies - with debug - present") {
     val log = new LogTest() {
       override def separator(
-        level: Level.Value,
-        title: String
+          level: Level.Value,
+          title: String
       ): Unit = {
         test.assert(
           title.contains("allDependencies") || title.contains("checkVersion") ||
-            title.contains("rewriteLibraries") || title.contains("TaskAllDependencies")
+            title.contains("rewriteLibraries") || title.contains(
+            "TaskAllDependencies"
+          )
         )
 
         ()
@@ -431,7 +440,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
       )
     )
     val libraries: Seq[ModuleID] = Seq(
-      "com.org"  % "artifact"  % "v1.0",
+      "com.org" % "artifact" % "v1.0",
       "com.org2" % "artifact2" % "v2.0"
     )
     val debugValue: Option[ModuleID] = Some("com.org" %% "artifact" % "1.0.0")
@@ -456,12 +465,14 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   test("test execAllDependencies - with debug - absent") {
     val log = new LogTest() {
       override def separator(
-        level: Level.Value,
-        title: String
+          level: Level.Value,
+          title: String
       ): Unit = {
         test.assert(
           title.contains("allDependencies") || title.contains("checkVersion") ||
-            title.contains("rewriteLibraries") || title.contains("TaskAllDependencies")
+            title.contains("rewriteLibraries") || title.contains(
+            "TaskAllDependencies"
+          )
         )
 
         ()
@@ -509,12 +520,14 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   test("test execAllDependencies") {
     val log = new LogTest() {
       override def separator(
-        level: Level.Value,
-        title: String
+          level: Level.Value,
+          title: String
       ): Unit = {
         test.assert(
           title.contains("allDependencies") || title.contains("checkVersion") ||
-            title.contains("rewriteLibraries") || title.contains("TaskAllDependencies")
+            title.contains("rewriteLibraries") || title.contains(
+            "TaskAllDependencies"
+          )
         )
 
         ()
@@ -535,7 +548,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
       )
     )
     val libraries: Seq[ModuleID] = Seq(
-      "com.org"  % "artifact"  % "v1.0",
+      "com.org" % "artifact" % "v1.0",
       "com.org2" % "artifact2" % "v2.0"
     )
     val debugValue: Option[ModuleID] = None
@@ -557,11 +570,13 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   test("test rewriteLibAndVersionCheck - wrong version") {
     val log = new LogTest() {
       override def separator(
-        level: Level.Value,
-        title: String
+          level: Level.Value,
+          title: String
       ): Unit = {
         test.assert(
-          title.contains("checkVersion") || title.contains("TaskAllDependencies.rewriteLibraries")
+          title.contains("checkVersion") || title.contains(
+            "TaskAllDependencies.rewriteLibraries"
+          )
         )
 
         ()
@@ -616,8 +631,8 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   test("test rewriteLibAndVersionCheck") {
     val log = new LogTest() {
       override def separator(
-        level: Level.Value,
-        title: String
+          level: Level.Value,
+          title: String
       ): Unit = {
         test.assert(
           title.contains("allDependencies") || title.contains("checkVersion") ||
@@ -642,7 +657,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
       )
     )
     val libraries: Seq[ModuleID] = Seq(
-      "com.org"  % "artifact"  % "v1.0",
+      "com.org" % "artifact" % "v1.0",
       "com.org2" % "artifact2" % "v2.0"
     )
 
@@ -670,8 +685,8 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   test("test rewriteLibraries") {
     val log = new LogTest() {
       override def separator(
-        level: Level.Value,
-        title: String
+          level: Level.Value,
+          title: String
       ): Unit = {
         test.assert(
           title.contains("allDependencies") || title.contains("checkVersion") ||
@@ -696,7 +711,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
       )
     )
     val libraries: Seq[ModuleID] = Seq(
-      "com.org"  % "artifact"  % "v1.0",
+      "com.org" % "artifact" % "v1.0",
       "com.org2" % "artifact2" % "v2.0"
     )
 
