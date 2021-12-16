@@ -10,6 +10,9 @@ class ModuleDefaultsTest extends ParentTest {
 
   test("Test ToOption For Arrays") {
     assertEquals(None, ModuleDefaults.toOption(Seq.empty[String]))
-    assertEquals(Some(Seq("a", "b")), ModuleDefaults.toOption(Seq("a", "b")).map(_.toSeq))
+    assertEquals(
+      Some(Seq("a", "b")),
+      ModuleDefaults.toOption(Seq("a", "b")).map(_.toSeq)
+    )
   }
 }

@@ -11,7 +11,9 @@ private[Transformations] trait CheckEnvIsSetUp {
       val value = sys.env.get(envKey)
       Def.task {
         value.fold[Unit] {
-          log.fail(s"No value was found for the environment variable: '$envKey'")
+          log.fail(
+            s"No value was found for the environment variable: '$envKey'"
+          )
         } { _ =>
           log.info(s"A value was found for the environment variable: '$envKey'")
         }

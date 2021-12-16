@@ -6,7 +6,11 @@ import sbt.util.Level
 
 class SoteriaLoggerTest extends ParentTest {
   val Log: SoteriaLogger =
-    SoteriaLogger(innerLog = ConsoleLogger(), level = Level.Debug, softError = true)
+    SoteriaLogger(
+      innerLog = ConsoleLogger(),
+      level = Level.Debug,
+      softError = true
+    )
 
   test("Set Level") {
     assertEquals(Level.Debug, Log.TestOnly.getLevelTest)
@@ -37,7 +41,9 @@ class SoteriaLoggerTest extends ParentTest {
   test("Test prepend header") {
     val message = "this is a message"
     assert(!message.contains(SoteriaLogger.Header))
-    assert(Log.TestOnly.prependHeaderTest(message).contains(SoteriaLogger.Header))
+    assert(
+      Log.TestOnly.prependHeaderTest(message).contains(SoteriaLogger.Header)
+    )
   }
 
   test("Test softError") {

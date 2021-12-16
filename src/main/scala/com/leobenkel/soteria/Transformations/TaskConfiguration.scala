@@ -1,12 +1,11 @@
 package com.leobenkel.soteria.Transformations
 
-import com.leobenkel.soteria.SoteriaPluginKeys.soteriaConfPath
 import com.leobenkel.soteria.{Config, SoteriaPluginKeys}
-import com.leobenkel.soteria.SoteriaPluginKeys
+import com.leobenkel.soteria.SoteriaPluginKeys.soteriaConfPath
 import sbt.Def
 
 private[Transformations] trait TaskConfiguration {
-  def soteriaConfigurationExec(): Def.Initialize[Config.SoteriaConfiguration] = {
+  def soteriaConfigurationExec(): Def.Initialize[Config.SoteriaConfiguration] =
     Def.settingDyn {
       val log = SoteriaPluginKeys.soteriaGetLog.value
       val path = soteriaConfPath.value
@@ -17,5 +16,4 @@ private[Transformations] trait TaskConfiguration {
         conf.getConf
       }
     }
-  }
 }

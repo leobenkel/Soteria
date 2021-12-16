@@ -7,7 +7,9 @@ import scala.util.matching.Regex
 
 private[Transformations] trait AddScalaFixCompilerPlugin {
 
-  private[Transformations] def shouldAddCompilerPlugin(scalaVersion: String): Boolean = {
+  private[Transformations] def shouldAddCompilerPlugin(
+      scalaVersion: String
+  ): Boolean = {
     val pattern: Regex = "^2\\.1[012]\\..*$".r
     pattern.pattern.matcher(scalaVersion).find()
   }
@@ -26,7 +28,9 @@ private[Transformations] trait AddScalaFixCompilerPlugin {
 
       Def.setting {
         if (soteriaAddSemantic) {
-          libraries :+ compilerPlugin(scalafix.sbt.ScalafixPlugin.autoImport.scalafixSemanticdb)
+          libraries :+ compilerPlugin(
+            scalafix.sbt.ScalafixPlugin.autoImport.scalafixSemanticdb
+          )
         } else {
           libraries
         }

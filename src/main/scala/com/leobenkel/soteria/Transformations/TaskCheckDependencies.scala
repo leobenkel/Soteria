@@ -5,24 +5,24 @@ import com.leobenkel.soteria.Modules.Dependency
 import com.leobenkel.soteria.SoteriaPluginKeys
 import com.leobenkel.soteria.Utils.ImplicitModuleToString._
 import com.leobenkel.soteria.Utils.LoggerExtended
-import sbt.librarymanagement.ModuleID
 import sbt.{ConfigRef, Configuration, ConfigurationReport, Def, Keys, Task, UpdateReport}
+import sbt.librarymanagement.ModuleID
 
 private[Transformations] trait TaskCheckDependencies {
 
-  /**
-    * Does not do anything special without the debugging enable.
-    */
+  /** Does not do anything special without the debugging enable. */
   def checkDependencies(
     configuration: Configuration
-  ): Def.Initialize[Task[SoteriaConfiguration]] = {
+  ): Def.Initialize[Task[SoteriaConfiguration]] =
     Def.taskDyn {
       val log = SoteriaPluginKeys.soteriaGetLog.value
       log.separatorDebug("update")
       log.debug("> Starting Update")
       val updateReport = (configuration / Keys.update).value
-      val debugValue:    Option[ModuleID] = SoteriaPluginKeys.soteriaDebugModule.value
-      val soteriaConfig: SoteriaConfiguration = SoteriaPluginKeys.soteriaConfig.value
+      val debugValue: Option[ModuleID] =
+        SoteriaPluginKeys.soteriaDebugModule.value
+      val soteriaConfig: SoteriaConfiguration =
+        SoteriaPluginKeys.soteriaConfig.value
 
       Def.task {
         debugValue.fold(soteriaConfig)(
@@ -35,7 +35,6 @@ private[Transformations] trait TaskCheckDependencies {
         )
       }
     }
-  }
 
   private def checkUpdatedLibraries(
     log:           LoggerExtended,
@@ -50,7 +49,12 @@ private[Transformations] trait TaskCheckDependencies {
     val debugModule = Dependency(debugValue)
     printDebug(log, debugModule, modulesFromCompilation)
 
-    debugPrintScala(log, soteriaConfig, debugModule, modulesFromCompilation.flatMap(_._2))
+    debugPrintScala(
+      log,
+      soteriaConfig,
+      debugModule,
+      modulesFromCompilation.flatMap(_._2)
+    )
   }
 
   private def debugPrintScala(
@@ -59,7 +63,8 @@ private[Transformations] trait TaskCheckDependencies {
     debugModule:           Dependency,
     moduleFromCompilation: Seq[Dependency]
   ): SoteriaConfiguration = {
-    val debugModuleWithKnowledge = soteriaConfig.AllModules
+    val debugModuleWithKnowledge = soteriaConfig
+      .AllModules
       .find(_ === debugModule)
       .getOrElse(debugModule)
 
@@ -79,7 +84,8 @@ private[Transformations] trait TaskCheckDependencies {
     allModule:     Seq[Dependency],
     debugModule:   Dependency
   ): SoteriaConfiguration = {
-    val modulesFromBuild = modulesFromBuildWithKnowledge(soteriaConfig, allModule)
+    val modulesFromBuild =
+      modulesFromBuildWithKnowledge(soteriaConfig, allModule)
     writeResultJsonToOutputFile(soteriaConfig, modulesFromBuild, debugModule)
   }
 
@@ -89,9 +95,7 @@ private[Transformations] trait TaskCheckDependencies {
   ): Seq[Dependency] = {
     val dependenciesFromBuild: Seq[Dependency] = allModule
       .groupBy(_.key)
-      .map {
-        case (_, cModules) => cModules.reduce((l, r) => (l |+| r).right.get)
-      }
+      .map { case (_, cModules) => cModules.reduce((l, r) => (l |+| r).right.get) }
       .toSeq
       .sortBy(_.key)
 
@@ -99,9 +103,7 @@ private[Transformations] trait TaskCheckDependencies {
       moduleWeKnowOf              <- soteriaConfig.NeedOverridden
       moduleFromBuildThanWeKnowOf <- dependenciesFromBuild
       if moduleWeKnowOf === moduleFromBuildThanWeKnowOf
-    } yield {
-      (moduleFromBuildThanWeKnowOf |+| moduleWeKnowOf).right.get
-    }
+    } yield (moduleFromBuildThanWeKnowOf |+| moduleWeKnowOf).right.get
   }
 
   private def writeResultJsonToOutputFile(
@@ -119,7 +121,7 @@ private[Transformations] trait TaskCheckDependencies {
   private def getAllModuleForConfigurations(
     configurations:      Seq[ConfigurationReport],
     targetConfiguration: ConfigRef
-  ): Seq[(String, Seq[Dependency])] = {
+  ): Seq[(String, Seq[Dependency])] =
     configurations
       .filter(_.configuration == targetConfiguration)
       .map { c =>
@@ -128,12 +130,14 @@ private[Transformations] trait TaskCheckDependencies {
           c.allModules
             .map(Dependency(_))
             .groupBy(_.key)
-            .map { case (_, cModules) => cModules.reduce((l, r) => (l |+| r).right.get) }
+            .map {
+              case (_, cModules) =>
+                cModules.reduce((l, r) => (l |+| r).right.get)
+            }
             .toSeq
             .sortBy(_.key)
         )
       }
-  }
 
   private def printDebug(
     log:        LoggerExtended,

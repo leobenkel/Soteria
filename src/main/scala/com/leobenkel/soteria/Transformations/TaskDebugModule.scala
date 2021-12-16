@@ -10,7 +10,7 @@ import sbt.internal.util.complete.Parser
 import sbt.librarymanagement.ModuleID
 
 private[Transformations] trait TaskDebugModule {
-  private val CommandName:    String = "soteriaDebugModuleWithCode"
+  private val CommandName: String = "soteriaDebugModuleWithCode"
   private val CommandNameAll: String = "soteriaDebugAllModules"
 
   @transient lazy private val parseModule: Parser[Dependency] = {
@@ -26,8 +26,10 @@ private[Transformations] trait TaskDebugModule {
       }
     }
 
-    val singlePercent: Parser[String] = Space ~> literal("%").examples("%") <~ Space
-    val doublePercent: Parser[String] = Space ~> literal("%%").examples("%%") <~ Space
+    val singlePercent
+      : Parser[String] = Space ~> literal("%").examples("%") <~ Space
+    val doublePercent
+      : Parser[String] = Space ~> literal("%%").examples("%%") <~ Space
     val percentParser: Parser[String] = singlePercent | doublePercent
     val orgParser = token(StringBasic, "<organization>").ensureNoQuotes
     val artifactParser = token(StringBasic, "<artifact>").ensureNoQuotes
@@ -48,9 +50,9 @@ private[Transformations] trait TaskDebugModule {
   }
 
   private def executeDebugModuleCommand(
-    log:     LoggerExtended,
-    module:  Either[String, Dependency],
-    execute: ModuleID => SoteriaConfiguration
+      log: LoggerExtended,
+      module: Either[String, Dependency],
+      execute: ModuleID => SoteriaConfiguration
   ): Option[SoteriaConfiguration] = {
     module match {
       case Right(module: Dependency) =>
@@ -69,30 +71,34 @@ private[Transformations] trait TaskDebugModule {
   }
 
   def executeCompilation(
-    state:        State,
-    scalaVersion: String,
-    config:       SoteriaConfiguration,
-    m:            ModuleID
+      state: State,
+      scalaVersion: String,
+      config: SoteriaConfiguration,
+      m: ModuleID
   ): (State, SoteriaConfiguration) = {
     val newState = Project
-      .extract(state).appendWithoutSession(
+      .extract(state)
+      .appendWithoutSession(
         Seq(
           Keys.libraryDependencies += m,
-          Keys.scalaVersion                    := scalaVersion,
+          Keys.scalaVersion := scalaVersion,
           SoteriaPluginKeys.soteriaDebugModule := Some(m),
-          SoteriaPluginKeys.soteriaSoft        := true,
-          SoteriaPluginKeys.soteriaConfig      := config
+          SoteriaPluginKeys.soteriaSoft := true,
+          SoteriaPluginKeys.soteriaConfig := config
         ),
         state
       )
 
-    Project.extract(newState).runTask(Test / SoteriaPluginKeys.soteriaBuildConfig, newState)
+    Project
+      .extract(newState)
+      .runTask(Test / SoteriaPluginKeys.soteriaBuildConfig, newState)
   }
 
   def debugModuleCommand: Command = {
     Command
       .args(CommandName, "") { (state, args) =>
-        val result: Either[String, Dependency] = Parser.parse(args.mkString(" ").trim, parseModule)
+        val result: Either[String, Dependency] =
+          Parser.parse(args.mkString(" ").trim, parseModule)
         val config = Project.extract(state).get(SoteriaPluginKeys.soteriaConfig)
         val log = Project.extract(state).get(SoteriaPluginKeys.soteriaGetLog)
         val scalaVersion = Project.extract(state).get(Keys.scalaVersion)
@@ -119,7 +125,8 @@ private[Transformations] trait TaskDebugModule {
             val encoded: Either[String, String] = JsonDecode.encode(fullConfig)
 
             encoded match {
-              case Left(error) => log.error(s"Failed to encode dependency: $error")
+              case Left(error) =>
+                log.error(s"Failed to encode dependency: $error")
               case Right(json) => log.info(json)
             }
         }
@@ -141,7 +148,8 @@ private[Transformations] trait TaskDebugModule {
 
         val (_, fullConfig) = allScalaVersions.foldLeft((state, config)) {
           case ((currentState, conf), scalaVersion) =>
-            val allModules: Set[ModuleID] = conf.getValidModule(scalaVersion) ++ libraries
+            val allModules
+              : Set[ModuleID] = conf.getValidModule(scalaVersion) ++ libraries
             allModules.foldLeft((currentState, conf)) {
               case ((currentState, conf), module) =>
                 executeCompilation(
@@ -171,9 +179,9 @@ private[Transformations] trait TaskDebugModule {
     val parser = parseModule
 
     def execute(
-      log:     LoggerExtended,
-      module:  Either[String, Dependency],
-      execute: ModuleID => SoteriaConfiguration
+        log: LoggerExtended,
+        module: Either[String, Dependency],
+        execute: ModuleID => SoteriaConfiguration
     ): Option[SoteriaConfiguration] = {
       executeDebugModuleCommand(log, module, execute)
     }

@@ -34,7 +34,10 @@ class TaskDebugModuleTest extends ParentTest with TaskDebugModule {
 
     (bad.map(_.trim) ++ bad)
       .map(i => (i, Parser.parse(i, p)))
-      .map(r => assert(r._2.isLeft, s"'${r._1}' should have failed, but got: ${r._2}"))
+      .map(
+        r =>
+          assert(r._2.isLeft, s"'${r._1}' should have failed, but got: ${r._2}")
+      )
   }
 
   test("Test parser - succeed") {
@@ -52,7 +55,13 @@ class TaskDebugModuleTest extends ParentTest with TaskDebugModule {
 
     (good.map(_.trim) ++ good)
       .map(i => (i, Parser.parse(i, p)))
-      .map(r => assert(r._2.isRight, s"'${r._1}' should have succeed, but got: ${r._2}"))
+      .map(
+        r =>
+          assert(
+            r._2.isRight,
+            s"'${r._1}' should have succeed, but got: ${r._2}"
+          )
+      )
   }
 
   test("Test command - fail no dependency") {

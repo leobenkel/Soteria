@@ -7,8 +7,8 @@ import sbt.CrossVersion
 import scala.util.matching.Regex
 
 case class ScalaVersionHandler(
-  filterPositive: Boolean,
-  scalaVersion:   ScalaV
+    filterPositive: Boolean,
+    scalaVersion: ScalaV
 ) {
   @transient lazy final val serialized: String =
     (if (filterPositive) '+' else '-') +: scalaVersion.serialized
@@ -84,16 +84,20 @@ object ScalaVSimilarity {
 }
 
 case class ScalaV(
-  scalaVersionMajor: String,
-  scalaVersionMinor: String,
-  scalaVersionMin:   Option[String]
+    scalaVersionMajor: String,
+    scalaVersionMinor: String,
+    scalaVersionMin: Option[String]
 ) {
   @transient lazy final val scalaBinaryVersion: String =
     (scalaVersionMajor :: scalaVersionMinor :: Nil).mkString(".")
   @transient lazy final val serialized: String =
-    ((scalaVersionMajor :: scalaVersionMinor :: Nil) ++ scalaVersionMin).mkString(".")
+    ((scalaVersionMajor :: scalaVersionMinor :: Nil) ++ scalaVersionMin)
+      .mkString(".")
   @transient lazy final val crossVersion =
-    CrossVersion.apply(scalaFullVersion = serialized, scalaBinaryVersion = scalaBinaryVersion)
+    CrossVersion.apply(
+      scalaFullVersion = serialized,
+      scalaBinaryVersion = scalaBinaryVersion
+    )
 
   def is(input: ScalaV): Option[Sim] = {
     input match {
@@ -111,8 +115,9 @@ case class ScalaV(
   object MajorEqual {
     def unapply(input: ScalaV): Option[Boolean] = {
       input match {
-        case ScalaV(ma, mi, None) => Some(scalaVersionMajor == ma && scalaVersionMinor == mi)
-        case _                    => None
+        case ScalaV(ma, mi, None) =>
+          Some(scalaVersionMajor == ma && scalaVersionMinor == mi)
+        case _ => None
       }
     }
   }
@@ -122,7 +127,8 @@ case class ScalaV(
       input match {
         case ScalaV(ma, mi, Some(mm)) =>
           Some(
-            scalaVersionMajor == ma && scalaVersionMinor == mi && scalaVersionMin.forall(_ == mm)
+            scalaVersionMajor == ma && scalaVersionMinor == mi && scalaVersionMin
+              .forall(_ == mm)
           )
         case _ => None
       }
@@ -134,15 +140,18 @@ case class ScalaV(
       input match {
         case ScalaV(ma, mi, Some(mm)) =>
           Some(
-            scalaVersionMajor == ma && scalaVersionMinor == mi && scalaVersionMin.contains(mm)
+            scalaVersionMajor == ma && scalaVersionMinor == mi && scalaVersionMin
+              .contains(mm)
           )
         case _ => None
       }
     }
   }
 
-  def ===(moduleScalaVersion:         String): Boolean = this === ScalaV(moduleScalaVersion)
-  @inline def =!=(moduleScalaVersion: String): Boolean = !(this === moduleScalaVersion)
+  def ===(moduleScalaVersion: String): Boolean =
+    this === ScalaV(moduleScalaVersion)
+  @inline def =!=(moduleScalaVersion: String): Boolean =
+    !(this === moduleScalaVersion)
 
   def ===(input: ScalaV): Boolean = {
     input match {
@@ -166,10 +175,13 @@ object ScalaV {
   private val NR: Regex = "([0-9]+)".r
   def apply(input: String): Either[String, ScalaV] = {
     input.split('.').toList match {
-      case NR(major) :: NR(minor) :: Nil            => Right(ScalaV(major, minor, None))
-      case NR(major) :: NR(minor) :: NR(min) :: Nil => Right(ScalaV(major, minor, Some(min)))
+      case NR(major) :: NR(minor) :: Nil => Right(ScalaV(major, minor, None))
+      case NR(major) :: NR(minor) :: NR(min) :: Nil =>
+        Right(ScalaV(major, minor, Some(min)))
       case _ =>
-        Left(s"Unable to parse '$input', expected structure: '[major].[minor].<min>'")
+        Left(
+          s"Unable to parse '$input', expected structure: '[major].[minor].<min>'"
+        )
 
     }
   }

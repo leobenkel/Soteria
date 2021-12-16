@@ -1,9 +1,9 @@
 package com.leobenkel.soteria.Config
 
 import com.leobenkel.soteria.Modules.NameOfModule
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class NameOfModuleTest extends FunSuite {
+class NameOfModuleTest extends AnyFunSuite {
   test("Name match") {
     val filter = NameOfModule(
       organization = "org.orgs",
@@ -34,9 +34,10 @@ class NameOfModuleTest extends FunSuite {
     val searchFor = "This is a broken name"
     val result = NameOfModule.find(
       data = Map(
-        "com.org" -> Map(
-          "artifactName" -> SerializedModule.Empty.copy(version = "1.0")
-        )
+        "com.org" ->
+          Map(
+            "artifactName" -> SerializedModule.Empty.copy(version = "1.0")
+          )
       )
     )(s = searchFor)
 

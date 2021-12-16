@@ -14,8 +14,8 @@ class SerializedModuleTest extends ParentTest {
   private class LogTestWithBuffer extends LogTest(test) {
     private var allMessages: String = ""
     override def log(
-      level:   Level.Value,
-      message: => String
+        level: Level.Value,
+        message: => String
     ): Unit = {
       test.log.debug(message)
       assertEquals(Level.Error, level)
@@ -36,7 +36,9 @@ class SerializedModuleTest extends ParentTest {
     log.debug(s"Reading '$pathToFile'")
 
     val result: Either[String, SoteriaConfiguration] =
-      JsonDecode.parse[SoteriaConfiguration](content)(SoteriaConfiguration.parser(soteriaLog))
+      JsonDecode.parse[SoteriaConfiguration](content)(
+        SoteriaConfiguration.parser(soteriaLog)
+      )
 
     assert(result.isRight)
 
@@ -75,9 +77,15 @@ class SerializedModuleTest extends ParentTest {
     assert(m3.version.isLeft)
     assert(m3.version.left.get.contains("0"))
     assertEquals(false, m3Obj.exactName)
-    assertEquals(Seq("artifactory", "artifice"), m3Obj.excludeName.sortBy(identity))
+    assertEquals(
+      Seq("artifactory", "artifice"),
+      m3Obj.excludeName.sortBy(identity)
+    )
     assertEquals(1, m3.dependenciesToRemove.length)
-    assertEquals(Seq(NameOfModule.apply("com.orgs", "name-of-library")), m3.dependenciesToRemove)
+    assertEquals(
+      Seq(NameOfModule.apply("com.orgs", "name-of-library")),
+      m3.dependenciesToRemove
+    )
   }
 
   test("test serialize/deserialize") {

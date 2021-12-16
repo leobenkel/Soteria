@@ -41,8 +41,8 @@ class ImplicitModuleToStringTest extends ParentTest {
         }
 
         override def separator(
-          level: Level.Value,
-          title: String
+            level: Level.Value,
+            title: String
         ): Unit = {
           test.fail("Should not be called")
         }
@@ -51,13 +51,15 @@ class ImplicitModuleToStringTest extends ParentTest {
           test.fail("Should not be called")
         }
 
-        override def trace(t: => Throwable): Unit = test.fail("Should not be called")
+        override def trace(t: => Throwable): Unit =
+          test.fail("Should not be called")
 
-        override def success(message: => String): Unit = test.fail("Should not be called")
+        override def success(message: => String): Unit =
+          test.fail("Should not be called")
 
         override def log(
-          level:        Level.Value,
-          prettyString: => String
+            level: Level.Value,
+            prettyString: => String
         ): Unit = {
           assertEquals(Level.Debug, level)
           assert(prettyString.contains(header))
@@ -93,8 +95,8 @@ class ImplicitModuleToStringTest extends ParentTest {
         }
 
         override def separator(
-          level: Level.Value,
-          title: String
+            level: Level.Value,
+            title: String
         ): Unit = {
           test.fail("Should not be called")
         }
@@ -103,13 +105,15 @@ class ImplicitModuleToStringTest extends ParentTest {
           test.fail("Should not be called")
         }
 
-        override def trace(t: => Throwable): Unit = test.fail("Should not be called")
+        override def trace(t: => Throwable): Unit =
+          test.fail("Should not be called")
 
-        override def success(message: => String): Unit = test.fail("Should not be called")
+        override def success(message: => String): Unit =
+          test.fail("Should not be called")
 
         override def log(
-          level:        Level.Value,
-          prettyString: => String
+            level: Level.Value,
+            prettyString: => String
         ): Unit = {
           assertEquals(Level.Debug, level)
           assert(prettyString.contains(header))

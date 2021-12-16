@@ -17,8 +17,8 @@ import scala.util.{Either, Left, Right, Try}
 @silent("deprecated")
 private[Json] object JsonInnerEngine {
   def parse[A](
-    input:  String,
-    parser: JsonDecode.Parser[A]
+      input: String,
+      parser: JsonDecode.Parser[A]
   ): Either[String, A] = {
     Try(
       JSON
@@ -26,7 +26,8 @@ private[Json] object JsonInnerEngine {
         .map(_.asInstanceOf[Map[String, Any]])
     ).toEither.left
       .map(_.toString)
-      .right.flatMap {
+      .right
+      .flatMap {
         case None => Left("Did not parse")
         case Some(v) =>
           parser(v) match {
@@ -46,7 +47,7 @@ private[Json] object JsonInnerEngine {
         case v: JsonDecode.Encoder => JSONObject(convert(unsafeConvert(v)))
         case v: Map[_, _]          => JSONObject(convert(v))
         case v: List[_]            => JSONArray(v)
-        case v => v
+        case v                     => v
       }
   }
 

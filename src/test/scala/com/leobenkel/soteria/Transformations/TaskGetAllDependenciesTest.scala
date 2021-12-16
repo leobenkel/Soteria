@@ -4,7 +4,6 @@ import com.leobenkel.soteria.Config.SerializedModule
 import com.leobenkel.soteria.Modules.{Dependency, ScalaVersionHandler}
 import com.leobenkel.soteria.ParentTest
 import com.leobenkel.soteria.Utils.SoteriaLogger
-import com.leobenkel.soteria.Utils.SoteriaLogger
 import sbt._
 import sbt.internal.util.ConsoleLogger
 import sbt.util.Level
@@ -18,8 +17,8 @@ class TaskGetAllDependenciesTest extends ParentTest with TaskGetAllDependencies 
 
   test("Process Deps - all good - 2.12") {
     val modules = Seq(
-      "org.something" %% "artifact"         % "1.0.0",
-      "org.something" % "artifact-no-cross" % "1.0.0"
+      "org.something" %% "artifact"          % "1.0.0",
+      "org.something"  % "artifact-no-cross" % "1.0.0"
     )
     val output = processDependencies(
       logger,
@@ -32,8 +31,8 @@ class TaskGetAllDependenciesTest extends ParentTest with TaskGetAllDependencies 
 
   test("Process Deps - all good - 2.11") {
     val modules = Seq(
-      "org.something" %% "artifact"         % "1.0.0",
-      "org.something" % "artifact-no-cross" % "1.0.0"
+      "org.something" %% "artifact"          % "1.0.0",
+      "org.something"  % "artifact-no-cross" % "1.0.0"
     )
     val output = processDependencies(
       logger,
@@ -138,15 +137,19 @@ class TaskGetAllDependenciesTest extends ParentTest with TaskGetAllDependencies 
     val m1 = SerializedModule
       .parser("com.test", "artifact-test")(
         Map[String, Any](
-          "dependenciesToRemove" -> List(
-            "com.fasterxml.jackson.core | jackson-annotations",
-            "com.fasterxml.jackson.core | jackson-core",
-            "com.fasterxml.jackson.core | jackson-databind"
-          ),
+          "dependenciesToRemove" ->
+            List(
+              "com.fasterxml.jackson.core | jackson-annotations",
+              "com.fasterxml.jackson.core | jackson-core",
+              "com.fasterxml.jackson.core | jackson-databind"
+            ),
           "version" -> "3.3.1"
         )
-      ).right.get
-      .toDependency("com.test", "artifact-test", _ => Left("too bad"))._1
+      )
+      .right
+      .get
+      .toDependency("com.test", "artifact-test", _ => Left("too bad"))
+      ._1
     val output11 = processDependencies(
       logger,
       Seq(m1),
@@ -165,16 +168,20 @@ class TaskGetAllDependenciesTest extends ParentTest with TaskGetAllDependencies 
     val m1 = SerializedModule
       .parser("com.test", "artifact-test")(
         Map[String, Any](
-          "dependenciesToRemove" -> List(
-            "com.fasterxml.jackson.core | jackson-annotations",
-            "com.fasterxml.jackson.core | jackson-core",
-            "com.fasterxml.jackson.core | jackson-databind"
-          ),
+          "dependenciesToRemove" ->
+            List(
+              "com.fasterxml.jackson.core | jackson-annotations",
+              "com.fasterxml.jackson.core | jackson-core",
+              "com.fasterxml.jackson.core | jackson-databind"
+            ),
           "version"             -> "3.3.1",
           "scalaVersionsFilter" -> List("+2.12")
         )
-      ).right.get
-      .toDependency("com.test", "artifact-test", _ => Left("too bad"))._1
+      )
+      .right
+      .get
+      .toDependency("com.test", "artifact-test", _ => Left("too bad"))
+      ._1
     val output11 = processDependencies(
       logger,
       Seq(m1),

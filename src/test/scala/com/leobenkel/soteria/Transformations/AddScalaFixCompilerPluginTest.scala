@@ -1,7 +1,6 @@
 package com.leobenkel.soteria.Transformations
 
 import com.leobenkel.soteria.ParentTest
-import com.leobenkel.soteria.ParentTest
 
 class AddScalaFixCompilerPluginTest extends ParentTest with AddScalaFixCompilerPlugin {
   test("Test correct version") {
