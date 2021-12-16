@@ -1,10 +1,10 @@
-soteriaAddSemantic := false
+//soteriaAddSemantic := false
 
 //resolvers ++= Seq(
 //        "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases",
 //        "JBoss" at "https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/"
 //)
-libraryDependencies +=  "commons-logging" % "commons-logging" % "1.2"
+libraryDependencies += "commons-logging" % "commons-logging" % "1.2"
 
 // Test
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.10" % Test
@@ -40,7 +40,8 @@ addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
 
 // TODO: Remove when we are able to use Circe for JSON parsing
 val silencerVersion = "1.7.7"
-ThisBuild / libraryDependencies ++= Seq(
-  compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
-  "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
-)
+ThisBuild / libraryDependencies ++=
+  Seq(
+    compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
+    "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
+  )

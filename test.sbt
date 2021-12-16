@@ -2,8 +2,8 @@
 
 enablePlugins(SbtPlugin)
 
-scriptedLaunchOpts ++= Seq("-Dplugin.version=" + version.value)
-
-scriptedBufferLog := false
-
-stryker / logLevel := Level.Debug
+scriptedLaunchOpts ++= Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
+scriptedBufferLog         := false
+scriptedParallelInstances := 1
+scriptedBatchExecution    := false
+//stryker / logLevel := Level.Debug

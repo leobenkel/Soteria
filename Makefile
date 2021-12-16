@@ -25,8 +25,12 @@ have_right_version:
 	echo "Plugin have right version!"
 
 # https://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html
-test_plugin: publishLocal
-	sbt 'set isSnapshot := true' scripted
+test_plugin:
+	sbt '; set isSnapshot := true ; scripted'
+
+# https://stackoverflow.com/a/42430476
+test_plugin_one:
+	sbt "; set isSnapshot := true ; scripted $(TEST_NAME)"
 
 test_coverage_run:
 	sbt clean coverage test coverageReport
