@@ -1,20 +1,20 @@
 soteriaAddSemantic := false
 
 // Test
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.9" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.10" % Test
 
 // https://github.com/scoverage/sbt-scoverage
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.9.2")
-addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.2.7")
+addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.3.1")
 //
 
 // ASSEMBLY
-addSbtPlugin("com.eed3si9n"      % "sbt-assembly" % "0.15.0")
+addSbtPlugin("com.eed3si9n"      % "sbt-assembly" % "1.1.0")
 addSbtPlugin("se.marcuslonnberg" % "sbt-docker"   % "1.8.2")
 ///
 
 // For testing
-addSbtPlugin("io.stryker-mutator" % "sbt-stryker4s" % "0.12.0")
+addSbtPlugin("io.stryker-mutator" % "sbt-stryker4s" % "0.12.2")
 
 // For SourceClear
 // https://github.com/jrudolph/sbt-dependency-graph
