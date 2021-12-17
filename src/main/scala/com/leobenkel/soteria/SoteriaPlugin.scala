@@ -1,7 +1,7 @@
 package com.leobenkel.soteria
 
 import com.leobenkel.soteria.SoteriaPluginKeys.FancySettings
-import com.leobenkel.soteria.Transformations.SoteriaExecutionLogic._
+import com.leobenkel.soteria.Transformations.SoteriaExecutionLogic
 import com.leobenkel.soteria.Utils.SoteriaLogger
 import org.scoverage.coveralls.CoverallsPlugin
 import sbt.{addCommandAlias, Def, _}
@@ -9,7 +9,7 @@ import sbt.util.Level
 import sbtassembly._
 import scoverage.ScoverageKeys
 
-object SoteriaPlugin extends AutoPlugin {
+object SoteriaPlugin extends AutoPlugin with SoteriaExecutionLogic {
 
   /** autoImport is a keyword to expose keys */
   // scalastyle:off object.name
@@ -224,15 +224,17 @@ object SoteriaPlugin extends AutoPlugin {
       Seq[Def.Setting[_]](
         Compile / Keys.update              := update(Compile).value,
         Test / Keys.update                 := update(Test).value,
-        Keys.libraryDependencies           := libraryDependencies(None).value,
-        Compile / Keys.libraryDependencies := libraryDependencies(Some(Compile)).value,
-        Test / Keys.libraryDependencies    := libraryDependencies(Some(Test)).value,
-        Keys.allDependencies               := allDependencies().value,
+        Keys.libraryDependencies           := libraryDependenciesSetting(None).value,
+        Compile / Keys.libraryDependencies := libraryDependenciesSetting(Some(Compile)).value,
+        Test / Keys.libraryDependencies    := libraryDependenciesSetting(Some(Test)).value,
+        Keys.allDependencies               := allDependencies(None).value,
+        Compile / Keys.allDependencies     := allDependencies(Some(Compile)).value,
+        Test / Keys.allDependencies        := allDependencies(Some(Test)).value,
         Keys.dependencyOverrides           := dependencyOverrides(None).value,
         Compile / Keys.dependencyOverrides := dependencyOverrides(Some(Compile)).value,
         Test / Keys.dependencyOverrides    := dependencyOverrides(Some(Test)).value,
-        Compile / Keys.scalaVersion        := scalaVersionExec().value,
-        Keys.sbtVersion                    := sbtVersionExec().value,
+        Compile / Keys.scalaVersion        := scalaVersionExecSetting().value,
+        Keys.sbtVersion                    := sbtVersionExecSetting().value,
         // scalac
         soteriaSoftOnCompilerWarning := false,
         Keys.scalacOptions           := extraScalacOptions(None).value,

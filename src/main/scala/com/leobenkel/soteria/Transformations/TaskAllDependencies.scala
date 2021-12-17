@@ -10,22 +10,32 @@ import com.leobenkel.soteria.Utils.ImplicitModuleToString._
 import com.leobenkel.soteria.Utils.LoggerExtended
 import sbt._
 
-private[Transformations] trait TaskAllDependencies extends CheckVersion {
+private[Transformations] trait TaskAllDependencies
+    extends CheckVersion with TaskLibraryDependencies with TaskVersions {
 
   /**
    * This will rewrite the dependencies. When debugging is enable, this will also remove all
    * libraries but the tested one.
    */
-  def allDependencies(): Def.Initialize[Task[Seq[ModuleID]]] =
+  def allDependencies(conf: Option[Configuration]): Def.Initialize[Task[Seq[ModuleID]]] =
     Def.taskDyn {
       val log = SoteriaPluginKeys.soteriaGetLog.value
       val libraries = Keys.allDependencies.value
+      val lib = libraryDependencies(conf).value
       val debugValue = SoteriaPluginKeys.soteriaDebugModule.value
       val soteriaConfig: SoteriaConfiguration =
         SoteriaPluginKeys.soteriaConfig.value
 
+      val scalaVersion = scalaVersionExec().value
+      val sbtVersion = sbtVersionExec().value
+
       Def.task {
-        execAllDependencies(log, soteriaConfig, libraries, debugValue)
+        execAllDependencies(
+          log = log,
+          soteriaConfig = soteriaConfig,
+          libraries = (libraries ++ lib).toSet.toList,
+          debugValue = debugValue
+        )
       }
     }
 

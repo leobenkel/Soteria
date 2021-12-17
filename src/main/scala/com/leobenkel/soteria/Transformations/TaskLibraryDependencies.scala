@@ -6,7 +6,7 @@ import com.leobenkel.soteria.SoteriaPluginKeys
 import com.leobenkel.soteria.SoteriaPluginKeys.soteriaGetLog
 import com.leobenkel.soteria.Utils.ImplicitModuleToString._
 import com.leobenkel.soteria.Utils.LoggerExtended
-import sbt.{Configuration, Def, Keys, ModuleID}
+import sbt.{Configuration, Def, Keys, ModuleID, Task}
 
 private[Transformations] trait TaskLibraryDependencies {
 
@@ -63,16 +63,35 @@ private[Transformations] trait TaskLibraryDependencies {
     libraryDependencies
   }
 
-  def libraryDependencies(
+  def libraryDependenciesSetting(
     conf: Option[Configuration]
   ): Def.Initialize[Seq[ModuleID]] =
     Def.settingDyn {
       val log = soteriaGetLog.value
       val libraryDependencies =
         conf.fold(Keys.libraryDependencies)(_ / Keys.libraryDependencies).value
-      val config = SoteriaPluginKeys.soteriaConfig.value
+      val config: SoteriaConfiguration = SoteriaPluginKeys.soteriaConfig.value
 
       Def.setting {
+        processLibraryDependencies(
+          log = log.setSoftError(true),
+          config = config,
+          conf = conf,
+          libraryDependencies = libraryDependencies
+        )
+      }
+    }
+
+  def libraryDependencies(
+    conf: Option[Configuration]
+  ): Def.Initialize[Task[Seq[ModuleID]]] =
+    Def.taskDyn {
+      val log = soteriaGetLog.value
+      val libraryDependencies =
+        conf.fold(Keys.libraryDependencies)(_ / Keys.libraryDependencies).value
+      val config = SoteriaPluginKeys.soteriaConfig.value
+
+      Def.task {
         processLibraryDependencies(log, config, conf, libraryDependencies)
       }
     }
