@@ -13,9 +13,9 @@ import sbt._
 private[Transformations] trait TaskAllDependencies extends CheckVersion {
 
   /**
-    * This will rewrite the dependencies. When debugging is enable, this will also remove all
-    * libraries but the tested one.
-    */
+   * This will rewrite the dependencies. When debugging is enable, this will also remove all
+   * libraries but the tested one.
+   */
   def allDependencies(): Def.Initialize[Task[Seq[ModuleID]]] =
     Def.taskDyn {
       val log = SoteriaPluginKeys.soteriaGetLog.value
@@ -30,10 +30,10 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
     }
 
   private def execAllDependencies(
-      log: LoggerExtended,
-      soteriaConfig: SoteriaConfiguration,
-      libraries: Seq[ModuleID],
-      debugValue: Option[ModuleID]
+    log:           LoggerExtended,
+    soteriaConfig: SoteriaConfiguration,
+    libraries:     Seq[ModuleID],
+    debugValue:    Option[ModuleID]
   ): Seq[sbt.ModuleID] = {
     log.separatorDebug("allDependencies")
     log.debug(s"> Start 'allDependencies' with ${libraries.size} libraries.")
@@ -47,7 +47,7 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
       }
       .getOrElse(rewriteLibAndVersionCheck(log, soteriaConfig, libraries)) match {
       case Left(errors) =>
-        errors.consume(s => log.fail(s))
+        errors.consume(log.fail(_))
         Seq.empty
       case Right(rewroteLibraries) =>
         log.info(
@@ -60,14 +60,14 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
   private val goodLibraries: Seq[String] = Seq("org.scala-lang")
 
   /**
-    * Remove all but the wanted library.
-    *
-    * @return
-    */
+   * Remove all but the wanted library.
+   *
+   * @return
+   */
   private def filterLibraries(
-      log: LoggerExtended,
-      libraries: Seq[ModuleID],
-      whatToKeep: Dependency
+    log:        LoggerExtended,
+    libraries:  Seq[ModuleID],
+    whatToKeep: Dependency
   ): Either[Errors, Seq[ModuleID]] = {
     val output = libraries
       .filter(m => goodLibraries.contains(m.organization) || whatToKeep === m)
@@ -86,18 +86,18 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
   }
 
   /**
-    * This method rewrite the libraries to make sure the risky dependencies are not fetch and
-    * replaced.
-    *
-    * @param libraries
-    *   the libraries fetch by the build, coming from [[sbt.Keys.allDependencies]]
-    *
-    * @return
-    */
+   * This method rewrite the libraries to make sure the risky dependencies are not fetch and
+   * replaced.
+   *
+   * @param libraries
+   *   the libraries fetch by the build, coming from [[sbt.Keys.allDependencies]]
+   *
+   * @return
+   */
   private def rewriteLibAndVersionCheck(
-      log: LoggerExtended,
-      config: SoteriaConfiguration,
-      libraries: Seq[ModuleID]
+    log:       LoggerExtended,
+    config:    SoteriaConfiguration,
+    libraries: Seq[ModuleID]
   ): Either[Errors, Seq[ModuleID]] =
     checkVersion(log, config.CorrectVersions, libraries) match {
       case Right(_) => Right(rewriteLibraries(log, config, libraries))
@@ -107,9 +107,9 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
     }
 
   private def rewriteLibraries(
-      log: LoggerExtended,
-      config: SoteriaConfiguration,
-      libraries: Seq[ModuleID]
+    log:       LoggerExtended,
+    config:    SoteriaConfiguration,
+    libraries: Seq[ModuleID]
   ): Seq[ModuleID] = {
     log.separatorDebug("TaskAllDependencies.rewriteLibraries")
     log.debug(s"> Rewrite starting with ${libraries.size} libraries")
@@ -134,9 +134,9 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
   }
 
   private def excludeBadDependencies(
-      log: LoggerExtended,
-      libraryToEdit: Seq[(ModuleID, Seq[NameOfModule])],
-      needToBeReplaced: Seq[Dependency]
+    log:              LoggerExtended,
+    libraryToEdit:    Seq[(ModuleID, Seq[NameOfModule])],
+    needToBeReplaced: Seq[Dependency]
   ): Seq[ModuleID] = {
     libraryToEdit
       .map {
@@ -165,18 +165,13 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
   }
 
   private def getLibraryFiltered(
-      log: LoggerExtended,
-      packageKnownRiskDependencies: Map[Dependency, Seq[NameOfModule]],
-      libraries: Seq[ModuleID]
+    log:                          LoggerExtended,
+    packageKnownRiskDependencies: Map[Dependency, Seq[NameOfModule]],
+    libraries:                    Seq[ModuleID]
   ): Seq[(ModuleID, Seq[NameOfModule])] =
     libraries.map { m =>
       val depToRemove =
-        packageKnownRiskDependencies
-          .filterKeys(_ === m)
-          .values
-          .flatten
-          .toSeq
-          .distinct
+        packageKnownRiskDependencies.filterKeys(_ === m).values.flatten.toSeq.distinct
       log.debug(
         s"For ${m.prettyString}: found ${depToRemove.length} lib to remove"
       )
@@ -185,11 +180,11 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
     }
 
   private def removeBadDependencies(
-      log: LoggerExtended,
-      needToBeReplaced: Seq[Dependency],
-      module: ModuleID,
-      acc: Seq[ModuleID],
-      toRemove: NameOfModule
+    log:              LoggerExtended,
+    needToBeReplaced: Seq[Dependency],
+    module:           ModuleID,
+    acc:              Seq[ModuleID],
+    toRemove:         NameOfModule
   ): (ModuleID, Seq[ModuleID]) = {
     toRemove.exclusionRule match {
       case Right(er) =>
@@ -223,8 +218,8 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
   }
 
   private def removeAllDependencies(
-      needToBeReplaced: Seq[Dependency],
-      moduleID: ModuleID
+    needToBeReplaced: Seq[Dependency],
+    moduleID:         ModuleID
   ): Either[String, ModuleID] =
     needToBeReplaced.foldLeft(Right(moduleID): Either[String, ModuleID]) {
       case (m, toRemove) =>
@@ -238,25 +233,24 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
 
   object ZTestOnlyTaskAllDependencies {
     def filterLibrariesTest(
-        log: LoggerExtended,
-        libraries: Seq[ModuleID],
-        whatToKeep: Dependency
-    ): Either[Errors, Seq[ModuleID]] =
-      filterLibraries(log, libraries, whatToKeep)
+      log:        LoggerExtended,
+      libraries:  Seq[ModuleID],
+      whatToKeep: Dependency
+    ): Either[Errors, Seq[ModuleID]] = filterLibraries(log, libraries, whatToKeep)
 
     def getLibraryFilteredTest(
-        log: LoggerExtended,
-        packageKnownRiskDependencies: Map[Dependency, Seq[NameOfModule]],
-        libraries: Seq[ModuleID]
+      log:                          LoggerExtended,
+      packageKnownRiskDependencies: Map[Dependency, Seq[NameOfModule]],
+      libraries:                    Seq[ModuleID]
     ): Seq[(ModuleID, Seq[NameOfModule])] =
       getLibraryFiltered(log, packageKnownRiskDependencies, libraries)
 
     def removeBadDependenciesTest(
-        log: LoggerExtended,
-        needToBeReplaced: Seq[Dependency],
-        module: ModuleID,
-        acc: Seq[ModuleID],
-        toRemove: NameOfModule
+      log:              LoggerExtended,
+      needToBeReplaced: Seq[Dependency],
+      module:           ModuleID,
+      acc:              Seq[ModuleID],
+      toRemove:         NameOfModule
     ): (ModuleID, Seq[ModuleID]) =
       removeBadDependencies(
         log,
@@ -267,10 +261,10 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
       )
 
     def execAllDependenciesTest(
-        log: LoggerExtended,
-        soteriaConfig: SoteriaConfiguration,
-        libraries: Seq[ModuleID],
-        debugValue: Option[ModuleID]
+      log:           LoggerExtended,
+      soteriaConfig: SoteriaConfiguration,
+      libraries:     Seq[ModuleID],
+      debugValue:    Option[ModuleID]
     ): Seq[sbt.ModuleID] =
       execAllDependencies(
         log,
@@ -280,9 +274,9 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
       )
 
     def rewriteLibAndVersionCheckTest(
-        log: LoggerExtended,
-        config: SoteriaConfiguration,
-        libraries: Seq[ModuleID]
+      log:       LoggerExtended,
+      config:    SoteriaConfiguration,
+      libraries: Seq[ModuleID]
     ): Either[Errors, Seq[ModuleID]] =
       rewriteLibAndVersionCheck(
         log,
@@ -291,16 +285,15 @@ private[Transformations] trait TaskAllDependencies extends CheckVersion {
       )
 
     def rewriteLibrariesTest(
-        log: LoggerExtended,
-        config: SoteriaConfiguration,
-        libraries: Seq[ModuleID]
+      log:       LoggerExtended,
+      config:    SoteriaConfiguration,
+      libraries: Seq[ModuleID]
     ): Seq[ModuleID] = rewriteLibraries(log, config, libraries)
 
     def excludeBadDependenciesTest(
-        log: LoggerExtended,
-        libraryToEdit: Seq[(ModuleID, Seq[NameOfModule])],
-        needToBeReplaced: Seq[Dependency]
-    ): Seq[ModuleID] =
-      excludeBadDependencies(log, libraryToEdit, needToBeReplaced)
+      log:              LoggerExtended,
+      libraryToEdit:    Seq[(ModuleID, Seq[NameOfModule])],
+      needToBeReplaced: Seq[Dependency]
+    ): Seq[ModuleID] = excludeBadDependencies(log, libraryToEdit, needToBeReplaced)
   }
 }

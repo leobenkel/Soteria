@@ -1,5 +1,3 @@
 # check if the file gets created
-$ pause
 -> ;clean ;assembly
-$ pause
 $ absent target/scala-2.12/foo.jar
