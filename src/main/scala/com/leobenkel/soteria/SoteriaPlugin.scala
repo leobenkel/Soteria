@@ -40,7 +40,7 @@ object SoteriaPlugin extends AutoPlugin with SoteriaExecutionLogic {
   lazy final override val trigger: PluginTrigger = allRequirements
 
   private def coverallMakeCommand(task: FancySettings[_]): String =
-    "; set ThisBuild / coverageEnabled := true " + s"; Test/${task.nameAsString} " +
+    "; set ThisBuild / coverageEnabled := true " + s"; Test / ${task.nameAsString} " +
       "; set ThisBuild / coverageEnabled := false "
 
   lazy final override val buildSettings: Seq[Def.Setting[_]] = super.buildSettings ++ {

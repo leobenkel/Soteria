@@ -33,11 +33,11 @@ test_plugin_one:
 	sbt "; set isSnapshot := true ; scripted $(TEST_NAME)"
 
 test_coverage_run:
-	sbt clean coverage test coverageReport
+	sbt ";clean; coverage; test; coverageReport"
 	open ./target/scala-2.12/sbt-1.0/scoverage-report/index.html
 
 test_coverage:
-	sbt clean coverage test
+	sbt ";clean; coverage; test"
 
 test_coverage_report:
 	sbt coverageReport && sbt coverageAggregate
@@ -46,7 +46,7 @@ check_style:
 	sbt soteriaCheckScalaFmt
 
 unit_test:
-	sbt clean test
+	sbt ";clean; test"
 
 test: deep_clean check_style publishLocal unit_test test_plugin
 
