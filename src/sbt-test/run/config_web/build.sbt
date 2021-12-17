@@ -5,4 +5,4 @@ lazy val root = (project in file(".")).settings(
 )
 
 // TODO: Replace with main branch when merged
-soteriaConfPath := "https://raw.githubusercontent.com/leobenkel/soteria/update_sbt/soteria.json"
+soteriaConfPath := "https://raw.githubusercontent.com/leobenkel/soteria/main/soteria.json"
