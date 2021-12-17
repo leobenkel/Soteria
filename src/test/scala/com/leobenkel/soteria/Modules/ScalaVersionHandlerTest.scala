@@ -111,14 +111,16 @@ class ScalaVersionHandlerTest extends ParentTest {
   }
 
   test("Test right scala version - mix") {
-    val filters = Seq(
+    val f = Seq(
       ScalaVersionHandler("+2.12"),
       ScalaVersionHandler("-2.12.11"),
       ScalaVersionHandler("-2.11.7"),
       ScalaVersionHandler("-2.10")
-    ).flattenEI.applyTo(_)
+    ).flattenEI
 
-    assert(ScalaV("2.12").right.map(filters(_)).right.get)
+    val filters = f.applyTo(_)
+
+    assert(!ScalaV("2.12").right.map(filters(_)).right.get)
     assert(!ScalaV("2.12.11").right.map(filters(_)).right.get)
     assert(ScalaV("2.12.15").right.map(filters(_)).right.get)
     assert(!ScalaV("2.7.15").right.map(filters(_)).right.get)

@@ -16,8 +16,8 @@ object NameOfModule {
   }
 
   def apply(
-    org:  String,
-    name: String
+      org: String,
+      name: String
   ): NameOfModule = {
     NameOfModule(
       org,
@@ -29,15 +29,16 @@ object NameOfModule {
   }
 
   def find(
-    data: Map[String, Map[String, SerializedModule]]
+      data: Map[String, Map[String, SerializedModule]]
   )(
-    s: String
+      s: String
   ): Either[String, NameOfModule] = {
     fromPath(s).flatMap {
       case (org, name) =>
         for {
           inOrg <- data.get(org) match {
-            case None    => Left(s"Could not find org: '$org' in available knowledge")
+            case None =>
+              Left(s"Could not find org: '$org' in available knowledge")
             case Some(m) => Right(m)
           }
           module <- inOrg.get(name) match {
@@ -57,7 +58,9 @@ object NameOfModule {
   private def fromPath(s: String): Either[String, (String, String)] = {
     val pieces = s.split('|').map(_.trim)
     if (pieces.length != 2) {
-      Left(s"Was not able to get module with dependency override name being: '$s'")
+      Left(
+        s"Was not able to get module with dependency override name being: '$s'"
+      )
     } else {
       val org = pieces(0)
       val name = pieces(1)
@@ -67,16 +70,17 @@ object NameOfModule {
 }
 
 case class NameOfModule(
-  organization:      String,
-  name:              String,
-  exactName:         Boolean,
-  excludeName:       Seq[String],
-  needDoublePercent: Boolean
+    organization: String,
+    name: String,
+    exactName: Boolean,
+    excludeName: Seq[String],
+    needDoublePercent: Boolean
 ) {
-  @transient lazy val key:                      (String, String) = (organization, name)
-  @transient lazy private val percentConnector: String = if (needDoublePercent) "%%" else "%"
-  @transient lazy private val lowerCaseName:    String = name.toLowerCase
-  @transient lazy val toPath:                   String = s"$organization | $name"
+  @transient lazy val key: (String, String) = (organization, name)
+  @transient lazy private val percentConnector: String =
+    if (needDoublePercent) "%%" else "%"
+  @transient lazy private val lowerCaseName: String = name.toLowerCase
+  @transient lazy val toPath: String = s"$organization | $name"
   @transient lazy override val toString: String =
     s""" "$organization" $percentConnector "$name" """.trim
 
@@ -84,13 +88,17 @@ case class NameOfModule(
     if (exactName) {
       otherName.toLowerCase == lowerCaseName
     } else {
-      isExcludedName(otherName) && otherName.toLowerCase.startsWith(lowerCaseName)
+      isExcludedName(otherName) && otherName.toLowerCase.startsWith(
+        lowerCaseName
+      )
     }
   }
 
-  private def isExcludedName(testName: String): Boolean = !excludeName.exists(testName.startsWith)
+  private def isExcludedName(testName: String): Boolean =
+    !excludeName.exists(testName.startsWith)
 
-  @transient lazy val toOrganizationArtifactName: Either[String, Dependency.OrgArtifact] = {
+  @transient lazy val toOrganizationArtifactName
+    : Either[String, Dependency.OrgArtifact] = {
     if (exactName) {
       if (needDoublePercent) {
         Right(organization %% name)
@@ -98,7 +106,9 @@ case class NameOfModule(
         Right(organization % name)
       }
     } else {
-      Left(s"The name was not exact, could not create a moduleID for incomplete name: '$name'.")
+      Left(
+        s"The name was not exact, could not create a moduleID for incomplete name: '$name'."
+      )
     }
   }
 

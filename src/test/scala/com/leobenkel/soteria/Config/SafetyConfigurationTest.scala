@@ -5,7 +5,7 @@ import com.leobenkel.soteria.Utils.Json.JsonDecode
 import com.leobenkel.soteria.{LogTest, ParentTest}
 
 class SoteriaConfigurationTest extends ParentTest {
-  private val test:       SoteriaConfigurationTest = this
+  private val test: SoteriaConfigurationTest = this
   private val soteriaLog: LogTest = new LogTest(test)
 
   test("test serialize/deserialize") {
@@ -65,7 +65,9 @@ class SoteriaConfigurationTest extends ParentTest {
     val encoded = encodedEi.right.get
     log.debug(encoded)
     val sParsedEi = JsonDecode
-      .parse[SoteriaConfiguration](encoded)(SoteriaConfiguration.parser(soteriaLog))
+      .parse[SoteriaConfiguration](encoded)(
+        SoteriaConfiguration.parser(soteriaLog)
+      )
     assert(sParsedEi.isRight)
     val sParsed = sParsedEi.right.get
     assertEquals(s, sParsed)
@@ -147,7 +149,8 @@ class SoteriaConfigurationTest extends ParentTest {
       )
     )
 
-    val s2 = s1.replaceModule(Dependency("com.org2", "name2").withVersion("2.0"))
+    val s2 =
+      s1.replaceModule(Dependency("com.org2", "name2").withVersion("2.0"))
 
     assert(s2.AllModules.length == 2)
     assert(s2.AllModules.find(_.name == "name").get.version.right.get == "1.0")

@@ -6,13 +6,14 @@ import sbt.librarymanagement.ModuleID
 private[soteria] object ImplicitModuleToString {
 
   implicit class ModuleToString(m: ModuleID) {
-    final def prettyString: String = s"""["${m.organization}" % "${m.name}" % "${m.revision}"]"""
+    final def prettyString: String =
+      s"""["${m.organization}" % "${m.name}" % "${m.revision}"]"""
   }
 
   implicit class ModuleToStringSeq(mm: Seq[ModuleID]) {
     final def prettyString(
-      log:    LoggerExtended,
-      header: String
+        log: LoggerExtended,
+        header: String
     ): Unit = {
       def toKey(m: ModuleID): (String, String, String) = {
         (m.organization, m.name, m.revision)
@@ -28,8 +29,8 @@ private[soteria] object ImplicitModuleToString {
 
   implicit class SoteriaModuleToStringSeq(mm: Seq[Dependency]) {
     final def prettyString(
-      log:    LoggerExtended,
-      header: String
+        log: LoggerExtended,
+        header: String
     ): Unit = {
       def toKey(m: Dependency): (String, String, Option[String]) = {
         (m.organization, m.name, m.versions.headOption)

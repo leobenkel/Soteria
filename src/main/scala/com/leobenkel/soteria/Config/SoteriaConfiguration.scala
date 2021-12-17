@@ -3,36 +3,36 @@ package com.leobenkel.soteria.Config
 import com.leobenkel.soteria.Modules._
 import com.leobenkel.soteria.Utils.EitherUtils._
 import com.leobenkel.soteria.Utils.Json.JsonDecode
+import com.leobenkel.soteria.Utils.Json.JsonDecode.Encoder
 import com.leobenkel.soteria.Utils.Json.JsonParserHelper._
 import com.leobenkel.soteria.Utils.LoggerExtended
-import com.leobenkel.soteria.Utils.Json.JsonDecode.Encoder
 import sbt.librarymanagement.ModuleID
 
-/**
-  * What is read from the JSON config file
-  */
+/** What is read from the JSON config file */
 private[soteria] case class SoteriaConfiguration(
-  log:            LoggerExtended,
-  sbtVersion:     String,
-  scalaVersions:  Set[String],
-  scalaCFlags:    Seq[String],
-  modules:        Map[String, Map[String, SerializedModule]],
-  dockerImageOpt: Option[String]
+    log: LoggerExtended,
+    sbtVersion: String,
+    scalaVersions: Set[String],
+    scalaCFlags: Seq[String],
+    modules: Map[String, Map[String, SerializedModule]],
+    dockerImageOpt: Option[String]
 ) extends Encoder {
   @transient lazy val dockerImage: String =
     dockerImageOpt.getOrElse(SoteriaConfiguration.defaultDockerImage)
   @transient lazy val dockerImageWasSet: Boolean = dockerImageOpt.isDefined
 
-  @transient lazy private val retrieveModule: String => Either[String, NameOfModule] =
+  @transient lazy private val retrieveModule
+    : String => Either[String, NameOfModule] =
     NameOfModule.find(modules)
 
-  @transient lazy private val RawModules: Seq[(Dependency, Seq[String])] = modules.flatMap {
-    case (org, mm) =>
-      mm.map {
-        case (name, m) =>
-          m.toDependency(org, name, retrieveModule)
-      }
-  }.toSeq
+  @transient lazy private val RawModules: Seq[(Dependency, Seq[String])] =
+    modules.flatMap {
+      case (org, mm) =>
+        mm.map {
+          case (name, m) =>
+            m.toDependency(org, name, retrieveModule)
+        }
+    }.toSeq
 
   @transient lazy val AllModules: Seq[Dependency] = RawModules.map {
     case (module, errors) =>
@@ -43,34 +43,38 @@ private[soteria] case class SoteriaConfiguration(
       module
   }
 
-  @transient lazy val NeedOverridden:   Seq[Dependency] = AllModules.filter(!_.overrideIsEnough)
-  @transient lazy val AsProvided:       Seq[Dependency] = AllModules.filter(_.shouldBeProvided)
-  @transient lazy val ShouldDownload:   Seq[Dependency] = AllModules.filter(_.shouldDownload)
-  @transient lazy val NeedToBeReplaced: Seq[Dependency] = AllModules.filter(_.needToBeReplaced)
-  @transient lazy val CorrectVersions:  Seq[Dependency] = AllModules.filter(_.isCorrectVersion)
-  @transient lazy val PackageKnownRiskDependencies: Map[Dependency, Seq[NameOfModule]] =
+  @transient lazy val NeedOverridden: Seq[Dependency] =
+    AllModules.filter(!_.overrideIsEnough)
+  @transient lazy val AsProvided: Seq[Dependency] =
+    AllModules.filter(_.shouldBeProvided)
+  @transient lazy val ShouldDownload: Seq[Dependency] =
+    AllModules.filter(_.shouldDownload)
+  @transient lazy val NeedToBeReplaced: Seq[Dependency] =
+    AllModules.filter(_.needToBeReplaced)
+  @transient lazy val CorrectVersions: Seq[Dependency] =
+    AllModules.filter(_.isCorrectVersion)
+  @transient lazy val PackageKnownRiskDependencies
+    : Map[Dependency, Seq[NameOfModule]] =
     AllModules
       .filter(_.dependenciesToRemove.nonEmpty)
       .map(m => (m, m.dependenciesToRemove))
       .toMap
-  @transient lazy val AllModuleID: Set[ModuleID] = AllModules
-    .map(_.toModuleID)
-    .flattenEI
-    .toSet
+  @transient lazy val AllModuleID: Set[ModuleID] =
+    AllModules.map(_.toModuleID).flattenEI.toSet
   @transient lazy val DependenciesOverride: Set[ModuleID] = AllModuleID
   @transient lazy val ForbiddenModules: Seq[(Dependency, String)] = AllModules
     .filter(_.isForbidden)
     .map(m => (m, m.forbiddenExplanation))
 
-  lazy override protected val asMap: Map[String, Any] = {
+  lazy override protected val asMap: Map[String, Any] =
     Map[String, Any](
-      "sbtVersion"    -> this.sbtVersion,
+      "sbtVersion" -> this.sbtVersion,
       "scalaVersions" -> this.scalaVersions.toList,
-      "scalaCFlags"   -> this.scalaCFlags.toList,
-      "dockerImage"   -> this.dockerImageOpt,
-      "modules"       -> this.modules.mapValues(_.mapValues(_.toJsonStructure.right.get))
+      "scalaCFlags" -> this.scalaCFlags.toList,
+      "dockerImage" -> this.dockerImageOpt,
+      "modules" -> this.modules
+        .mapValues(_.mapValues(_.toJsonStructure.right.get))
     )
-  }
 
   def getValidModule(scalaVersion: String): Set[ModuleID] = {
     val scalaV = ScalaV(scalaVersion).right.get
@@ -81,7 +85,7 @@ private[soteria] case class SoteriaConfiguration(
       .toSet
   }
 
-  def replaceModule(newModule: Dependency): SoteriaConfiguration = {
+  def replaceModule(newModule: Dependency): SoteriaConfiguration =
     this.copy(
       modules = modules.updated(
         newModule.organization,
@@ -91,7 +95,6 @@ private[soteria] case class SoteriaConfiguration(
           .getOrElse(Map(newModule.name -> newModule.toSerializedModule))
       )
     )
-  }
 
   object ZTestOnly {
     lazy val RawModulesTest: Seq[(Dependency, Seq[String])] = RawModules
@@ -101,20 +104,20 @@ private[soteria] case class SoteriaConfiguration(
 private[soteria] object SoteriaConfiguration {
   val defaultDockerImage: String = "openjdk:8-jre"
 
-  implicit val parser: LoggerExtended => JsonDecode.Parser[SoteriaConfiguration] =
+  implicit val parser
+    : LoggerExtended => JsonDecode.Parser[SoteriaConfiguration] =
     (log: LoggerExtended) =>
       (input: Map[String, Any]) => {
         for {
-          sbtVersion   <- input.getAs[String]("sbtVersion")
+          sbtVersion <- input.getAs[String]("sbtVersion")
           scalaVersion <- input.getAs[List[String]]("scalaVersions")
-          _ <- if (scalaVersion.isEmpty) {
+          _ <- if (scalaVersion.isEmpty)
             Left("'scalaVersions' cannot be empty")
-          } else {
+          else
             Right(())
-          }
           dockerImage <- input.getOption[String]("dockerImage")
           scalaCFlags <- input.getOption[List[String]]("scalaCFlags")
-          moduleRead  <- input.getOption[Map[String, Any]]("modules")
+          moduleRead <- input.getOption[Map[String, Any]]("modules")
           moduleFinal <- moduleRead match {
             case Some(m) =>
               m.map {
@@ -126,18 +129,22 @@ private[soteria] object SoteriaConfiguration {
                           case (name, s) =>
                             (
                               name,
-                              SerializedModule.parser(org, name)(s.asInstanceOf[Map[String, Any]])
+                              SerializedModule.parser(org, name)(
+                                s.asInstanceOf[Map[String, Any]]
+                              )
                             )
                         }
-                        .toSeq.flattenedEiSeq
+                        .toSeq
+                        .flattenedEiSeq
                         .map(_.toMap)
                     )
                 }
-                .toSeq.flattenedEiSeq
+                .toSeq
+                .flattenedEiSeq
                 .map(_.toMap)
             case None => Right(Map.empty[String, Map[String, SerializedModule]])
           }
-        } yield {
+        } yield
           SoteriaConfiguration.apply(
             log,
             sbtVersion = sbtVersion,
@@ -146,6 +153,5 @@ private[soteria] object SoteriaConfiguration {
             dockerImageOpt = dockerImage,
             modules = moduleFinal
           )
-        }
       }
 }

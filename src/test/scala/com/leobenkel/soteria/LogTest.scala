@@ -10,24 +10,27 @@ class LogTest(test: ParentTest) extends LoggerExtended {
     test.fail("Should not be called")
   }
 
-  override def criticalFailure(message: => String): Unit = test.fail("Should not be called")
+  override def criticalFailure(message: => String): Unit =
+    test.fail("Should not be called")
 
-  override def setLevel(level: Level.Value): LoggerExtended = test.fail("Should not be called")
+  override def setLevel(level: Level.Value): LoggerExtended =
+    test.fail("Should not be called")
 
   override def separator(
-    level: Level.Value,
-    title: String
+      level: Level.Value,
+      title: String
   ): Unit = {
     test.fail("Should not be called")
   }
 
   override def trace(t: => Throwable): Unit = test.fail("Should not be called")
 
-  override def success(message: => String): Unit = test.fail("Should not be called")
+  override def success(message: => String): Unit =
+    test.fail("Should not be called")
 
   override def log(
-    level:   Level.Value,
-    message: => String
+      level: Level.Value,
+      message: => String
   ): Unit = {
     test.fail("Should not be called")
   }

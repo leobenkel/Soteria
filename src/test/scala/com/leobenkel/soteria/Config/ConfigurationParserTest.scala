@@ -7,7 +7,8 @@ import sbt.util.Level
 class ConfigurationParserTest extends ParentTest {
   private val test: ConfigurationParserTest = this
 
-  private abstract class LogTest(test: ConfigurationParserTest) extends LoggerExtended {
+  private abstract class LogTest(test: ConfigurationParserTest)
+      extends LoggerExtended {
     override def isSoftError: Boolean = {
       test.fail("Should not be called")
     }
@@ -21,19 +22,21 @@ class ConfigurationParserTest extends ParentTest {
     }
 
     override def separator(
-      level: Level.Value,
-      title: String
+        level: Level.Value,
+        title: String
     ): Unit = {
       test.fail("Should not be called")
     }
 
-    override def trace(t: => Throwable): Unit = test.fail("Should not be called")
+    override def trace(t: => Throwable): Unit =
+      test.fail("Should not be called")
 
-    override def success(message: => String): Unit = test.fail("Should not be called")
+    override def success(message: => String): Unit =
+      test.fail("Should not be called")
 
     override def log(
-      level:   Level.Value,
-      message: => String
+        level: Level.Value,
+        message: => String
     ): Unit = {
       test.fail("Should not be called")
     }

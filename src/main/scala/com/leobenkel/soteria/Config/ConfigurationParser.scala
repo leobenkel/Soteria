@@ -7,8 +7,8 @@ import scala.io.Source
 import scala.util._
 
 private[soteria] case class ConfigurationParser(
-  log:        LoggerExtended,
-  configPath: String
+    log: LoggerExtended,
+    configPath: String
 ) {
   if (!configPath.endsWith(".json")) {
     log.criticalFailure(
@@ -17,7 +17,8 @@ private[soteria] case class ConfigurationParser(
     )
   }
 
-  @transient lazy private val isWeb: Boolean = configPath.startsWith("http://") || configPath
+  @transient lazy private val isWeb
+    : Boolean = configPath.startsWith("http://") || configPath
     .startsWith("https://")
 
   @transient lazy private val fileContent: String =
@@ -36,7 +37,9 @@ private[soteria] case class ConfigurationParser(
     }
 
   @transient lazy private val conf: SoteriaConfiguration = {
-    JsonDecode.parse[SoteriaConfiguration](fileContent)(SoteriaConfiguration.parser(log)) match {
+    JsonDecode.parse[SoteriaConfiguration](fileContent)(
+      SoteriaConfiguration.parser(log)
+    ) match {
       case Left(err: String) =>
         log.criticalFailure(err)
         throw new Exception(err)

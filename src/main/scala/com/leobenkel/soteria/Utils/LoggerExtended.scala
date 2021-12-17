@@ -13,11 +13,11 @@ private[soteria] trait LoggerExtended extends Logger {
   def setLevel(level: Level.Value): LoggerExtended
 
   def separator(
-    level: Level.Value,
-    title: String
+      level: Level.Value,
+      title: String
   ): Unit
 
-  final def separatorInfo(title:  String): Unit = separator(Level.Info, title)
+  final def separatorInfo(title: String): Unit = separator(Level.Info, title)
   final def separatorDebug(title: String): Unit = separator(Level.Debug, title)
 
   def fail(message: => String): Unit = {

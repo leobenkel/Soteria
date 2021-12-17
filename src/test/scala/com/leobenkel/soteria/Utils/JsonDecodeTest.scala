@@ -15,13 +15,14 @@ class JsonDecodeTest extends ParentTest {
     val value: Int = 12
     case class MyJson(key: Int)
 
-    implicit val parser: JsonDecode.Parser[MyJson] = (input: Map[String, Any]) => {
-      for {
-        key <- input.getAsInt("key")
-      } yield {
-        MyJson(key)
+    implicit val parser: JsonDecode.Parser[MyJson] =
+      (input: Map[String, Any]) => {
+        for {
+          key <- input.getAsInt("key")
+        } yield {
+          MyJson(key)
+        }
       }
-    }
 
     val ei = JsonDecode.parse[MyJson](s"""
         |{
@@ -86,7 +87,9 @@ class JsonDecodeTest extends ParentTest {
         log.debug(s"Reading '$filePath'")
 
         val result: Either[String, SoteriaConfiguration] =
-          JsonDecode.parse[SoteriaConfiguration](content)(SoteriaConfiguration.parser(soteriaLog))
+          JsonDecode.parse[SoteriaConfiguration](content)(
+            SoteriaConfiguration.parser(soteriaLog)
+          )
 
         test(result)
     }

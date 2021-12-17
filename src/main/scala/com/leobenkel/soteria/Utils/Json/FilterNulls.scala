@@ -8,11 +8,11 @@ object FilterNulls {
           case (_, v: Option[_]) => v.isDefined
           case (_, v: List[_])   => v.nonEmpty
           case (_, v: Map[_, _]) => v.nonEmpty
-          case (_, _) => true
+          case (_, _)            => true
         }
         .mapValues {
           case v: Some[_] => v.get
-          case v => v
+          case v          => v
         }
     }
   }

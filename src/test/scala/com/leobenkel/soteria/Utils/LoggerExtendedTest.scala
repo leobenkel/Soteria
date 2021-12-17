@@ -6,7 +6,8 @@ import sbt.util.Level
 class LoggerExtendedTest extends ParentTest {
   private val test: LoggerExtendedTest = this
 
-  private abstract class LogSeparatorTest(test: LoggerExtendedTest) extends LoggerExtended {
+  private abstract class LogSeparatorTest(test: LoggerExtendedTest)
+      extends LoggerExtended {
     final override def isSoftError: Boolean = {
       test.fail("Should not be called")
     }
@@ -15,25 +16,29 @@ class LoggerExtendedTest extends ParentTest {
       test.fail("Should not be called")
     }
 
-    final override def criticalFailure(message: => String): Unit = test.fail("Should not be called")
+    final override def criticalFailure(message: => String): Unit =
+      test.fail("Should not be called")
 
     final override def setLevel(level: Level.Value): LoggerExtended = {
       test.fail("Should not be called")
     }
 
-    final override def trace(t: => Throwable): Unit = test.fail("Should not be called")
+    final override def trace(t: => Throwable): Unit =
+      test.fail("Should not be called")
 
-    final override def success(message: => String): Unit = test.fail("Should not be called")
+    final override def success(message: => String): Unit =
+      test.fail("Should not be called")
 
     final override def log(
-      level:   Level.Value,
-      message: => String
+        level: Level.Value,
+        message: => String
     ): Unit = {
       test.fail("Should not be called")
     }
   }
 
-  private abstract class LogFailTest(test: LoggerExtendedTest) extends LoggerExtended {
+  private abstract class LogFailTest(test: LoggerExtendedTest)
+      extends LoggerExtended {
     final override def setSoftError(softError: Boolean): LoggerExtended = {
       test.fail("should not be called")
     }
@@ -43,23 +48,25 @@ class LoggerExtendedTest extends ParentTest {
     }
 
     final override def separator(
-      level: Level.Value,
-      title: String
+        level: Level.Value,
+        title: String
     ): Unit = {
       test.fail("should not be called")
     }
 
-    final override def trace(t: => Throwable): Unit = test.fail("should not be called")
+    final override def trace(t: => Throwable): Unit =
+      test.fail("should not be called")
 
-    final override def success(message: => String): Unit = test.fail("should not be called")
+    final override def success(message: => String): Unit =
+      test.fail("should not be called")
   }
 
   test("Test separator") {
     val titleInput = "Cool title"
     val log = new LogSeparatorTest(test) {
       override def separator(
-        level: Level.Value,
-        title: String
+          level: Level.Value,
+          title: String
       ): Unit = {
         assertEquals(titleInput, title)
       }
@@ -73,8 +80,8 @@ class LoggerExtendedTest extends ParentTest {
     val titleInput = "Cool title"
     val log = new LogSeparatorTest(test) {
       override def separator(
-        level: Level.Value,
-        title: String
+          level: Level.Value,
+          title: String
       ): Unit = {
         assertEquals(titleInput, title)
         assertEquals(Level.Info, level)
@@ -88,8 +95,8 @@ class LoggerExtendedTest extends ParentTest {
     val titleInput = "Cool title"
     val log = new LogSeparatorTest(test) {
       override def separator(
-        level: Level.Value,
-        title: String
+          level: Level.Value,
+          title: String
       ): Unit = {
         assertEquals(titleInput, title)
         assertEquals(Level.Debug, level)
@@ -104,11 +111,12 @@ class LoggerExtendedTest extends ParentTest {
     val log = new LogFailTest(test) {
       override def isSoftError: Boolean = true
 
-      override def criticalFailure(message: => String): Unit = test.fail("Should not be called")
+      override def criticalFailure(message: => String): Unit =
+        test.fail("Should not be called")
 
       override def log(
-        level:   Level.Value,
-        message: => String
+          level: Level.Value,
+          message: => String
       ): Unit = {
         assertEquals(messageInput, message)
         assertEquals(Level.Error, level)
@@ -128,8 +136,8 @@ class LoggerExtendedTest extends ParentTest {
       }
 
       override def log(
-        level:   Level.Value,
-        message: => String
+          level: Level.Value,
+          message: => String
       ): Unit = {
         test.fail("Should not be called")
       }
