@@ -1,2 +1,2 @@
 // https://github.com/leobenkel/soteria
-//addSbtPlugin("com.leobenkel" % "soteria" % "0.3.3")
+addSbtPlugin("com.leobenkel" % "soteria" % "0.3.3")

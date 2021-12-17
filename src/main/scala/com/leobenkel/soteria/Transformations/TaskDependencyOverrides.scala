@@ -8,12 +8,11 @@ import sbt.{Configuration, Def, Keys, ModuleID}
 private[Transformations] trait TaskDependencyOverrides {
 
   /**
-    * Since this does not inject more libraries into the build but just override,
-    * we always override the correct versions,
-    * coming from [[com.leobenkel.soteria.Config.SoteriaConfiguration.DependenciesOverride]].
-    */
+   * Since this does not inject more libraries into the build but just override, we always override
+   * the correct versions.
+   */
   def dependencyOverrides(
-      conf: Option[Configuration]
+    conf: Option[Configuration]
   ): Def.Initialize[Seq[ModuleID]] = {
     Def.settingDyn {
       val log = soteriaGetLog.value
@@ -26,20 +25,17 @@ private[Transformations] trait TaskDependencyOverrides {
         log.debug(
           s"> Starting with ${originalDependencies.size} dependencyOverrides:"
         )
-        val newDependencyOverrides =
-          (originalDependencies ++ config.DependenciesOverride).distinct
+        val newDependencyOverrides = (originalDependencies ++ config.DependenciesOverride).distinct
 
         if (conf.isEmpty) {
           log.info(
             s"> 'dependencyOverrides' have ${newDependencyOverrides.size} overrides."
           )
           newDependencyOverrides.prettyString(log, "dependencyOverrides")
-        } else {
+        } else
           log.debug(
-            s"> '$conf / dependencyOverrides' have " +
-              s"${newDependencyOverrides.size} overrides."
+            s"> '$conf / dependencyOverrides' have " + s"${newDependencyOverrides.size} overrides."
           )
-        }
 
         newDependencyOverrides
       }

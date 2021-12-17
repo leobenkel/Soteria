@@ -6,4 +6,5 @@ scriptedLaunchOpts ++= Seq("-Xmx1024M", "-Dplugin.version=" + version.value)
 scriptedBufferLog         := false
 scriptedParallelInstances := 1
 scriptedBatchExecution    := false
-//stryker / logLevel := Level.Debug
+
+stryker / logLevel := Level.Debug

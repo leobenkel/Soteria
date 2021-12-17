@@ -30,6 +30,8 @@ private[Transformations] trait TaskAllDependencies
       val sbtVersion = sbtVersionExec().value
 
       Def.task {
+        log.debug(s"SBT Version: $sbtVersion")
+        log.debug(s"Scala Version: $scalaVersion")
         execAllDependencies(
           log = log,
           soteriaConfig = soteriaConfig,

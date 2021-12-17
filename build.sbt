@@ -1,9 +1,5 @@
-//soteriaAddSemantic := false
+soteriaAddSemantic := false
 
-//resolvers ++= Seq(
-//        "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases",
-//        "JBoss" at "https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/"
-//)
 libraryDependencies += "commons-logging" % "commons-logging" % "1.2"
 
 // Test
