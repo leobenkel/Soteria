@@ -17,6 +17,8 @@ jobs:
           sbt coveralls
         with:
           github-token: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          COVERALLS_GIT_COMMIT: ${{ env.GITHUB_SHA }}
+          COVERALLS_GIT_BRANCH: ${{ env.GITHUB_REF }}
       - name: release-staging
         run: |
           sbt ";set isSnapshot := true ; clean ; ci-release"
