@@ -15,7 +15,7 @@ jobs:
           make test_plugin 
           make test_coverage test_coverage_report
           sbt coveralls
-        with:
+        env:
           github-token: ${{ secrets.COVERALLS_REPO_TOKEN }}
           COVERALLS_GIT_COMMIT: ${{ env.GITHUB_SHA }}
           COVERALLS_GIT_BRANCH: ${{ env.GITHUB_REF }}
