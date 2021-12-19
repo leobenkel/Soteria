@@ -15,6 +15,8 @@ jobs:
           make test_plugin 
           make test_coverage test_coverage_report
           sbt coveralls
+        with:
+          github-token: ${{ secrets.COVERALLS_REPO_TOKEN }}
       - name: release-staging
         run: |
           sbt ";set isSnapshot := true ; clean ; ci-release"
