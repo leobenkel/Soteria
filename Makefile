@@ -39,8 +39,10 @@ test_coverage_run:
 test_coverage:
 	sbt ";clean; coverage; test"
 
+# https://github.com/scoverage/sbt-coveralls#github-actions-integration
+# && sbt coverageAggregate
 test_coverage_report:
-	sbt coverageReport && sbt coverageAggregate
+	sbt coverageReport
 
 check_style:
 	sbt soteriaCheckScalaFmt
