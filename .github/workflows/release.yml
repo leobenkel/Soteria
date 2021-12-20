@@ -17,6 +17,7 @@ jobs:
           sbt coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          COVERALLS_SERVICE_NAME: ${{ secrets.COVERALLS_SERVICE_NAME }}
           COVERALLS_FLAG_NAME: Scala ${{ matrix.scala }}
           COVERALLS_GIT_COMMIT: ${{ env.GITHUB_SHA }}
           COVERALLS_GIT_BRANCH: ${{ env.GITHUB_REF }}
