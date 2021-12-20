@@ -8,3 +8,5 @@ scriptedParallelInstances := 1
 scriptedBatchExecution    := false
 
 stryker / logLevel := Level.Debug
+
+coverageOutputDebug := true
