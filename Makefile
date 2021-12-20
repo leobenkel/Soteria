@@ -37,12 +37,7 @@ test_coverage_run:
 	open ./target/scala-2.12/sbt-1.0/scoverage-report/index.html
 
 test_coverage:
-	sbt ";clean; coverage; test"
-
-# https://github.com/scoverage/sbt-coveralls#github-actions-integration
-# && sbt coverageAggregate
-test_coverage_report:
-	sbt coverageReport
+	sbt ";clean; coverage; test; coverageReport; coveralls"
 
 check_style:
 	sbt soteriaCheckScalaFmt
