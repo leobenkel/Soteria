@@ -23,10 +23,10 @@ jobs:
 
       - name: test-coverage
         run: |
-          export COVERALLS_REPO_TOKEN="pKjQ0Lr189Gu9HbGez15vXvVSFNgEgZmr" && make test_coverage
+          make test_coverage
         env:
-#          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-          COVERALLS_SERVICE_NAME: github-actions
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          COVERALLS_SERVICE_NAME: "github-actions"
 
       - name: release-staging
         run: sbt ";set isSnapshot := true ; clean ; ci-release"
