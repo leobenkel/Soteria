@@ -1,2 +1,3 @@
 // https://github.com/leobenkel/soteria
-addSbtPlugin("com.leobenkel" % "soteria" % "0.3.3")
+resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+addSbtPlugin("com.leobenkel" % "soteria" % "0.0.0+1-0c19bf3a-SNAPSHOT")

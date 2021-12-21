@@ -4,5 +4,4 @@ lazy val root = (project in file(".")).settings(
   assembly / assemblyJarName := "foo.jar"
 )
 
-// TODO: Replace with main branch when merged
 soteriaConfPath := "https://raw.githubusercontent.com/leobenkel/soteria/main/soteria.json"
