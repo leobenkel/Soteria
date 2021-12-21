@@ -23,12 +23,10 @@ jobs:
 
       - name: test-coverage
         run: |
-          echo "Coverall is: ${CAN_DISPLAY}"
-          make test_coverage
+          export COVERALLS_REPO_TOKEN="pKjQ0Lr189Gu9HbGez15vXvVSFNgEgZmr" && make test_coverage
         env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+#          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           COVERALLS_SERVICE_NAME: github-actions
-          CAN_DISPLAY: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
       - name: release-staging
         run: sbt ";set isSnapshot := true ; clean ; ci-release"
