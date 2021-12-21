@@ -1,5 +1,5 @@
 {
-  "sbtVersion": "1.5.7",
+  "sbtVersion": "1.5.8",
   "scalaVersions": [
     "2.12.14",
     "2.11.12"
