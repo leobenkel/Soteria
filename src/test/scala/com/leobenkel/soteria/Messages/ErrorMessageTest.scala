@@ -7,16 +7,16 @@ class ErrorMessageTest extends ParentTest {
   import CommonMessage._
 
   test("Test errors") {
-    "This is an error".asErrors
-      .consume(
-        s =>
-          assertEquals(
-            """
+    "This is an error"
+      .asErrors
+      .consume(s =>
+        assertEquals(
+          """
             |Found blocks of errors (1) :
             |  This is an error
           """.trim.stripMargin,
-            s
-          )
+          s
+        )
       )
   }
 
@@ -30,11 +30,9 @@ class ErrorMessageTest extends ParentTest {
         "more 1",
         "more 2",
         "more 3"
-      ).toError("more Errors"))
-      .consume(
-        s =>
-          assertEquals(
-            """
+      ).toError("more Errors")).consume(s =>
+      assertEquals(
+        """
             |Found blocks of errors (2) :
             |  We have a log of errors (3) :
             |    error one
@@ -45,9 +43,9 @@ class ErrorMessageTest extends ParentTest {
             |    more 2
             |    more 3
           """.trim.stripMargin,
-            s
-          )
+        s
       )
+    )
   }
 
   test("Test one nested error") {
@@ -57,18 +55,17 @@ class ErrorMessageTest extends ParentTest {
       "error three"
     ).toError("We have a log of errors")
       .toErrors
-      .consume(
-        s =>
-          assertEquals(
-            """
+      .consume(s =>
+        assertEquals(
+          """
             |Found blocks of errors (1) :
             |  We have a log of errors (3) :
             |    error one
             |    error two
             |    error three
           """.trim.stripMargin,
-            s
-          )
+          s
+        )
       )
   }
 
@@ -78,17 +75,16 @@ class ErrorMessageTest extends ParentTest {
       "error two",
       "error three"
     ).toError("We have a log of errors")
-      .consume(
-        s =>
-          assertEquals(
-            """
+      .consume(s =>
+        assertEquals(
+          """
           |We have a log of errors (3) :
           |  error one
           |  error two
           |  error three
         """.trim.stripMargin,
-            s
-          )
+          s
+        )
       )
   }
 
@@ -105,8 +101,7 @@ class ErrorMessageTest extends ParentTest {
   }
 
   test("Test resolve without errors") {
-    val input = Errors(Seq.empty[WithErrorMessage])
-      .resolve("This is a success")
+    val input = Errors(Seq.empty[WithErrorMessage]).resolve("This is a success")
 
     assert(input.isRight)
   }
@@ -149,9 +144,7 @@ class ErrorMessageTest extends ParentTest {
   }
 
   test("Test Errors with no error") {
-    Errors(Seq.empty[WithErrorMessage]).consume { _ =>
-      fail("Should not be called")
-    }
+    Errors(Seq.empty[WithErrorMessage]).consume(_ => fail("Should not be called"))
     assertEquals("No Error", Errors(Seq.empty[WithErrorMessage]).toString)
   }
 

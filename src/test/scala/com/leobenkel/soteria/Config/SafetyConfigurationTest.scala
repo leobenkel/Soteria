@@ -1,11 +1,11 @@
 package com.leobenkel.soteria.Config
 
+import com.leobenkel.soteria.{LogTest, ParentTest}
 import com.leobenkel.soteria.Modules.Dependency
 import com.leobenkel.soteria.Utils.Json.JsonDecode
-import com.leobenkel.soteria.{LogTest, ParentTest}
 
 class SoteriaConfigurationTest extends ParentTest {
-  private val test: SoteriaConfigurationTest = this
+  private val test:       SoteriaConfigurationTest = this
   private val soteriaLog: LogTest = new LogTest(test)
 
   test("test serialize/deserialize") {
@@ -19,13 +19,17 @@ class SoteriaConfigurationTest extends ParentTest {
       scalaCFlags = Seq("flag1", "flag2"),
       dockerImageOpt = None,
       modules = Map(
-        "com.org" -> Map(
-          "name" -> SerializedModule.Empty.copy(
-            version = "1.0",
-            shouldBeProvided = Some(true),
-            excludeName = Some(Seq("a", "b"))
+        "com.org" ->
+          Map(
+            "name" ->
+              SerializedModule
+                .Empty
+                .copy(
+                  version = "1.0",
+                  shouldBeProvided = Some(true),
+                  excludeName = Some(Seq("a", "b"))
+                )
           )
-        )
       )
     )
 
@@ -50,13 +54,17 @@ class SoteriaConfigurationTest extends ParentTest {
       scalaCFlags = Seq("flag1", "flag2"),
       dockerImageOpt = None,
       modules = Map(
-        "com.org" -> Map(
-          "name" -> SerializedModule.Empty.copy(
-            version = "1.0",
-            shouldBeProvided = Some(true),
-            excludeName = Some(Seq("a", "b"))
+        "com.org" ->
+          Map(
+            "name" ->
+              SerializedModule
+                .Empty
+                .copy(
+                  version = "1.0",
+                  shouldBeProvided = Some(true),
+                  excludeName = Some(Seq("a", "b"))
+                )
           )
-        )
       )
     )
 
@@ -64,10 +72,9 @@ class SoteriaConfigurationTest extends ParentTest {
     assert(encodedEi.isRight)
     val encoded = encodedEi.right.get
     log.debug(encoded)
-    val sParsedEi = JsonDecode
-      .parse[SoteriaConfiguration](encoded)(
-        SoteriaConfiguration.parser(soteriaLog)
-      )
+    val sParsedEi = JsonDecode.parse[SoteriaConfiguration](encoded)(
+      SoteriaConfiguration.parser(soteriaLog)
+    )
     assert(sParsedEi.isRight)
     val sParsed = sParsedEi.right.get
     assertEquals(s, sParsed)
@@ -84,13 +91,17 @@ class SoteriaConfigurationTest extends ParentTest {
       scalaCFlags = Seq("flag1", "flag2"),
       dockerImageOpt = None,
       modules = Map(
-        "com.org" -> Map(
-          "name" -> SerializedModule.Empty.copy(
-            version = "1.0",
-            shouldBeProvided = Some(true),
-            excludeName = Some(Seq("a", "b"))
+        "com.org" ->
+          Map(
+            "name" ->
+              SerializedModule
+                .Empty
+                .copy(
+                  version = "1.0",
+                  shouldBeProvided = Some(true),
+                  excludeName = Some(Seq("a", "b"))
+                )
           )
-        )
       )
     )
 
@@ -111,13 +122,17 @@ class SoteriaConfigurationTest extends ParentTest {
       scalaCFlags = Seq("flag1", "flag2"),
       dockerImageOpt = None,
       modules = Map(
-        "com.org" -> Map(
-          "name" -> SerializedModule.Empty.copy(
-            version = "1.0",
-            shouldBeProvided = Some(true),
-            excludeName = Some(Seq("a", "b"))
+        "com.org" ->
+          Map(
+            "name" ->
+              SerializedModule
+                .Empty
+                .copy(
+                  version = "1.0",
+                  shouldBeProvided = Some(true),
+                  excludeName = Some(Seq("a", "b"))
+                )
           )
-        )
       )
     )
 
@@ -139,13 +154,17 @@ class SoteriaConfigurationTest extends ParentTest {
       scalaCFlags = Seq("flag1", "flag2"),
       dockerImageOpt = None,
       modules = Map(
-        "com.org" -> Map(
-          "name" -> SerializedModule.Empty.copy(
-            version = "1.0",
-            shouldBeProvided = Some(true),
-            excludeName = Some(Seq("a", "b"))
+        "com.org" ->
+          Map(
+            "name" ->
+              SerializedModule
+                .Empty
+                .copy(
+                  version = "1.0",
+                  shouldBeProvided = Some(true),
+                  excludeName = Some(Seq("a", "b"))
+                )
           )
-        )
       )
     )
 

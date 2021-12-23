@@ -2,7 +2,7 @@ package com.leobenkel.soteria.Utils.Json
 
 object FilterNulls {
   implicit class FilterMap(val m: Map[_, _]) extends AnyVal {
-    def filterNullsOut: Map[String, Any] = {
+    def filterNullsOut: Map[String, Any] =
       m.map { case (k, v) => (k.toString, v) }
         .filter {
           case (_, v: Option[_]) => v.isDefined
@@ -12,8 +12,7 @@ object FilterNulls {
         }
         .mapValues {
           case v: Some[_] => v.get
-          case v          => v
+          case v => v
         }
-    }
   }
 }

@@ -1,11 +1,10 @@
 package com.leobenkel.soteria.Utils
 
+import com.leobenkel.soteria.{LogTest, ParentTest}
 import com.leobenkel.soteria.Config.SoteriaConfiguration
 import com.leobenkel.soteria.Utils.Json.JsonDecode
 import com.leobenkel.soteria.Utils.Json.JsonParserHelper._
-import com.leobenkel.soteria.{LogTest, ParentTest}
 import org.scalatest.Assertion
-
 import scala.io.Source
 
 class JsonDecodeTest extends ParentTest {
@@ -16,13 +15,10 @@ class JsonDecodeTest extends ParentTest {
     case class MyJson(key: Int)
 
     implicit val parser: JsonDecode.Parser[MyJson] =
-      (input: Map[String, Any]) => {
+      (input: Map[String, Any]) =>
         for {
           key <- input.getAsInt("key")
-        } yield {
-          MyJson(key)
-        }
-      }
+        } yield MyJson(key)
 
     val ei = JsonDecode.parse[MyJson](s"""
         |{

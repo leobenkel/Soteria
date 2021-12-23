@@ -3,15 +3,15 @@ package com.leobenkel.soteria.Transformations
 import sbtassembly.{MergeStrategy, PathList}
 
 /**
-  * Stryker4s was mutating this method and making it too large for the JVM.
-  * Moved to its own place so it is easier to deal with
-  */
+ * Stryker4s was mutating this method and making it too large for the JVM. Moved to its own place so
+ * it is easier to deal with
+ */
 private[Transformations] trait MergeStrategyConfiguration {
 
   // scalastyle:off cyclomatic.complexity
   def getMergeStrategy(
-      input: String,
-      oldStrategy: String => MergeStrategy
+    input:       String,
+    oldStrategy: String => MergeStrategy
   ): MergeStrategy = {
     input match {
       case "git.properties"                           => MergeStrategy.rename

@@ -1,10 +1,9 @@
 package com.leobenkel.soteria.Config
 
+import com.leobenkel.soteria.{LogTest, ParentTest}
 import com.leobenkel.soteria.Modules.NameOfModule
 import com.leobenkel.soteria.Utils.Json.JsonDecode
-import com.leobenkel.soteria.{LogTest, ParentTest}
 import sbt.util.Level
-
 import scala.io.Source
 
 // scalastyle:off magic.number
@@ -14,8 +13,8 @@ class SerializedModuleTest extends ParentTest {
   private class LogTestWithBuffer extends LogTest(test) {
     private var allMessages: String = ""
     override def log(
-        level: Level.Value,
-        message: => String
+      level:   Level.Value,
+      message: => String
     ): Unit = {
       test.log.debug(message)
       assertEquals(Level.Error, level)
@@ -48,7 +47,9 @@ class SerializedModuleTest extends ParentTest {
 
     val modules = serializedModule.AllModules.sortBy(s => s.key)
 
-    val modulesWithDependanceErrors = serializedModule.ZTestOnly.RawModulesTest
+    val modulesWithDependanceErrors = serializedModule
+      .ZTestOnly
+      .RawModulesTest
       .filter(_._2.nonEmpty)
     modulesWithDependanceErrors.foreach {
       case (module, errors) =>
@@ -89,11 +90,13 @@ class SerializedModuleTest extends ParentTest {
   }
 
   test("test serialize/deserialize") {
-    val s = SerializedModule.Empty.copy(
-      version = "1.0",
-      shouldBeProvided = Some(true),
-      excludeName = Some(Seq("a", "b"))
-    )
+    val s = SerializedModule
+      .Empty
+      .copy(
+        version = "1.0",
+        shouldBeProvided = Some(true),
+        excludeName = Some(Seq("a", "b"))
+      )
     val encodedEi = s.toJsonStructure
     assert(encodedEi.isRight)
     val encoded = encodedEi.right.get

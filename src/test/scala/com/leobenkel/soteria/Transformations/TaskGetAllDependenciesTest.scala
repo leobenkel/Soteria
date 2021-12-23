@@ -8,9 +8,7 @@ import sbt._
 import sbt.internal.util.ConsoleLogger
 import sbt.util.Level
 
-class TaskGetAllDependenciesTest
-    extends ParentTest
-    with TaskGetAllDependencies {
+class TaskGetAllDependenciesTest extends ParentTest with TaskGetAllDependencies {
   lazy val logger: SoteriaLogger = SoteriaLogger(
     ConsoleLogger(),
     Level.Debug,
@@ -19,8 +17,8 @@ class TaskGetAllDependenciesTest
 
   test("Process Deps - all good - 2.12") {
     val modules = Seq(
-      "org.something" %% "artifact" % "1.0.0",
-      "org.something" % "artifact-no-cross" % "1.0.0"
+      "org.something" %% "artifact"          % "1.0.0",
+      "org.something"  % "artifact-no-cross" % "1.0.0"
     )
     val output = processDependencies(
       logger,
@@ -33,8 +31,8 @@ class TaskGetAllDependenciesTest
 
   test("Process Deps - all good - 2.11") {
     val modules = Seq(
-      "org.something" %% "artifact" % "1.0.0",
-      "org.something" % "artifact-no-cross" % "1.0.0"
+      "org.something" %% "artifact"          % "1.0.0",
+      "org.something"  % "artifact-no-cross" % "1.0.0"
     )
     val output = processDependencies(
       logger,
@@ -176,7 +174,7 @@ class TaskGetAllDependenciesTest
               "com.fasterxml.jackson.core | jackson-core",
               "com.fasterxml.jackson.core | jackson-databind"
             ),
-          "version" -> "3.3.1",
+          "version"             -> "3.3.1",
           "scalaVersionsFilter" -> List("+2.12")
         )
       )
