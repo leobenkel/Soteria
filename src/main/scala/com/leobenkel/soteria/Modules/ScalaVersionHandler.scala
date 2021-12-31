@@ -15,10 +15,10 @@ case class ScalaVersionHandler(
 
 object ScalaVersionHandler {
   implicit class ScalaFilters(input: Seq[ScalaVersionHandler]) {
-    def applyTo(scalaV: ScalaV): Boolean = {
+    def applyTo(scalaV: ScalaV): Boolean =
       if (input.isEmpty)
         true
-      else {
+      else
         input
           .groupBy(_.filterPositive)
           .map {
@@ -35,8 +35,6 @@ object ScalaVersionHandler {
           .filter(f => f._1.isDefined)
           .toOption
           .forall(f => f.minBy(_._1.get)._2)
-      }
-    }
   }
 
   private def getFilter(input: String): Either[String, (String, Boolean)] =
