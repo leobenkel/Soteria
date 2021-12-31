@@ -32,34 +32,26 @@ class ImplicitModuleToStringTest extends ParentTest {
     val header = "this is a header"
     m.prettyString(
       new LoggerExtended() {
-        override def isSoftError: Boolean = {
-          test.fail("Should not be called")
-        }
+        override def isSoftError: Boolean = test.fail("Should not be called")
 
-        override def setSoftError(softError: Boolean): LoggerExtended = {
+        override def setSoftError(softError: Boolean): LoggerExtended =
           test.fail("Should not be called")
-        }
 
         override def separator(
-            level: Level.Value,
-            title: String
-        ): Unit = {
-          test.fail("Should not be called")
-        }
+          level: Level.Value,
+          title: String
+        ): Unit = test.fail("Should not be called")
 
-        override def setLevel(level: Level.Value): LoggerExtended = {
-          test.fail("Should not be called")
-        }
-
-        override def trace(t: => Throwable): Unit =
+        override def setLevel(level: Level.Value): LoggerExtended =
           test.fail("Should not be called")
 
-        override def success(message: => String): Unit =
-          test.fail("Should not be called")
+        override def trace(t: => Throwable): Unit = test.fail("Should not be called")
+
+        override def success(message: => String): Unit = test.fail("Should not be called")
 
         override def log(
-            level: Level.Value,
-            prettyString: => String
+          level:        Level.Value,
+          prettyString: => String
         ): Unit = {
           assertEquals(Level.Debug, level)
           assert(prettyString.contains(header))
@@ -70,9 +62,7 @@ class ImplicitModuleToStringTest extends ParentTest {
           ()
         }
 
-        override def criticalFailure(message: => String): Unit = {
-          test.fail("Should not be called")
-        }
+        override def criticalFailure(message: => String): Unit = test.fail("Should not be called")
       },
       header
     )
@@ -86,34 +76,26 @@ class ImplicitModuleToStringTest extends ParentTest {
     val header = "this is a header"
     m.prettyString(
       new LoggerExtended() {
-        override def isSoftError: Boolean = {
-          test.fail("Should not be called")
-        }
+        override def isSoftError: Boolean = test.fail("Should not be called")
 
-        override def setSoftError(softError: Boolean): LoggerExtended = {
+        override def setSoftError(softError: Boolean): LoggerExtended =
           test.fail("Should not be called")
-        }
 
         override def separator(
-            level: Level.Value,
-            title: String
-        ): Unit = {
-          test.fail("Should not be called")
-        }
+          level: Level.Value,
+          title: String
+        ): Unit = test.fail("Should not be called")
 
-        override def setLevel(level: Level.Value): LoggerExtended = {
-          test.fail("Should not be called")
-        }
-
-        override def trace(t: => Throwable): Unit =
+        override def setLevel(level: Level.Value): LoggerExtended =
           test.fail("Should not be called")
 
-        override def success(message: => String): Unit =
-          test.fail("Should not be called")
+        override def trace(t: => Throwable): Unit = test.fail("Should not be called")
+
+        override def success(message: => String): Unit = test.fail("Should not be called")
 
         override def log(
-            level: Level.Value,
-            prettyString: => String
+          level:        Level.Value,
+          prettyString: => String
         ): Unit = {
           assertEquals(Level.Debug, level)
           assert(prettyString.contains(header))
@@ -124,9 +106,7 @@ class ImplicitModuleToStringTest extends ParentTest {
           ()
         }
 
-        override def criticalFailure(message: => String): Unit = {
-          test.fail("Should not be called")
-        }
+        override def criticalFailure(message: => String): Unit = test.fail("Should not be called")
       },
       header
     )

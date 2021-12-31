@@ -11,7 +11,7 @@ class ModuleNoVersionTest extends ParentTest {
       "name"
     )
 
-    assertEquals(true, module1 === "org" % "name" % "version")
+    assertEquals(true, module1 === "org"  % "name"      % "version")
     assertEquals(false, module1 === "org" % "name-core" % "version")
     assertEquals(false, module1 === "org" % "different" % "version")
 
@@ -20,9 +20,9 @@ class ModuleNoVersionTest extends ParentTest {
       "name-"
     ).withName(_.copy(exactName = false))
 
-    assertEquals(true, module2 === "org" % "name-core" % "version")
-    assertEquals(true, module2 === "org" % "name-all" % "version")
-    assertEquals(false, module2 === "org" % "name" % "version")
+    assertEquals(true, module2 === "org"  % "name-core" % "version")
+    assertEquals(true, module2 === "org"  % "name-all"  % "version")
+    assertEquals(false, module2 === "org" % "name"      % "version")
     assertEquals(false, module2 === "org" % "different" % "version")
 
     val module3 = Dependency(
@@ -35,11 +35,11 @@ class ModuleNoVersionTest extends ParentTest {
       )
     )
 
-    assertEquals(true, module3 === "org" % "name-core" % "version")
-    assertEquals(true, module3 === "org" % "name-alok" % "version")
-    assertEquals(false, module3 === "org" % "name-all" % "version")
+    assertEquals(true, module3 === "org"  % "name-core"  % "version")
+    assertEquals(true, module3 === "org"  % "name-alok"  % "version")
+    assertEquals(false, module3 === "org" % "name-all"   % "version")
     assertEquals(false, module3 === "org" % "name-all-2" % "version")
-    assertEquals(false, module3 === "org" % "name" % "version")
-    assertEquals(false, module3 === "org" % "different" % "version")
+    assertEquals(false, module3 === "org" % "name"       % "version")
+    assertEquals(false, module3 === "org" % "different"  % "version")
   }
 }

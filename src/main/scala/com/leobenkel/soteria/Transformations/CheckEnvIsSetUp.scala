@@ -5,7 +5,7 @@ import sbt.{Def, Task}
 
 private[Transformations] trait CheckEnvIsSetUp {
 
-  def checkEnvVar(envKey: String): Def.Initialize[Task[Unit]] = {
+  def checkEnvVar(envKey: String): Def.Initialize[Task[Unit]] =
     Def.taskDyn {
       val log = SoteriaPluginKeys.soteriaGetLog.value
       val value = sys.env.get(envKey)
@@ -14,10 +14,7 @@ private[Transformations] trait CheckEnvIsSetUp {
           log.fail(
             s"No value was found for the environment variable: '$envKey'"
           )
-        } { _ =>
-          log.info(s"A value was found for the environment variable: '$envKey'")
-        }
+        }(_ => log.info(s"A value was found for the environment variable: '$envKey'"))
       }
     }
-  }
 }

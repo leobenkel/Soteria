@@ -5,35 +5,32 @@ import org.scalactic.source.Position
 import org.scalatest.Tag
 import org.scalatest.funsuite.AnyFunSuiteLike
 
-/**
-  * Common methods for all our tests.
-  */
+/** Common methods for all our tests. */
 trait ParentTest extends AnyFunSuiteLike {
   lazy val log: Log = LogFactory.getLog(this.getClass)
 
   protected def assertEquals[T](
-      expected: T,
-      result: T
+    expected: T,
+    result:   T
   )(
-      implicit pos: Position
+    implicit pos: Position
   ): Unit = {
     assertResult(expected)(result)
     ()
   }
 
   override protected def test(
-      testName: String,
-      testTags: Tag*
+    testName: String,
+    testTags: Tag*
   )(
-      testFun: => Any
+    testFun: => Any
   )(
-      implicit pos: Position
-  ): Unit = {
+    implicit pos: Position
+  ): Unit =
     super.test(testName, testTags: _*) {
       log.debug(s">>> Starting - $testName")
       testFun
     }
-  }
 
   def time[R](block: => R): (R, Long) = {
     val t0 = System.nanoTime()

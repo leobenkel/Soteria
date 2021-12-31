@@ -7,8 +7,6 @@ class SuccessMessageTest extends ParentTest {
     val content = "content of the message"
     val message = SuccessMessage(content)
 
-    message.consume { s =>
-      assertEquals(content, s)
-    }
+    message.consume(s => assertEquals(content, s))
   }
 }

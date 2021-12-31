@@ -11,27 +11,19 @@ import sbt.util.Level
 class CheckVersionTest extends ParentTest with CheckVersion {
   private val test: CheckVersionTest = this
 
-  private abstract class LogTest(test: CheckVersionTest)
-      extends LoggerExtended {
+  private abstract class LogTest(test: CheckVersionTest) extends LoggerExtended {
     override def isSoftError: Boolean = false
 
-    override def criticalFailure(message: => String): Unit = {
-      test.fail("Should not be called")
-    }
+    override def criticalFailure(message: => String): Unit = test.fail("Should not be called")
 
-    override def setSoftError(softError: Boolean): LoggerExtended = {
-      test.fail("Should not be called")
-    }
-
-    override def setLevel(level: Level.Value): LoggerExtended = {
-      test.fail("Should not be called")
-    }
-
-    override def trace(t: => Throwable): Unit =
+    override def setSoftError(softError: Boolean): LoggerExtended =
       test.fail("Should not be called")
 
-    override def success(message: => String): Unit =
-      test.fail("Should not be called")
+    override def setLevel(level: Level.Value): LoggerExtended = test.fail("Should not be called")
+
+    override def trace(t: => Throwable): Unit = test.fail("Should not be called")
+
+    override def success(message: => String): Unit = test.fail("Should not be called")
   }
 
   test("Test checkVersion - do nothing") {
@@ -40,8 +32,8 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     val result = checkVersion(
       log = new LogTest(test) {
         override def separator(
-            level: Level.Value,
-            title: String
+          level: Level.Value,
+          title: String
         ): Unit = {
           test.assert(title.contains("checkVersion"))
 
@@ -49,8 +41,8 @@ class CheckVersionTest extends ParentTest with CheckVersion {
         }
 
         override def log(
-            level: Level.Value,
-            message: => String
+          level:   Level.Value,
+          message: => String
         ): Unit = {
           test.assert(message.contains(libraryInput.length.toString))
 
@@ -77,8 +69,8 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     val result = checkVersion(
       log = new LogTest(test) {
         override def separator(
-            level: Level.Value,
-            title: String
+          level: Level.Value,
+          title: String
         ): Unit = {
           test.assert(title.contains("checkVersion"))
 
@@ -86,8 +78,8 @@ class CheckVersionTest extends ParentTest with CheckVersion {
         }
 
         override def log(
-            level: Level.Value,
-            message: => String
+          level:   Level.Value,
+          message: => String
         ): Unit = {
           test.assert(message.contains(libraryInput.length.toString))
 
@@ -115,8 +107,8 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     val result = checkVersion(
       log = new LogTest(test) {
         override def separator(
-            level: Level.Value,
-            title: String
+          level: Level.Value,
+          title: String
         ): Unit = {
           test.assert(title.contains("checkVersion"))
 
@@ -124,8 +116,8 @@ class CheckVersionTest extends ParentTest with CheckVersion {
         }
 
         override def log(
-            level: Level.Value,
-            message: => String
+          level:   Level.Value,
+          message: => String
         ): Unit = {
           countLog match {
             case 0 =>
@@ -147,17 +139,20 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     )
 
     assert(result.isRight)
-    result.right.get.consume { s =>
-      assert(s.contains(libraryInput.length.toString))
-      test.log.debug(s)
-    }
+    result
+      .right
+      .get
+      .consume { s =>
+        assert(s.contains(libraryInput.length.toString))
+        test.log.debug(s)
+      }
   }
 
   test("Test checkVersion - no full overlap - more input Lib") {
     val libraryInput = Seq[ModuleID](
-      "com.org" % "artifactName1" % "v8.0",
+      "com.org"  % "artifactName1" % "v8.0",
       "com.org2" % "artifactName3" % "v6.0",
-      "com.org" % "artifactName2" % "v7.0"
+      "com.org"  % "artifactName2" % "v7.0"
     )
     val knowledge = libraryInput.take(2).map(m => Dependency.apply(m))
 
@@ -166,8 +161,8 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     val result = checkVersion(
       log = new LogTest(test) {
         override def separator(
-            level: Level.Value,
-            title: String
+          level: Level.Value,
+          title: String
         ): Unit = {
           test.assert(title.contains("checkVersion"))
 
@@ -175,8 +170,8 @@ class CheckVersionTest extends ParentTest with CheckVersion {
         }
 
         override def log(
-            level: Level.Value,
-            message: => String
+          level:   Level.Value,
+          message: => String
         ): Unit = {
           countLog match {
             case 0 => test.assert(message.contains(knowledge.length.toString))
@@ -197,17 +192,20 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     )
 
     assert(result.isRight)
-    result.right.get.consume { s =>
-      assert(s.contains(knowledge.length.toString))
-      log.debug(s)
-    }
+    result
+      .right
+      .get
+      .consume { s =>
+        assert(s.contains(knowledge.length.toString))
+        log.debug(s)
+      }
   }
 
   test("Test checkVersion - no full overlap - more knowledge") {
     val libraryInput = Seq[ModuleID](
-      "com.org" % "artifactName1" % "v8.0",
+      "com.org"  % "artifactName1" % "v8.0",
       "com.org2" % "artifactName3" % "v6.0",
-      "com.org" % "artifactName2" % "v7.0",
+      "com.org"  % "artifactName2" % "v7.0",
       "com.org3" % "artifactName5" % "v0.0"
     )
     val knowledge = libraryInput.take(2).map(m => Dependency.apply(m)) ++
@@ -217,17 +215,15 @@ class CheckVersionTest extends ParentTest with CheckVersion {
         Dependency("com.org4" % "artifactName7" % "v99.0")
       )
 
-    val overlap = knowledge.map(_.key) intersect libraryInput.map(
-      m => (m.organization, m.name)
-    )
+    val overlap = knowledge.map(_.key) intersect libraryInput.map(m => (m.organization, m.name))
 
     var countLog = 0
 
     val result = checkVersion(
       log = new LogTest(test) {
         override def separator(
-            level: Level.Value,
-            title: String
+          level: Level.Value,
+          title: String
         ): Unit = {
           test.assert(title.contains("checkVersion"))
 
@@ -235,8 +231,8 @@ class CheckVersionTest extends ParentTest with CheckVersion {
         }
 
         override def log(
-            level: Level.Value,
-            message: => String
+          level:   Level.Value,
+          message: => String
         ): Unit = {
           countLog match {
             case 0 => test.assert(message.contains(overlap.length.toString))
@@ -257,25 +253,26 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     )
 
     assert(result.isRight)
-    result.right.get.consume { s =>
-      assert(s.contains(overlap.length.toString))
+    result
+      .right
+      .get
+      .consume { s =>
+        assert(s.contains(overlap.length.toString))
 
-      ()
-    }
+        ()
+      }
   }
 
   test("Test checkVersion - not exact match") {
     val libraryInput = Seq[ModuleID](
-      "com.org" % "artifactName1" % "v5.0",
-      "com.org" % "artifactName3" % "v5.0",
-      "com.org" % "artifactName2" % "v5.0",
+      "com.org"  % "artifactName1" % "v5.0",
+      "com.org"  % "artifactName3" % "v5.0",
+      "com.org"  % "artifactName2" % "v5.0",
       "com.org3" % "artifactName5" % "v0.0"
     )
 
     val knowledge = Seq(
-      Dependency("com.org", "art")
-        .withName(_.copy(exactName = false))
-        .withVersion("v5.0")
+      Dependency("com.org", "art").withName(_.copy(exactName = false)).withVersion("v5.0")
     )
 
     val overlap = libraryInput
@@ -287,8 +284,8 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     val result = checkVersion(
       log = new LogTest(test) {
         override def separator(
-            level: Level.Value,
-            title: String
+          level: Level.Value,
+          title: String
         ): Unit = {
           test.assert(title.contains("checkVersion"))
 
@@ -296,8 +293,8 @@ class CheckVersionTest extends ParentTest with CheckVersion {
         }
 
         override def log(
-            level: Level.Value,
-            message: => String
+          level:   Level.Value,
+          message: => String
         ): Unit = {
           countLog match {
             case 0 => test.assert(message.contains(overlap.length.toString))
@@ -318,11 +315,14 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     )
 
     assert(result.isRight)
-    result.right.get.consume { s =>
-      assert(s.contains(overlap.length.toString))
+    result
+      .right
+      .get
+      .consume { s =>
+        assert(s.contains(overlap.length.toString))
 
-      ()
-    }
+        ()
+      }
   }
 
   test("Test checkVersion - not exact match - with errors") {
@@ -331,14 +331,12 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     val libraryInput = Seq[ModuleID](
       "com.org" % "artifactName1" % goodVersion,
       badDependency,
-      "com.org" % "artifactName2" % goodVersion,
+      "com.org"  % "artifactName2" % goodVersion,
       "com.org3" % "artifactName5" % "v0.0"
     )
 
     val knowledge = Seq(
-      Dependency("com.org", "art")
-        .withName(_.copy(exactName = false))
-        .withVersion(goodVersion)
+      Dependency("com.org", "art").withName(_.copy(exactName = false)).withVersion(goodVersion)
     )
 
     val overlap = libraryInput
@@ -350,8 +348,8 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     val result = checkVersion(
       log = new LogTest(test) {
         override def separator(
-            level: Level.Value,
-            title: String
+          level: Level.Value,
+          title: String
         ): Unit = {
           test.assert(title.contains("checkVersion"))
 
@@ -359,8 +357,8 @@ class CheckVersionTest extends ParentTest with CheckVersion {
         }
 
         override def log(
-            level: Level.Value,
-            message: => String
+          level:   Level.Value,
+          message: => String
         ): Unit = {
           countLog match {
             case 0 => test.assert(message.contains(overlap.length.toString))
@@ -381,15 +379,18 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     )
 
     assert(result.isLeft)
-    result.left.get.consume { s =>
-      assert(s.contains("Wrong versions"))
-      assert(s.contains(badDependency.name))
-      assert(s.contains(badDependency.organization))
-      assert(s.contains(badDependency.revision))
-      assert(s.contains(goodVersion))
+    result
+      .left
+      .get
+      .consume { s =>
+        assert(s.contains("Wrong versions"))
+        assert(s.contains(badDependency.name))
+        assert(s.contains(badDependency.organization))
+        assert(s.contains(badDependency.revision))
+        assert(s.contains(goodVersion))
 
-      ()
-    }
+        ()
+      }
   }
 
   test("Test getLibraryToCheck - Empty") {
@@ -409,11 +410,11 @@ class CheckVersionTest extends ParentTest with CheckVersion {
       Dependency("com.org2", "bar")
     )
     val inputLib = Seq[ModuleID](
-      "com.org" % "artifact" % "v1.0",
-      "com.org" % "artifact2" % "v1.0",
-      "com.org" % "foo" % "v1.0",
-      "com.org2" % "bar" % "v5.0",
-      "com.org2" % "barfoo" % "v3.0"
+      "com.org"  % "artifact"  % "v1.0",
+      "com.org"  % "artifact2" % "v1.0",
+      "com.org"  % "foo"       % "v1.0",
+      "com.org2" % "bar"       % "v5.0",
+      "com.org2" % "barfoo"    % "v3.0"
     )
 
     val output = ZTestOnlyCheckVersion.getLibraryToCheckTest(
@@ -440,11 +441,11 @@ class CheckVersionTest extends ParentTest with CheckVersion {
 
   test("Test buildError - no error") {
     val inputLib = Seq[ModuleID](
-      "com.org" % "artifact" % "v1.0",
-      "com.org" % "artifact2" % "v1.0",
-      "com.org" % "foo" % "v1.0",
-      "com.org2" % "bar" % "v5.0",
-      "com.org2" % "barfoo" % "v3.0"
+      "com.org"  % "artifact"  % "v1.0",
+      "com.org"  % "artifact2" % "v1.0",
+      "com.org"  % "foo"       % "v1.0",
+      "com.org2" % "bar"       % "v5.0",
+      "com.org2" % "barfoo"    % "v3.0"
     )
     val knowledge =
       Dependency("com.org", "art").withName(_.copy(exactName = false))
@@ -462,10 +463,10 @@ class CheckVersionTest extends ParentTest with CheckVersion {
     val badLib = "com.org" % "artifact2" % "v2.0"
     val inputLib = Seq[ModuleID](
       badLib,
-      "com.org" % "artifact" % "v1.0",
-      "com.org" % "foo" % "v1.0",
-      "com.org2" % "bar" % "v5.0",
-      "com.org2" % "barfoo" % "v3.0"
+      "com.org"  % "artifact" % "v1.0",
+      "com.org"  % "foo"      % "v1.0",
+      "com.org2" % "bar"      % "v5.0",
+      "com.org2" % "barfoo"   % "v3.0"
     )
     val knowledge =
       Dependency("com.org", "art").withName(_.copy(exactName = false))

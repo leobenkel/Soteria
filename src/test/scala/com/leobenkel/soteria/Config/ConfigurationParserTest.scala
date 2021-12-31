@@ -7,39 +7,27 @@ import sbt.util.Level
 class ConfigurationParserTest extends ParentTest {
   private val test: ConfigurationParserTest = this
 
-  private abstract class LogTest(test: ConfigurationParserTest)
-      extends LoggerExtended {
-    override def isSoftError: Boolean = {
-      test.fail("Should not be called")
-    }
+  private abstract class LogTest(test: ConfigurationParserTest) extends LoggerExtended {
+    override def isSoftError: Boolean = test.fail("Should not be called")
 
-    override def setSoftError(softError: Boolean): LoggerExtended = {
+    override def setSoftError(softError: Boolean): LoggerExtended =
       test.fail("Should not be called")
-    }
 
-    override def setLevel(level: Level.Value): LoggerExtended = {
-      test.fail("Should not be called")
-    }
+    override def setLevel(level: Level.Value): LoggerExtended = test.fail("Should not be called")
 
     override def separator(
-        level: Level.Value,
-        title: String
-    ): Unit = {
-      test.fail("Should not be called")
-    }
+      level: Level.Value,
+      title: String
+    ): Unit = test.fail("Should not be called")
 
-    override def trace(t: => Throwable): Unit =
-      test.fail("Should not be called")
+    override def trace(t: => Throwable): Unit = test.fail("Should not be called")
 
-    override def success(message: => String): Unit =
-      test.fail("Should not be called")
+    override def success(message: => String): Unit = test.fail("Should not be called")
 
     override def log(
-        level: Level.Value,
-        message: => String
-    ): Unit = {
-      test.fail("Should not be called")
-    }
+      level:   Level.Value,
+      message: => String
+    ): Unit = test.fail("Should not be called")
   }
 
   test("Test fail to parse json") {
@@ -60,9 +48,7 @@ class ConfigurationParserTest extends ParentTest {
     val goodFile = "goodFile.json"
     ConfigurationParser(
       log = new LogTest(test) {
-        override def criticalFailure(message: => String): Unit = {
-          test.fail("Should not be called")
-        }
+        override def criticalFailure(message: => String): Unit = test.fail("Should not be called")
       },
       configPath = goodFile
     )

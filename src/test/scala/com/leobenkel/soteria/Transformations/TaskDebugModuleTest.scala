@@ -1,8 +1,8 @@
 package com.leobenkel.soteria.Transformations
 
+import com.leobenkel.soteria.{LogTest, ParentTest}
 import com.leobenkel.soteria.Config.SoteriaConfiguration
 import com.leobenkel.soteria.Modules.Dependency
-import com.leobenkel.soteria.{LogTest, ParentTest}
 import sbt.internal.util.complete.Parser
 
 class TaskDebugModuleTest extends ParentTest with TaskDebugModule {
@@ -34,10 +34,7 @@ class TaskDebugModuleTest extends ParentTest with TaskDebugModule {
 
     (bad.map(_.trim) ++ bad)
       .map(i => (i, Parser.parse(i, p)))
-      .map(
-        r =>
-          assert(r._2.isLeft, s"'${r._1}' should have failed, but got: ${r._2}")
-      )
+      .map(r => assert(r._2.isLeft, s"'${r._1}' should have failed, but got: ${r._2}"))
   }
 
   test("Test parser - succeed") {
@@ -55,12 +52,11 @@ class TaskDebugModuleTest extends ParentTest with TaskDebugModule {
 
     (good.map(_.trim) ++ good)
       .map(i => (i, Parser.parse(i, p)))
-      .map(
-        r =>
-          assert(
-            r._2.isRight,
-            s"'${r._1}' should have succeed, but got: ${r._2}"
-          )
+      .map(r =>
+        assert(
+          r._2.isRight,
+          s"'${r._1}' should have succeed, but got: ${r._2}"
+        )
       )
   }
 
@@ -68,9 +64,7 @@ class TaskDebugModuleTest extends ParentTest with TaskDebugModule {
     val errorMessage = "Failed to get dependency"
     ZTestOnlyTaskDebugModule.execute(
       log = new LogTest(test) {
-        override def criticalFailure(message: => String): Unit = {
-          assertEquals(errorMessage, message)
-        }
+        override def criticalFailure(message: => String): Unit = assertEquals(errorMessage, message)
       },
       module = Left(errorMessage),
       execute = _ => test.fail("Should not be called")
@@ -114,9 +108,7 @@ class TaskDebugModuleTest extends ParentTest with TaskDebugModule {
   test("Test command - good") {
     val dep = Dependency("com.org", "artif-").withVersion("1.0")
     val log = new LogTest(test) {
-      override def criticalFailure(message: => String): Unit = {
-        test.fail("Should not be called")
-      }
+      override def criticalFailure(message: => String): Unit = test.fail("Should not be called")
     }
 
     ZTestOnlyTaskDebugModule.execute(

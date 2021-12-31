@@ -13,22 +13,16 @@ class TaskUpdateTest extends ParentTest with TaskUpdate {
   abstract class LogTest() extends LoggerExtended {
     override def isSoftError: Boolean = test.fail("Should not be called")
 
-    override def setSoftError(softError: Boolean): LoggerExtended = {
-      test.fail("Should not be called")
-    }
-
-    override def criticalFailure(message: => String): Unit =
+    override def setSoftError(softError: Boolean): LoggerExtended =
       test.fail("Should not be called")
 
-    override def setLevel(level: Level.Value): LoggerExtended = {
-      test.fail("Should not be called")
-    }
+    override def criticalFailure(message: => String): Unit = test.fail("Should not be called")
 
-    override def trace(t: => Throwable): Unit =
-      test.fail("Should not be called")
+    override def setLevel(level: Level.Value): LoggerExtended = test.fail("Should not be called")
 
-    override def success(message: => String): Unit =
-      test.fail("Should not be called")
+    override def trace(t: => Throwable): Unit = test.fail("Should not be called")
+
+    override def success(message: => String): Unit = test.fail("Should not be called")
   }
 
   test("test CombineModule") {
@@ -60,17 +54,13 @@ class TaskUpdateTest extends ParentTest with TaskUpdate {
     assertEquals(3, output.length)
 
     val versions1 =
-      output
-        .find(m => m.organization == "com.org" && m.name == "artifact")
-        .map(_.versions)
+      output.find(m => m.organization == "com.org" && m.name == "artifact").map(_.versions)
     assert(versions1.isDefined)
     assert(versions1.get.size == 1)
     assert(versions1.get.contains("1.0"))
 
     val versions2 =
-      output
-        .find(m => m.organization == "com.org" && m.name == "artifact2")
-        .map(_.versions)
+      output.find(m => m.organization == "com.org" && m.name == "artifact2").map(_.versions)
     assert(versions2.isDefined)
     assert(versions2.get.contains("2.0"))
     assert(versions2.get.contains("5.0"))
@@ -80,8 +70,8 @@ class TaskUpdateTest extends ParentTest with TaskUpdate {
     val (goodModules, errors) = ZTestOnlyTaskUpdate.checkTooManyVersionsTest(
       log = new LogTest() {
         override def separator(
-            level: Level.Value,
-            title: String
+          level: Level.Value,
+          title: String
         ): Unit = {
           test.assert(title.contains("TaskUpdate"))
           test.assert(title.contains("checkTooManyVersions"))
@@ -90,11 +80,9 @@ class TaskUpdateTest extends ParentTest with TaskUpdate {
         }
 
         override def log(
-            level: Level.Value,
-            message: => String
-        ): Unit = {
-          test.fail("Should not be called")
-        }
+          level:   Level.Value,
+          message: => String
+        ): Unit = test.fail("Should not be called")
       },
       loadedModules = Seq()
     )
@@ -110,8 +98,8 @@ class TaskUpdateTest extends ParentTest with TaskUpdate {
     val (goodModules, errors) = ZTestOnlyTaskUpdate.checkTooManyVersionsTest(
       log = new LogTest() {
         override def separator(
-            level: Level.Value,
-            title: String
+          level: Level.Value,
+          title: String
         ): Unit = {
           test.assert(title.contains("TaskUpdate"))
           test.assert(title.contains("checkTooManyVersions"))
@@ -120,11 +108,9 @@ class TaskUpdateTest extends ParentTest with TaskUpdate {
         }
 
         override def log(
-            level: Level.Value,
-            message: => String
-        ): Unit = {
-          test.fail("Should not be called")
-        }
+          level:   Level.Value,
+          message: => String
+        ): Unit = test.fail("Should not be called")
       },
       loadedModules = Seq(
         Dependency("com.org", "artifact").withVersion("v1.0"),
@@ -162,31 +148,22 @@ class TaskUpdateTest extends ParentTest with TaskUpdate {
     ZTestOnlyTaskUpdate.printDebugTest(
       log = new LogTest() {
         override def separator(
-            level: Level.Value,
-            title: String
-        ): Unit = {
-          test.fail("Should not be called")
-        }
+          level: Level.Value,
+          title: String
+        ): Unit = test.fail("Should not be called")
 
         override def log(
-            level: Level.Value,
-            message: => String
-        ): Unit = {
-          allMessage += "\n" + message
-        }
+          level:   Level.Value,
+          message: => String
+        ): Unit = allMessage += "\n" + message
       },
       allModule = allCategories
     )
 
     allMessage.contains(allCategories.length.toString)
-    allCategories
-      .map(_._2.length.toString)
-      .foreach(k => assert(allMessage.contains(k)))
+    allCategories.map(_._2.length.toString).foreach(k => assert(allMessage.contains(k)))
     allCategories.map(_._1).foreach(k => assert(allMessage.contains(k)))
-    allCategories
-      .flatMap(_._2)
-      .map(_.toString)
-      .foreach(m => assert(allMessage.contains(m)))
+    allCategories.flatMap(_._2).map(_.toString).foreach(m => assert(allMessage.contains(m)))
   }
 }
 // scalastyle:on magic.number

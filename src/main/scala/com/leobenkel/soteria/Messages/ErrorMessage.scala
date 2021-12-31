@@ -11,79 +11,62 @@ sealed trait ErrorMessage {
 }
 
 case class Errors(errorMessage: Seq[WithErrorMessage]) {
-  def consume(logFail: String => Unit): Unit = {
-    if (errorMessage.nonEmpty) {
+  def consume(logFail: String => Unit): Unit =
+    if (errorMessage.nonEmpty)
       logFail(this.toString)
-    } else {
+    else
       ()
-    }
-  }
 
-  override def toString: String = {
-    if (errorMessage.nonEmpty) {
-      errorMessage
-        .map(_.toString)
-        .toError("Found blocks of errors")
-        .toString
-    } else {
+  override def toString: String =
+    if (errorMessage.nonEmpty)
+      errorMessage.map(_.toString).toError("Found blocks of errors").toString
+    else
       "No Error"
-    }
-  }
 
-  def ++(other: Errors): Errors = {
+  def ++(other: Errors): Errors =
     this.copy(
       errorMessage = this.errorMessage ++ other.errorMessage
     )
-  }
 
-  def resolve(successMessage: SuccessMessage): CommonMessage.ResultMessages = {
-    if (errorMessage.isEmpty) {
+  def resolve(successMessage: SuccessMessage): CommonMessage.ResultMessages =
+    if (errorMessage.isEmpty)
       Right(successMessage)
-    } else {
+    else
       Left(this)
-    }
-  }
 
-  def resolve(successMessage: String): CommonMessage.ResultMessages = {
+  def resolve(successMessage: String): CommonMessage.ResultMessages =
     resolve(SuccessMessage(successMessage))
-  }
 }
 
 case class WithErrorMessage(
-    title: String,
-    messages: Seq[String]
+  title:    String,
+  messages: Seq[String]
 ) extends ErrorMessage {
-  override def ++(other: ErrorMessage): Errors = {
+  override def ++(other: ErrorMessage): Errors =
     other match {
-      case NoError                 => Errors(Seq(this))
+      case NoError => Errors(Seq(this))
       case error: WithErrorMessage => Errors(Seq(this, error))
     }
-  }
 
   override def toErrors: Errors = Errors(Seq(this))
 
-  private def getAllLines: Seq[String] = {
-    messages.flatMap(_.split("\n"))
-  }
+  private def getAllLines: Seq[String] = messages.flatMap(_.split("\n"))
 
-  override def toString: String = {
-    if (messages.isEmpty) {
+  override def toString: String =
+    if (messages.isEmpty)
       title
-    } else {
+    else
       s"$title (${messages.size}) :\n${getAllLines.map(m => s"  $m").mkString("\n")}"
-    }
-  }
 
   override def consume(log: String => Unit): Unit = log(this.toString)
 }
 
 case object NoError extends ErrorMessage {
-  override def ++(other: ErrorMessage): Errors = {
+  override def ++(other: ErrorMessage): Errors =
     other match {
-      case NoError                 => Errors(Seq.empty)
+      case NoError => Errors(Seq.empty)
       case error: WithErrorMessage => Errors(Seq(error))
     }
-  }
 
   override def toErrors: Errors = Errors(Seq.empty)
 
@@ -94,16 +77,12 @@ object ErrorMessage {
   val Empty: ErrorMessage = NoError
 
   def apply(
-      title: String,
-      message: String
-  ): WithErrorMessage = {
-    WithErrorMessage(title, Seq(message))
-  }
+    title:   String,
+    message: String
+  ): WithErrorMessage = WithErrorMessage(title, Seq(message))
 
   def apply(
-      title: String,
-      messages: Seq[String]
-  ): WithErrorMessage = {
-    WithErrorMessage(title, messages)
-  }
+    title:    String,
+    messages: Seq[String]
+  ): WithErrorMessage = WithErrorMessage(title, messages)
 }
