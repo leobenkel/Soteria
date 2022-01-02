@@ -219,7 +219,7 @@ object SoteriaPlugin extends AutoPlugin with SoteriaExecutionLogic {
       SoteriaPluginKeys.soteriaConfig := soteriaConfigurationExec().value
     )
 
-  lazy final override val projectSettings: Seq[Def.Setting[_]] = {
+  lazy final override val projectSettings: Seq[Def.Setting[_]] =
     configurations ++ logSettings ++ debugSettings ++ testSettings ++
       Seq[Def.Setting[_]](
         Compile / Keys.update              := update(Compile).value,
@@ -241,5 +241,4 @@ object SoteriaPlugin extends AutoPlugin with SoteriaExecutionLogic {
         Compile / Keys.scalacOptions := extraScalacOptions(Some(Compile)).value,
         Test / Keys.scalacOptions    := extraScalacOptions(Some(Test)).value
       ) ++ assemblyRules ++ scalaStyleSettings
-  }
 }

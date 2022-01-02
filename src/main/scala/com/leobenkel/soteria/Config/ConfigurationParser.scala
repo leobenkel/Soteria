@@ -34,7 +34,7 @@ private[soteria] case class ConfigurationParser(
         throw exception
     }
 
-  @transient lazy private val conf: SoteriaConfiguration = {
+  @transient lazy private val conf: SoteriaConfiguration =
     JsonDecode.parse[SoteriaConfiguration](fileContent)(
       SoteriaConfiguration.parser(log)
     ) match {
@@ -43,7 +43,6 @@ private[soteria] case class ConfigurationParser(
         throw new Exception(err)
       case Right(c) => c
     }
-  }
 
   def getConf: SoteriaConfiguration = conf
 }
