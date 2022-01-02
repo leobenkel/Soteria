@@ -91,7 +91,7 @@ case class NameOfModule(
 
   private def isExcludedName(testName: String): Boolean = !excludeName.exists(testName.startsWith)
 
-  @transient lazy val toOrganizationArtifactName: Either[String, Dependency.OrgArtifact] = {
+  @transient lazy val toOrganizationArtifactName: Either[String, Dependency.OrgArtifact] =
     if (exactName)
       if (needDoublePercent)
         Right(organization %% name)
@@ -101,9 +101,8 @@ case class NameOfModule(
       Left(
         s"The name was not exact, could not create a moduleID for incomplete name: '$name'."
       )
-  }
 
-  @transient lazy val exclusionRule: Either[String, sbt.ExclusionRule] = {
+  @transient lazy val exclusionRule: Either[String, sbt.ExclusionRule] =
     if (exactName)
       Right(ExclusionRule(organization = this.organization, name = this.name))
     else
@@ -111,7 +110,6 @@ case class NameOfModule(
         s"${this.toString}: The name was not exact ($exactName), " +
           s"could not create an exclusion rule for name: '$name'."
       )
-  }
 
   def toModuleID(revision: String): Either[String, ModuleID] =
     toOrganizationArtifactName.right.map(_ % revision)
