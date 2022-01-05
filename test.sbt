@@ -15,4 +15,4 @@ coverageOutputDebug := true
 
 coverallsFailBuildOnError := false
 
-coverallsFile := baseDirectory.value / "coveralls.json"
+coverallsFile := baseDirectory.value / "coveralls/coveralls.json"
