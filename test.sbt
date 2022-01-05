@@ -1,4 +1,4 @@
-import org.scoverage.coveralls.Imports.CoverallsKeys.coverallsFailBuildOnError
+import org.scoverage.coveralls.Imports.CoverallsKeys.{coverallsFailBuildOnError, coverallsFile}
 
 // https://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html
 
@@ -14,3 +14,5 @@ stryker / logLevel := Level.Debug
 coverageOutputDebug := true
 
 coverallsFailBuildOnError := false
+
+coverallsFile := baseDirectory.value / "coveralls.json"
