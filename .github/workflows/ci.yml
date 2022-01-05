@@ -44,7 +44,7 @@ jobs:
         env:
           REPO: self
           BRANCH: coveralls_file
-          FOLDER: /
+          FOLDER: .
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SKIP_EMPTY_COMMITS: true
           SQUASH_HISTORY: true
