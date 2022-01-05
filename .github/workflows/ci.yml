@@ -32,13 +32,14 @@ jobs:
 
       - name: Save coveralls.json file
         # https://stackoverflow.com/a/58353477/3357831
-        uses: peter-evans/create-pull-request@v2
+        uses: peter-evans/create-pull-request@v3.12.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Update coveralls file
           title: Update coveralls file
           draft: true
-          add-paths: ./coveralls
+          add-paths: |
+            ./coveralls
           branch: coveralls_file
 
 #      - name: Save coveralls.json file
