@@ -30,6 +30,24 @@ jobs:
           COVERALLS_SERVICE_NAME: github-actions
           COVERALLS_SERVICE_JOB_ID: ${{ github.RUN_ID }}
 
+#      - name: Create Pull Request
+#        # https://stackoverflow.com/a/58353477/3357831
+#        uses: peter-evans/create-pull-request@v2
+#        with:
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          commit-message: Update coveralls file
+#          title: Update coveralls file
+
+      - name: Save coveralls.json file
+        # https://github.com/s0/git-publish-subdir-action
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: coveralls_file
+          FOLDER: .
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MESSAGE: "Coveralls file for {long-sha}\nBranch: {target-branch}\nMsg:\n{msg}"
+
       - name: clean-up
         run: |
           rm -rf "$HOME/.ivy2/local" || true
