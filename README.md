@@ -2,7 +2,6 @@
 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Gitter](https://badges.gitter.im/soteria/community.svg)](https://gitter.im/soteria/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![release-badge][]][release]
 [![maven-central-badge][]][maven-central-link]
 [![BCH compliance](https://bettercodehub.com/edge/badge/leobenkel/Soteria?branch=main)](https://bettercodehub.com/)
