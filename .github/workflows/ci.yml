@@ -29,6 +29,7 @@ jobs:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           COVERALLS_SERVICE_NAME: github-actions
           COVERALLS_SERVICE_JOB_ID: ${{ github.RUN_ID }}
+          GITHUB_RUN_ID: ${{ github.RUN_ID }}
 
       - name: Save coveralls.json file
         # https://stackoverflow.com/a/58353477/3357831
