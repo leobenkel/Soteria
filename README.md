@@ -5,7 +5,6 @@
 [![Gitter](https://badges.gitter.im/soteria/community.svg)](https://gitter.im/soteria/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![release-badge][]][release]
 [![maven-central-badge][]][maven-central-link]
-[![Build Status](https://travis-ci.com/leobenkel/soteria.svg?branch=main)](https://travis-ci.com/leobenkel/soteria)
 [![BCH compliance](https://bettercodehub.com/edge/badge/leobenkel/Soteria?branch=main)](https://bettercodehub.com/)
 [![Coverage Status](https://coveralls.io/repos/github/leobenkel/Soteria/badge.svg?branch=main)](https://coveralls.io/github/leobenkel/Soteria?branch=main)
 [![Mutation testing badge](https://badge.stryker-mutator.io/github.com/leobenkel/Soteria/main)](https://stryker-mutator.github.io)
