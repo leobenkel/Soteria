@@ -26,10 +26,7 @@ jobs:
       - name: unit-test-coverage
         run: make test_coverage
         env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-          COVERALLS_SERVICE_NAME: github-actions
-          COVERALLS_SERVICE_JOB_ID: ${{ github.RUN_ID }}
-          GITHUB_RUN_ID: ${{ github.RUN_ID }}
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Save coveralls.json file
         # https://stackoverflow.com/a/58353477/3357831
