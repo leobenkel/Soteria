@@ -28,29 +28,17 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Save coveralls.json file
-        # https://stackoverflow.com/a/58353477/3357831
-        uses: peter-evans/create-pull-request@v3.12.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Update coveralls file
-          title: Update coveralls file
-          draft: true
-          add-paths: |
-            ./coveralls
-          branch: coveralls_file
-
 #      - name: Save coveralls.json file
-#        # https://github.com/s0/git-publish-subdir-action
-#        uses: s0/git-publish-subdir-action@develop
-#        env:
-#          REPO: self
-#          BRANCH: coveralls_file
-#          FOLDER: ./coveralls
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          SKIP_EMPTY_COMMITS: true
-#          SQUASH_HISTORY: false
-#          MESSAGE: "Coveralls file for {long-sha}\nBranch: {target-branch}\nMsg:\n{msg}"
+#        # https://stackoverflow.com/a/58353477/3357831
+#        uses: peter-evans/create-pull-request@v3.12.0
+#        with:
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          commit-message: Update coveralls file
+#          title: Update coveralls file
+#          draft: true
+#          add-paths: |
+#            ./coveralls
+#          branch: coveralls_file
 
       - name: clean-up
         run: |
