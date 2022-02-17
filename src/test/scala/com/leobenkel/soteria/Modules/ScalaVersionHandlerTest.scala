@@ -81,7 +81,7 @@ class ScalaVersionHandlerTest extends ParentTest {
 
     assert(ScalaV("2.12").right.map(filters(_)).right.get)
     assert(ScalaV("2.12.11").right.map(filters(_)).right.get)
-    assert(ScalaV("2.12.15").right.map(filters(_)).right.get)
+    assert(ScalaV("2.13.8").right.map(filters(_)).right.get)
     assert(!ScalaV("2.7.15").right.map(filters(_)).right.get)
   }
 
@@ -93,7 +93,7 @@ class ScalaVersionHandlerTest extends ParentTest {
 
     assert(!ScalaV("2.11").right.map(filters(_)).right.get)
     assert(ScalaV("2.12.11").right.map(filters(_)).right.get)
-    assert(ScalaV("2.12.15").right.map(filters(_)).right.get)
+    assert(ScalaV("2.13.8").right.map(filters(_)).right.get)
     assert(!ScalaV("2.7.15").right.map(filters(_)).right.get)
     assert(!ScalaV("2.11.15").right.map(filters(_)).right.get)
   }
@@ -109,7 +109,7 @@ class ScalaVersionHandlerTest extends ParentTest {
 
     assert(!ScalaV("2.12").right.map(filters(_)).right.get)
     assert(!ScalaV("2.12.11").right.map(filters(_)).right.get)
-    assert(!ScalaV("2.12.15").right.map(filters(_)).right.get)
+    assert(!ScalaV("2.13.8").right.map(filters(_)).right.get)
     assert(ScalaV("2.7.15").right.map(filters(_)).right.get)
   }
 
@@ -126,7 +126,7 @@ class ScalaVersionHandlerTest extends ParentTest {
 
     assert(!ScalaV("2.12").right.map(filters(_)).right.get)
     assert(!ScalaV("2.12.11").right.map(filters(_)).right.get)
-    assert(ScalaV("2.12.15").right.map(filters(_)).right.get)
+    assert(ScalaV("2.13.8").right.map(filters(_)).right.get)
     assert(!ScalaV("2.7.15").right.map(filters(_)).right.get)
   }
 }
