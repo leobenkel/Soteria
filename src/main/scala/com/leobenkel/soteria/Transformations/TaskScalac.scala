@@ -6,12 +6,12 @@ import sbt.{Configuration, Def, Keys, Task}
 
 private[Transformations] trait TaskScalac {
   def extraScalacOptions(
-    conf: Option[Configuration]
+      conf: Option[Configuration]
   ): Def.Initialize[Task[Seq[String]]] =
     Def.taskDyn {
-      val log = soteriaGetLog.value
+      val log           = soteriaGetLog.value
       val shouldNotFail = soteriaSoftOnCompilerWarning.value
-      val origin = conf.fold(Keys.scalacOptions)(_ / Keys.scalacOptions).value
+      val origin        = conf.fold(Keys.scalacOptions)(_ / Keys.scalacOptions).value
       val configuration = SoteriaPluginKeys.soteriaConfig.value
 
       Def.task {
@@ -20,7 +20,7 @@ private[Transformations] trait TaskScalac {
 
         (
           origin ++ compilerFlags ++
-            (if (shouldNotFail) Seq.empty
+            (if(shouldNotFail) Seq.empty
              else Seq("-Xfatal-warnings"))
         ).distinct
       }

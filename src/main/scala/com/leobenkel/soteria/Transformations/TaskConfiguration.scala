@@ -7,7 +7,7 @@ import sbt.Def
 private[Transformations] trait TaskConfiguration {
   def soteriaConfigurationExec(): Def.Initialize[Config.SoteriaConfiguration] =
     Def.settingDyn {
-      val log = SoteriaPluginKeys.soteriaGetLog.value
+      val log  = SoteriaPluginKeys.soteriaGetLog.value
       val path = soteriaConfPath.value
 
       Def.setting {

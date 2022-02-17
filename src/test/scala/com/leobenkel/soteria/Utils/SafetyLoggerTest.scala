@@ -9,7 +9,7 @@ class SoteriaLoggerTest extends ParentTest {
     SoteriaLogger(
       innerLog = ConsoleLogger(),
       level = Level.Debug,
-      softError = true
+      softError = true,
     )
 
   test("Set Level") {
@@ -20,14 +20,14 @@ class SoteriaLoggerTest extends ParentTest {
   }
 
   test("Test makeSeparator even") {
-    val title = "Cool title"
+    val title     = "Cool title"
     val separator = Log.TestOnly.makeSeparatorTest(title)
     assertEquals(SoteriaLogger.SeparatorLength, separator.length)
     assert(separator.contains(title))
   }
 
   test("Test makeSeparator odd") {
-    val title = "Cool titles"
+    val title     = "Cool titles"
     val separator = Log.TestOnly.makeSeparatorTest(title)
     assertEquals(SoteriaLogger.SeparatorLength, separator.length)
     assert(separator.contains(title))
@@ -49,7 +49,7 @@ class SoteriaLoggerTest extends ParentTest {
   test("Test softError") {
     assert(Log.isSoftError)
     val softError = false
-    val newLog = Log.setSoftError(softError)
+    val newLog    = Log.setSoftError(softError)
     assert(Log.isSoftError)
     assert(!newLog.isSoftError)
   }

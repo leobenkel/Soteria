@@ -26,7 +26,7 @@ private[Transformations] trait TaskAssembly extends MergeStrategyConfiguration {
           maxHashLength = None,
           shadeRules = (AssemblyKeys.assembly / AssemblyKeys.assemblyShadeRules).value,
           level = (AssemblyKeys.assembly / Keys.logLevel).value,
-          scalaVersion = Keys.scalaVersion.value
+          scalaVersion = Keys.scalaVersion.value,
         )
       }
     }
@@ -41,8 +41,7 @@ private[Transformations] trait TaskAssembly extends MergeStrategyConfiguration {
       log.info(s"Overriding assembly settings")
 
       Def.task {
-        val mergeStrategy =
-          (input: String) => getMergeStrategy(input, oldStrategy)
+        val mergeStrategy = (input: String) => getMergeStrategy(input, oldStrategy)
         val shadeRule: Seq[ShadeRule] =
           Seq(ShadeRule.rename("com.google.common.**" -> "shade.@0").inAll)
 

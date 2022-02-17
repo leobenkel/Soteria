@@ -18,15 +18,14 @@ private[Transformations] trait CheckVersion {
    *   The current log
    */
   def checkVersion(
-    log:                 LoggerExtended,
-    allCorrectLibraries: Seq[Dependency],
-    libraries:           Seq[ModuleID],
-    moreErrors:          ErrorMessage = ErrorMessage.Empty
+      log:                 LoggerExtended,
+      allCorrectLibraries: Seq[Dependency],
+      libraries:           Seq[ModuleID],
+      moreErrors:          ErrorMessage = ErrorMessage.Empty,
   ): ResultMessages = {
     log.separatorDebug("checkVersion")
 
-    val librariesToCheck: Seq[ModuleID] =
-      getLibraryToCheck(allCorrectLibraries, libraries)
+    val librariesToCheck: Seq[ModuleID] = getLibraryToCheck(allCorrectLibraries, libraries)
 
     // librariesToCheck.size == (allCorrectLibraries intersect libraries).size
     log.debug(s"> Verifying version of libraries (${librariesToCheck.size}) :")
@@ -36,8 +35,8 @@ private[Transformations] trait CheckVersion {
   }
 
   private def getLibraryToCheck(
-    allCorrectLibraries: Seq[Dependency],
-    libraries:           Seq[ModuleID]
+      allCorrectLibraries: Seq[Dependency],
+      libraries:           Seq[ModuleID],
   ): Seq[ModuleID] =
     (for {
       correctLibrary <- allCorrectLibraries
@@ -45,9 +44,9 @@ private[Transformations] trait CheckVersion {
     } yield library).sortBy(m => (m.organization, m.name))
 
   private def consolidateErrors(
-    allCorrectLibraries: Seq[Dependency],
-    librariesToCheck:    Seq[ModuleID],
-    moreErrors:          ErrorMessage
+      allCorrectLibraries: Seq[Dependency],
+      librariesToCheck:    Seq[ModuleID],
+      moreErrors:          ErrorMessage,
   ): ResultMessages =
     (allCorrectLibraries
       .filter(_.version.isRight)
@@ -61,29 +60,28 @@ private[Transformations] trait CheckVersion {
     )
 
   private def buildErrors(
-    librariesToCheck: Seq[ModuleID],
-    correctModule:    Dependency,
-    correctVersion:   String
+      librariesToCheck: Seq[ModuleID],
+      correctModule:    Dependency,
+      correctVersion:   String,
   ): Seq[String] =
     librariesToCheck
       .filter(m => (correctModule === m) && m.revision != correctVersion)
       .map { m =>
-        val correctModuleToString =
-          m.withRevision(correctVersion).withName(m.name).prettyString
+        val correctModuleToString = m.withRevision(correctVersion).withName(m.name).prettyString
 
         s"${m.prettyString} should be $correctModuleToString"
       }
 
   object ZTestOnlyCheckVersion {
     @inline def buildErrorsTest(
-      librariesToCheck: Seq[ModuleID],
-      correctModule:    Dependency,
-      correctVersion:   String
+        librariesToCheck: Seq[ModuleID],
+        correctModule:    Dependency,
+        correctVersion:   String,
     ): Seq[String] = buildErrors(librariesToCheck, correctModule, correctVersion)
 
     @inline def getLibraryToCheckTest(
-      allCorrectLibraries: Seq[Dependency],
-      libraries:           Seq[ModuleID]
+        allCorrectLibraries: Seq[Dependency],
+        libraries:           Seq[ModuleID],
     ): Seq[ModuleID] = getLibraryToCheck(allCorrectLibraries, libraries)
   }
 }

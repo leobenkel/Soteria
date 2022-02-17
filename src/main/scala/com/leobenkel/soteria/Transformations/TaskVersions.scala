@@ -16,7 +16,7 @@ private[Transformations] trait TaskVersions {
       Def.task {
         val legalSbtVersion = configuration.sbtVersion
 
-        if (sbtVersion != legalSbtVersion) log.fail(s"SBT: $sbtVersion != $legalSbtVersion !!!")
+        if(sbtVersion != legalSbtVersion) log.fail(s"SBT: $sbtVersion != $legalSbtVersion !!!")
         else log.debug(s"SBT: $sbtVersion (correct)")
 
         sbtVersion
@@ -33,7 +33,7 @@ private[Transformations] trait TaskVersions {
       Def.setting {
         val legalSbtVersion = configuration.sbtVersion
 
-        if (sbtVersion != legalSbtVersion) log.fail(s"SBT: $sbtVersion != $legalSbtVersion !!!")
+        if(sbtVersion != legalSbtVersion) log.fail(s"SBT: $sbtVersion != $legalSbtVersion !!!")
         else log.debug(s"SBT: $sbtVersion (correct)")
 
         sbtVersion
@@ -50,7 +50,7 @@ private[Transformations] trait TaskVersions {
       Def.task {
         val legalScalaVersion = configuration.scalaVersions
 
-        if (legalScalaVersion.contains(scalaVersion)) log.debug(s"Scala: $scalaVersion (correct)")
+        if(legalScalaVersion.contains(scalaVersion)) log.debug(s"Scala: $scalaVersion (correct)")
         else log.fail(s"Scala: $scalaVersion != [${legalScalaVersion.mkString(" OR ")}] !!!")
 
         scalaVersion
@@ -67,11 +67,10 @@ private[Transformations] trait TaskVersions {
       Def.setting {
         val legalScalaVersion = configuration.scalaVersions
 
-        if (legalScalaVersion.contains(scalaVersion)) log.debug(s"Scala: $scalaVersion (correct)")
+        if(legalScalaVersion.contains(scalaVersion)) log.debug(s"Scala: $scalaVersion (correct)")
         else log.fail(s"Scala: $scalaVersion != [${legalScalaVersion.mkString(" OR ")}] !!!")
 
         scalaVersion
       }
     }
-
 }

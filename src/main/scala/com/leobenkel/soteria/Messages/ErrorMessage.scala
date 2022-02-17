@@ -12,16 +12,15 @@ sealed trait ErrorMessage {
 
 case class Errors(errorMessage: Seq[WithErrorMessage]) {
   def consume(logFail: String => Unit): Unit =
-    if (errorMessage.nonEmpty)
-      logFail(this.toString)
-    else
-      ()
+    if(errorMessage.nonEmpty) logFail(this.toString)
+    else ()
 
   override def toString: String =
-    if (errorMessage.nonEmpty)
-      errorMessage.map(_.toString).toError("Found blocks of errors").toString
-    else
-      "No Error"
+    if(errorMessage.nonEmpty) errorMessage
+      .map(_.toString)
+      .toError("Found blocks of errors")
+      .toString
+    else "No Error"
 
   def ++(other: Errors): Errors =
     this.copy(
@@ -29,18 +28,16 @@ case class Errors(errorMessage: Seq[WithErrorMessage]) {
     )
 
   def resolve(successMessage: SuccessMessage): CommonMessage.ResultMessages =
-    if (errorMessage.isEmpty)
-      Right(successMessage)
-    else
-      Left(this)
+    if(errorMessage.isEmpty) Right(successMessage)
+    else Left(this)
 
   def resolve(successMessage: String): CommonMessage.ResultMessages =
     resolve(SuccessMessage(successMessage))
 }
 
 case class WithErrorMessage(
-  title:    String,
-  messages: Seq[String]
+    title:    String,
+    messages: Seq[String],
 ) extends ErrorMessage {
   override def ++(other: ErrorMessage): Errors =
     other match {
@@ -53,10 +50,8 @@ case class WithErrorMessage(
   private def getAllLines: Seq[String] = messages.flatMap(_.split("\n"))
 
   override def toString: String =
-    if (messages.isEmpty)
-      title
-    else
-      s"$title (${messages.size}) :\n${getAllLines.map(m => s"  $m").mkString("\n")}"
+    if(messages.isEmpty) title
+    else s"$title (${messages.size}) :\n${getAllLines.map(m => s"  $m").mkString("\n")}"
 
   override def consume(log: String => Unit): Unit = log(this.toString)
 }
@@ -77,12 +72,12 @@ object ErrorMessage {
   val Empty: ErrorMessage = NoError
 
   def apply(
-    title:   String,
-    message: String
+      title:   String,
+      message: String,
   ): WithErrorMessage = WithErrorMessage(title, Seq(message))
 
   def apply(
-    title:    String,
-    messages: Seq[String]
+      title:    String,
+      messages: Seq[String],
   ): WithErrorMessage = WithErrorMessage(title, messages)
 }

@@ -12,17 +12,15 @@ private[Transformations] trait TaskCheckDependencies {
 
   /** Does not do anything special without the debugging enable. */
   def checkDependencies(
-    configuration: Configuration
+      configuration: Configuration
   ): Def.Initialize[Task[SoteriaConfiguration]] =
     Def.taskDyn {
-      val log = SoteriaPluginKeys.soteriaGetLog.value
+      val log          = SoteriaPluginKeys.soteriaGetLog.value
       log.separatorDebug("update")
       log.debug("> Starting Update")
       val updateReport = (configuration / Keys.update).value
-      val debugValue: Option[ModuleID] =
-        SoteriaPluginKeys.soteriaDebugModule.value
-      val soteriaConfig: SoteriaConfiguration =
-        SoteriaPluginKeys.soteriaConfig.value
+      val debugValue:    Option[ModuleID]     = SoteriaPluginKeys.soteriaDebugModule.value
+      val soteriaConfig: SoteriaConfiguration = SoteriaPluginKeys.soteriaConfig.value
 
       Def.task {
         debugValue.fold(soteriaConfig)(
@@ -30,19 +28,19 @@ private[Transformations] trait TaskCheckDependencies {
             log = log,
             soteriaConfig = soteriaConfig,
             configuration = configuration,
-            updateReport = updateReport
+            updateReport = updateReport,
           )
         )
       }
     }
 
   private def checkUpdatedLibraries(
-    log:           LoggerExtended,
-    soteriaConfig: SoteriaConfiguration,
-    configuration: ConfigRef,
-    updateReport:  UpdateReport
+      log:           LoggerExtended,
+      soteriaConfig: SoteriaConfiguration,
+      configuration: ConfigRef,
+      updateReport:  UpdateReport,
   )(
-    debugValue: ModuleID
+      debugValue:    ModuleID
   ): SoteriaConfiguration = {
     val modulesFromCompilation: Seq[(String, Seq[Dependency])] =
       getAllModuleForConfigurations(updateReport.configurations, configuration)
@@ -53,26 +51,25 @@ private[Transformations] trait TaskCheckDependencies {
       log,
       soteriaConfig,
       debugModule,
-      modulesFromCompilation.flatMap(_._2)
+      modulesFromCompilation.flatMap(_._2),
     )
   }
 
   private def debugPrintScala(
-    log:                   LoggerExtended,
-    soteriaConfig:         SoteriaConfiguration,
-    debugModule:           Dependency,
-    moduleFromCompilation: Seq[Dependency]
+      log:                   LoggerExtended,
+      soteriaConfig:         SoteriaConfiguration,
+      debugModule:           Dependency,
+      moduleFromCompilation: Seq[Dependency],
   ): SoteriaConfiguration = {
-    val debugModuleWithKnowledge = soteriaConfig
-      .AllModules
-      .find(_ === debugModule)
-      .getOrElse(debugModule)
+    val debugModuleWithKnowledge =
+      soteriaConfig.AllModules.find(_ === debugModule).getOrElse(debugModule)
 
-    val newConfig = consolidateDangersDebugModule(
-      soteriaConfig = soteriaConfig,
-      allModule = moduleFromCompilation,
-      debugModule = debugModuleWithKnowledge
-    )
+    val newConfig =
+      consolidateDangersDebugModule(
+        soteriaConfig = soteriaConfig,
+        allModule = moduleFromCompilation,
+        debugModule = debugModuleWithKnowledge,
+      )
 
     log.fail("You cannot compile when 'soteriaDebugModule' is set.")
 
@@ -80,24 +77,24 @@ private[Transformations] trait TaskCheckDependencies {
   }
 
   private def consolidateDangersDebugModule(
-    soteriaConfig: SoteriaConfiguration,
-    allModule:     Seq[Dependency],
-    debugModule:   Dependency
+      soteriaConfig: SoteriaConfiguration,
+      allModule:     Seq[Dependency],
+      debugModule:   Dependency,
   ): SoteriaConfiguration = {
-    val modulesFromBuild =
-      modulesFromBuildWithKnowledge(soteriaConfig, allModule)
+    val modulesFromBuild = modulesFromBuildWithKnowledge(soteriaConfig, allModule)
     writeResultJsonToOutputFile(soteriaConfig, modulesFromBuild, debugModule)
   }
 
   private def modulesFromBuildWithKnowledge(
-    soteriaConfig: SoteriaConfiguration,
-    allModule:     Seq[Dependency]
+      soteriaConfig: SoteriaConfiguration,
+      allModule:     Seq[Dependency],
   ): Seq[Dependency] = {
-    val dependenciesFromBuild: Seq[Dependency] = allModule
-      .groupBy(_.key)
-      .map { case (_, cModules) => cModules.reduce((l, r) => (l |+| r).right.get) }
-      .toSeq
-      .sortBy(_.key)
+    val dependenciesFromBuild: Seq[Dependency] =
+      allModule
+        .groupBy(_.key)
+        .map { case (_, cModules) => cModules.reduce((l, r) => (l |+| r).right.get) }
+        .toSeq
+        .sortBy(_.key)
 
     for {
       moduleWeKnowOf              <- soteriaConfig.NeedOverridden
@@ -107,20 +104,21 @@ private[Transformations] trait TaskCheckDependencies {
   }
 
   private def writeResultJsonToOutputFile(
-    config:                       SoteriaConfiguration,
-    moduleFromBuildWithKnowledge: Seq[Dependency],
-    debugModule:                  Dependency
+      config:                       SoteriaConfiguration,
+      moduleFromBuildWithKnowledge: Seq[Dependency],
+      debugModule:                  Dependency,
   ): SoteriaConfiguration = {
-    val newDependency: Dependency = debugModule.copy(
-      dependenciesToRemove = moduleFromBuildWithKnowledge.filter(_ =!= debugModule).map(_.nameObj)
-    )
+    val newDependency: Dependency =
+      debugModule.copy(
+        dependenciesToRemove = moduleFromBuildWithKnowledge.filter(_ =!= debugModule).map(_.nameObj)
+      )
 
     config.replaceModule(newDependency)
   }
 
   private def getAllModuleForConfigurations(
-    configurations:      Seq[ConfigurationReport],
-    targetConfiguration: ConfigRef
+      configurations:      Seq[ConfigurationReport],
+      targetConfiguration: ConfigRef,
   ): Seq[(String, Seq[Dependency])] =
     configurations
       .filter(_.configuration == targetConfiguration)
@@ -130,19 +128,16 @@ private[Transformations] trait TaskCheckDependencies {
           c.allModules
             .map(Dependency(_))
             .groupBy(_.key)
-            .map {
-              case (_, cModules) =>
-                cModules.reduce((l, r) => (l |+| r).right.get)
-            }
+            .map { case (_, cModules) => cModules.reduce((l, r) => (l |+| r).right.get) }
             .toSeq
-            .sortBy(_.key)
+            .sortBy(_.key),
         )
       }
 
   private def printDebug(
-    log:        LoggerExtended,
-    debugValue: Dependency,
-    allModule:  Seq[(String, Seq[Dependency])]
+      log:        LoggerExtended,
+      debugValue: Dependency,
+      allModule:  Seq[(String, Seq[Dependency])],
   ): Unit = {
     val header = s"The module ${debugValue.toString} have fetch categories"
 

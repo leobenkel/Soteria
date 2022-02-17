@@ -10,8 +10,8 @@ private[Transformations] trait MergeStrategyConfiguration {
 
   // scalastyle:off cyclomatic.complexity
   def getMergeStrategy(
-    input:       String,
-    oldStrategy: String => MergeStrategy
+      input:       String,
+      oldStrategy: String => MergeStrategy,
   ): MergeStrategy = {
     input match {
       case "git.properties"                           => MergeStrategy.rename
@@ -41,6 +41,5 @@ private[Transformations] trait MergeStrategyConfiguration {
       case x                                          => oldStrategy(x)
     }
   }
-
   // scalastyle:on
 }

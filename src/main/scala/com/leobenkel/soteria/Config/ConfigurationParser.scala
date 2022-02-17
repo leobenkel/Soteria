@@ -6,26 +6,23 @@ import scala.io.Source
 import scala.util._
 
 private[soteria] case class ConfigurationParser(
-  log:        LoggerExtended,
-  configPath: String
+    log:        LoggerExtended,
+    configPath: String,
 ) {
-  if (!configPath.endsWith(".json"))
-    log.criticalFailure(
-      s"The input configuration file was defined as '$configPath' " +
-        s"but it should be a '.json' file."
-    )
+  if(!configPath.endsWith(".json")) log.criticalFailure(
+    s"The input configuration file was defined as '$configPath' " +
+      s"but it should be a '.json' file."
+  )
 
-  @transient lazy private val isWeb: Boolean = configPath.startsWith("http://") ||
-    configPath.startsWith("https://")
+  @transient lazy private val isWeb: Boolean =
+    configPath.startsWith("http://") || configPath.startsWith("https://")
 
   @transient lazy private val fileContent: String =
     Try(
-      if (isWeb)
-        Source.fromURL(configPath)
-      else
-        Source.fromFile(configPath)
+      if(isWeb) Source.fromURL(configPath)
+      else Source.fromFile(configPath)
     ) match {
-      case Success(file) =>
+      case Success(file)      =>
         val content = file.mkString
         file.close()
         content
@@ -41,7 +38,7 @@ private[soteria] case class ConfigurationParser(
       case Left(err: String) =>
         log.criticalFailure(err)
         throw new Exception(err)
-      case Right(c) => c
+      case Right(c)          => c
     }
 
   def getConf: SoteriaConfiguration = conf

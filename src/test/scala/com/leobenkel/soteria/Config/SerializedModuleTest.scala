@@ -12,9 +12,10 @@ class SerializedModuleTest extends ParentTest {
 
   private class LogTestWithBuffer extends LogTest(test) {
     private var allMessages: String = ""
+
     override def log(
-      level:   Level.Value,
-      message: => String
+        level:   Level.Value,
+        message: => String,
     ): Unit = {
       test.log.debug(message)
       assertEquals(Level.Error, level)
@@ -28,7 +29,7 @@ class SerializedModuleTest extends ParentTest {
     val pathToFile = "soteria_succeed_4.json"
     val soteriaLog = new LogTestWithBuffer
 
-    val file = Source.fromResource(pathToFile)
+    val file    = Source.fromResource(pathToFile)
     val content = file.mkString
     file.close()
 
@@ -47,10 +48,8 @@ class SerializedModuleTest extends ParentTest {
 
     val modules = serializedModule.AllModules.sortBy(s => s.key)
 
-    val modulesWithDependanceErrors = serializedModule
-      .ZTestOnly
-      .RawModulesTest
-      .filter(_._2.nonEmpty)
+    val modulesWithDependanceErrors =
+      serializedModule.ZTestOnly.RawModulesTest.filter(_._2.nonEmpty)
     modulesWithDependanceErrors.foreach {
       case (module, errors) =>
         assert(soteriaLog.getMessages.contains(module.toString))
@@ -71,7 +70,7 @@ class SerializedModuleTest extends ParentTest {
     assertEquals("artifact-name", m2.name)
     assertEquals(Right("2.1.0"), m2.version)
 
-    val m3 = modules.apply(1)
+    val m3    = modules.apply(1)
     val m3Obj = m3.nameObj
     assertEquals("com.other.org", m3.organization)
     assertEquals("artif", m3.name)
@@ -80,30 +79,31 @@ class SerializedModuleTest extends ParentTest {
     assertEquals(false, m3Obj.exactName)
     assertEquals(
       Seq("artifactory", "artifice"),
-      m3Obj.excludeName.sortBy(identity)
+      m3Obj.excludeName.sortBy(identity),
     )
     assertEquals(1, m3.dependenciesToRemove.length)
     assertEquals(
       Seq(NameOfModule.apply("com.orgs", "name-of-library")),
-      m3.dependenciesToRemove
+      m3.dependenciesToRemove,
     )
   }
 
   test("test serialize/deserialize") {
-    val s = SerializedModule
-      .Empty
-      .copy(
-        version = "1.0",
-        shouldBeProvided = Some(true),
-        excludeName = Some(Seq("a", "b"))
-      )
+    val s         =
+      SerializedModule
+        .Empty
+        .copy(
+          version = "1.0",
+          shouldBeProvided = Some(true),
+          excludeName = Some(Seq("a", "b")),
+        )
     val encodedEi = s.toJsonStructure
     assert(encodedEi.isRight)
-    val encoded = encodedEi.right.get
+    val encoded   = encodedEi.right.get
     log.debug(encoded)
     val sParsedEi = SerializedModule.parser("com.org", "arti")(encoded)
     assert(sParsedEi.isRight)
-    val sParsed = sParsedEi.right.get
+    val sParsed   = sParsedEi.right.get
     assertEquals(s, sParsed)
   }
 }

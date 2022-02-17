@@ -20,7 +20,8 @@ class JsonDecodeTest extends ParentTest {
           key <- input.getAsInt("key")
         } yield MyJson(key)
 
-    val ei = JsonDecode.parse[MyJson](s"""
+    val ei =
+      JsonDecode.parse[MyJson](s"""
         |{
         |"key": $value
         |}
@@ -32,7 +33,7 @@ class JsonDecodeTest extends ParentTest {
 
   test("Test decode soteria.json") {
     Map[String, Either[String, SoteriaConfiguration] => Assertion](
-      "soteria_succeed_1.json" -> { result =>
+      "soteria_succeed_1.json"             -> { result =>
         assert(result.isRight)
         val parsed = result.right.get
         assert(parsed.modules.size == 1)
@@ -41,7 +42,7 @@ class JsonDecodeTest extends ParentTest {
         assert(parsed.scalaCFlags.length == 10)
         assert(parsed.scalaVersions.size == 2)
       },
-      "soteria_succeed_2.json" -> { result =>
+      "soteria_succeed_2.json"             -> { result =>
         assert(result.isRight)
         val parsed = result.right.get
         assert(parsed.modules.size == 1)
@@ -50,7 +51,7 @@ class JsonDecodeTest extends ParentTest {
         assert(parsed.scalaCFlags.isEmpty)
         assert(parsed.scalaVersions.size == 2)
       },
-      "soteria_succeed_3.json" -> { result =>
+      "soteria_succeed_3.json"             -> { result =>
         assert(result.isRight)
         val parsed = result.right.get
         assert(parsed.modules.isEmpty)
@@ -62,21 +63,21 @@ class JsonDecodeTest extends ParentTest {
         val error = result.left.get
         assert(error.contains("scalaVersions"))
       },
-      "soteria_fail_no_version.json" -> { result =>
+      "soteria_fail_no_version.json"       -> { result =>
         assert(result.isLeft)
         val error = result.left.get
         assert(error.contains("version"))
         assert(error.contains("com.orgs"))
         assert(error.contains("name-of-library"))
       },
-      "soteria_fail_bad_json.json" -> { result =>
+      "soteria_fail_bad_json.json"         -> { result =>
         assert(result.isLeft)
         val error = result.left.get
         assert("Did not parse" == error)
-      }
+      },
     ).map {
       case (filePath, test) =>
-        val file = Source.fromResource(filePath)
+        val file    = Source.fromResource(filePath)
         val content = file.mkString
         file.close()
 

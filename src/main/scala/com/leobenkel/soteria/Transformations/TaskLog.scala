@@ -8,8 +8,8 @@ import sbt.Def
 private[Transformations] trait TaskLog {
   def soteriaGetLogExec(): Def.Initialize[SoteriaLogger] =
     Def.settingDyn {
-      val log = SoteriaPluginKeys.soteriaGetLog.value
-      val level = soteriaLogLevel.value
+      val log       = SoteriaPluginKeys.soteriaGetLog.value
+      val level     = soteriaLogLevel.value
       val softError = soteriaSoft.value
       Def.setting {
         log.setLevel(level).setSoftError(softError)

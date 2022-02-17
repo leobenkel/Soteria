@@ -15,7 +15,7 @@ class ErrorMessageTest extends ParentTest {
             |Found blocks of errors (1) :
             |  This is an error
           """.trim.stripMargin,
-          s
+          s,
         )
       )
   }
@@ -24,12 +24,12 @@ class ErrorMessageTest extends ParentTest {
     (Seq(
       "error one",
       "error two",
-      "error three"
+      "error three",
     ).toError("We have a log of errors") ++
       Seq(
         "more 1",
         "more 2",
-        "more 3"
+        "more 3",
       ).toError("more Errors")).consume(s =>
       assertEquals(
         """
@@ -43,7 +43,7 @@ class ErrorMessageTest extends ParentTest {
             |    more 2
             |    more 3
           """.trim.stripMargin,
-        s
+        s,
       )
     )
   }
@@ -52,7 +52,7 @@ class ErrorMessageTest extends ParentTest {
     Seq(
       "error one",
       "error two",
-      "error three"
+      "error three",
     ).toError("We have a log of errors")
       .toErrors
       .consume(s =>
@@ -64,7 +64,7 @@ class ErrorMessageTest extends ParentTest {
             |    error two
             |    error three
           """.trim.stripMargin,
-          s
+          s,
         )
       )
   }
@@ -73,7 +73,7 @@ class ErrorMessageTest extends ParentTest {
     Seq(
       "error one",
       "error two",
-      "error three"
+      "error three",
     ).toError("We have a log of errors")
       .consume(s =>
         assertEquals(
@@ -83,19 +83,20 @@ class ErrorMessageTest extends ParentTest {
           |  error two
           |  error three
         """.trim.stripMargin,
-          s
+          s,
         )
       )
   }
 
   test("Test resolve with errors") {
-    val input = Errors(
-      Seq(
-        "error one",
-        "error two",
-        "error three"
-      ).map(_.asError)
-    ).resolve(SuccessMessage("This is a success"))
+    val input =
+      Errors(
+        Seq(
+          "error one",
+          "error two",
+          "error three",
+        ).map(_.asError)
+      ).resolve(SuccessMessage("This is a success"))
 
     assert(input.isLeft)
   }
@@ -107,7 +108,7 @@ class ErrorMessageTest extends ParentTest {
   }
 
   test("Test add NoError") {
-    val error1 = "this is an error".asError
+    val error1  = "this is an error".asError
     val noError = NoError
 
     val allErrors = error1 ++ noError
@@ -118,17 +119,18 @@ class ErrorMessageTest extends ParentTest {
           |Found blocks of errors (1) :
           |  this is an error
         """.trim.stripMargin,
-        s
+        s,
       )
     }
   }
 
   test("Test add errors") {
-    val errors = Seq(
-      "error one",
-      "error two",
-      "error three"
-    ).map(_.asErrors).reduce(_ ++ _)
+    val errors =
+      Seq(
+        "error one",
+        "error two",
+        "error three",
+      ).map(_.asErrors).reduce(_ ++ _)
 
     errors.consume { s =>
       assertEquals(
@@ -138,7 +140,7 @@ class ErrorMessageTest extends ParentTest {
           |  error two
           |  error three
         """.trim.stripMargin,
-        s
+        s,
       )
     }
   }
@@ -154,8 +156,8 @@ class ErrorMessageTest extends ParentTest {
 
   test("Test combine empty error") {
     val emptyError = NoError
-    val error = ErrorMessage("error title", "error Message")
-    val allError = (emptyError ++ NoError) ++ (NoError ++ error)
+    val error      = ErrorMessage("error title", "error Message")
+    val allError   = (emptyError ++ NoError) ++ (NoError ++ error)
 
     allError.consume { s =>
       assertEquals(
@@ -164,7 +166,7 @@ class ErrorMessageTest extends ParentTest {
           |  error title (1) :
           |    error Message
         """.trim.stripMargin,
-        s
+        s,
       )
     }
   }

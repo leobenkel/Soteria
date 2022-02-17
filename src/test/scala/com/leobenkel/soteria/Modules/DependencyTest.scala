@@ -4,10 +4,10 @@ import com.leobenkel.soteria.ParentTest
 
 class DependencyTest extends ParentTest {
   test("Test to ModuleID") {
-    val org = "com.org"
-    val name = "artifactName"
-    val version = "1.0"
-    val d = Dependency.apply(org, name)
+    val org      = "com.org"
+    val name     = "artifactName"
+    val version  = "1.0"
+    val d        = Dependency.apply(org, name)
     val moduleEi = d.toModuleID(version)
 
     assert(moduleEi.isRight)
@@ -19,10 +19,10 @@ class DependencyTest extends ParentTest {
   }
 
   test("Test to ModuleID - when impossible") {
-    val org = "com.org"
-    val name = "artifactName"
-    val version = "1.0"
-    val d = Dependency.apply(org, name).withName(_.copy(exactName = false))
+    val org      = "com.org"
+    val name     = "artifactName"
+    val version  = "1.0"
+    val d        = Dependency.apply(org, name).withName(_.copy(exactName = false))
     val moduleEi = d.toModuleID(version)
 
     assert(moduleEi.isLeft)
@@ -31,10 +31,10 @@ class DependencyTest extends ParentTest {
   }
 
   test("Test comparator with ModuleID") {
-    val org = "com.org"
-    val name = "artifactName"
-    val version = "1.0"
-    val d = Dependency.apply(org, name)
+    val org      = "com.org"
+    val name     = "artifactName"
+    val version  = "1.0"
+    val d        = Dependency.apply(org, name)
     val moduleId = d.toModuleID(version).right.get
 
     assert(d === moduleId)
@@ -42,12 +42,12 @@ class DependencyTest extends ParentTest {
   }
 
   test("Test combine") {
-    val org = "com.org"
-    val name = "artifactName"
+    val org      = "com.org"
+    val name     = "artifactName"
     val version1 = "1.0"
     val version2 = "2.0"
 
-    val d = Dependency.apply(org, name)
+    val d  = Dependency.apply(org, name)
     val d1 = d.withVersion(version = version1)
     val d2 = d.withVersion(version = version2)
 
@@ -63,11 +63,11 @@ class DependencyTest extends ParentTest {
   }
 
   test("Test combine - same version") {
-    val org = "com.org"
-    val name = "artifactName"
+    val org     = "com.org"
+    val name    = "artifactName"
     val version = "1.0"
 
-    val d = Dependency.apply(org, name)
+    val d  = Dependency.apply(org, name)
     val d1 = d.withVersion(version = version)
     val d2 = d.withVersion(version = version)
 
@@ -82,9 +82,9 @@ class DependencyTest extends ParentTest {
   }
 
   test("Test combine fail") {
-    val org = "com.org"
-    val name1 = "artifactName"
-    val name2 = "different-name"
+    val org      = "com.org"
+    val name1    = "artifactName"
+    val name2    = "different-name"
     val version1 = "1.0"
     val version2 = "1.0"
 
@@ -104,8 +104,8 @@ class DependencyTest extends ParentTest {
   }
 
   test("Test constructor with needDoublePercent") {
-    val org = "com.org"
-    val name = "artifactName"
+    val org     = "com.org"
+    val name    = "artifactName"
     val version = "1.0"
 
     val m = Dependency.apply(org, name, version, needDoublePercent = true)

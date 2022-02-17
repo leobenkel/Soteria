@@ -16,8 +16,8 @@ import scala.util.parsing.json._
 @silent("deprecated")
 private[Json] object JsonInnerEngine {
   def parse[A](
-    input:  String,
-    parser: JsonDecode.Parser[A]
+      input:  String,
+      parser: JsonDecode.Parser[A],
   ): Either[String, A] =
     Try(
       JSON.parseFull(input).map(_.asInstanceOf[Map[String, Any]])
@@ -26,9 +26,8 @@ private[Json] object JsonInnerEngine {
       .map(_.toString)
       .right
       .flatMap {
-        case None => Left("Did not parse")
-        case Some(v) =>
-          parser(v) match {
+        case None    => Left("Did not parse")
+        case Some(v) => parser(v) match {
             case Right(vv) => Right(vv)
             case Left(ex)  => Left(s"The parser failed: $ex")
           }

@@ -12,14 +12,14 @@ private[Transformations] trait TaskDependencyOverrides {
    * the correct versions.
    */
   def dependencyOverrides(
-    conf: Option[Configuration]
+      conf: Option[Configuration]
   ): Def.Initialize[Seq[ModuleID]] = {
     Def.settingDyn {
-      val log = soteriaGetLog.value
+      val log                  = soteriaGetLog.value
       log.separatorDebug(s"$conf / dependencyOverrides")
       val originalDependencies =
         conf.fold(Keys.dependencyOverrides)(_ / Keys.dependencyOverrides).value
-      val config = SoteriaPluginKeys.soteriaConfig.value
+      val config               = SoteriaPluginKeys.soteriaConfig.value
 
       Def.setting {
         log.debug(
@@ -27,15 +27,14 @@ private[Transformations] trait TaskDependencyOverrides {
         )
         val newDependencyOverrides = (originalDependencies ++ config.DependenciesOverride).distinct
 
-        if (conf.isEmpty) {
+        if(conf.isEmpty) {
           log.info(
             s"> 'dependencyOverrides' have ${newDependencyOverrides.size} overrides."
           )
           newDependencyOverrides.prettyString(log, "dependencyOverrides")
-        } else
-          log.debug(
-            s"> '$conf / dependencyOverrides' have " + s"${newDependencyOverrides.size} overrides."
-          )
+        } else log.debug(
+          s"> '$conf / dependencyOverrides' have " + s"${newDependencyOverrides.size} overrides."
+        )
 
         newDependencyOverrides
       }

@@ -15,22 +15,22 @@ object SoteriaPlugin extends AutoPlugin with SoteriaExecutionLogic {
   // scalastyle:off object.name
   object autoImport {
     private val SoteriaKeys: SoteriaPluginKeys.type = SoteriaPluginKeys
-    val soteriaSoft = SoteriaKeys.soteriaSoft
-    val soteriaLogLevel = SoteriaKeys.soteriaLogLevel
-    val soteriaAssemblySettings = SoteriaKeys.soteriaAssemblySettings
+    val soteriaSoft                  = SoteriaKeys.soteriaSoft
+    val soteriaLogLevel              = SoteriaKeys.soteriaLogLevel
+    val soteriaAssemblySettings      = SoteriaKeys.soteriaAssemblySettings
     val soteriaSoftOnCompilerWarning = SoteriaKeys.soteriaSoftOnCompilerWarning
-    val soteriaCheckScalaStyle = SoteriaKeys.soteriaCheckScalaStyle
-    val soteriaCheckScalaFix = SoteriaKeys.soteriaCheckScalaFix
-    val soteriaCheckScalaFmt = SoteriaKeys.soteriaCheckScalaFmt
-    val soteriaCheckScalaFmtRun = SoteriaKeys.soteriaCheckScalaFmtRun
-    val soteriaCheckScalaCheckAll = SoteriaKeys.soteriaCheckScalaCheckAll
-    val soteriaGetAllDependencies = SoteriaKeys.soteriaGetAllDependencies
-    val soteriaConfPath = SoteriaKeys.soteriaConfPath
-    val soteriaTestCoverage = SoteriaKeys.soteriaTestCoverage.setting
-    val soteriaSubmitCoverage = SoteriaKeys.soteriaSubmitCoverage.setting
-    val soteriaCheckCoverallEnvVar = SoteriaKeys.soteriaCheckCoverallEnvVar
-    val soteriaDockerImage = SoteriaKeys.soteriaDockerImage
-    val soteriaAddSemantic = SoteriaKeys.soteriaAddSemantic
+    val soteriaCheckScalaStyle       = SoteriaKeys.soteriaCheckScalaStyle
+    val soteriaCheckScalaFix         = SoteriaKeys.soteriaCheckScalaFix
+    val soteriaCheckScalaFmt         = SoteriaKeys.soteriaCheckScalaFmt
+    val soteriaCheckScalaFmtRun      = SoteriaKeys.soteriaCheckScalaFmtRun
+    val soteriaCheckScalaCheckAll    = SoteriaKeys.soteriaCheckScalaCheckAll
+    val soteriaGetAllDependencies    = SoteriaKeys.soteriaGetAllDependencies
+    val soteriaConfPath              = SoteriaKeys.soteriaConfPath
+    val soteriaTestCoverage          = SoteriaKeys.soteriaTestCoverage.setting
+    val soteriaSubmitCoverage        = SoteriaKeys.soteriaSubmitCoverage.setting
+    val soteriaCheckCoverallEnvVar   = SoteriaKeys.soteriaCheckCoverallEnvVar
+    val soteriaDockerImage           = SoteriaKeys.soteriaDockerImage
+    val soteriaAddSemantic           = SoteriaKeys.soteriaAddSemantic
   }
 
   // scalastyle:on
@@ -43,45 +43,46 @@ object SoteriaPlugin extends AutoPlugin with SoteriaExecutionLogic {
     "; set ThisBuild / coverageEnabled := true " + s"; Test / ${task.nameAsString} " +
       "; set ThisBuild / coverageEnabled := false "
 
-  lazy final override val buildSettings: Seq[Def.Setting[_]] = super.buildSettings ++ {
-    sys.props += "packaging.type" -> "jar"
-    Seq()
-  } ++
-    addCommandAlias(
-      "soteriaRunTestCoverage",
-      coverallMakeCommand(SoteriaPluginKeys.soteriaTestCoverage)
-    ) ++
-    addCommandAlias(
-      "soteriaRunSubmitCoverage",
-      "; soteriaCheckCoverallEnvVar " +
-        coverallMakeCommand(
-          SoteriaPluginKeys.soteriaSubmitCoverage
-        )
-    )
+  lazy final override val buildSettings: Seq[Def.Setting[_]] =
+    super.buildSettings ++ {
+      sys.props += "packaging.type" -> "jar"
+      Seq()
+    } ++
+      addCommandAlias(
+        "soteriaRunTestCoverage",
+        coverallMakeCommand(SoteriaPluginKeys.soteriaTestCoverage),
+      ) ++
+      addCommandAlias(
+        "soteriaRunSubmitCoverage",
+        "; soteriaCheckCoverallEnvVar " +
+          coverallMakeCommand(
+            SoteriaPluginKeys.soteriaSubmitCoverage
+          ),
+      )
 
   lazy private val scalaStyleSettings: Seq[Def.Setting[_]] = {
     Seq(
       // Scalastyle
-      soteriaCheckScalaStyle :=
+      soteriaCheckScalaStyle    :=
         Def
           .sequential(
             (Compile / org.scalastyle.sbt.ScalastylePlugin.autoImport.scalastyle).toTask(""),
-            (Test / org.scalastyle.sbt.ScalastylePlugin.autoImport.scalastyle).toTask("")
+            (Test / org.scalastyle.sbt.ScalastylePlugin.autoImport.scalastyle).toTask(""),
           )
           .value,
       // ScalaFix
-      soteriaCheckScalaFix :=
+      soteriaCheckScalaFix      :=
         Def
           .sequential(
             (Compile / scalafix.sbt.ScalafixPlugin.autoImport.scalafix).toTask(" --check"),
-            (Test / scalafix.sbt.ScalafixPlugin.autoImport.scalafix).toTask(" --check")
+            (Test / scalafix.sbt.ScalafixPlugin.autoImport.scalafix).toTask(" --check"),
           )
           .value,
-      soteriaCheckScalaFmt :=
+      soteriaCheckScalaFmt      :=
         Def
           .sequential(
             (Compile / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmtCheck),
-            (Test / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmtCheck)
+            (Test / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmtCheck),
           )
           .value,
       soteriaCheckScalaCheckAll :=
@@ -89,18 +90,18 @@ object SoteriaPlugin extends AutoPlugin with SoteriaExecutionLogic {
           .sequential(
             soteriaCheckScalaFix,
             soteriaCheckScalaFmt,
-            soteriaCheckScalaStyle
+            soteriaCheckScalaStyle,
           )
           .value,
-      soteriaCheckScalaFmtRun :=
+      soteriaCheckScalaFmtRun   :=
         Def
           .sequential(
             (Compile / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmt),
-            (Test / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmt)
+            (Test / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmt),
           )
           .value,
-      soteriaAddSemantic       := getDefaultAddSemanticValue.value,
-      Keys.libraryDependencies := addScalaFixCompilerPlugin().value
+      soteriaAddSemantic        := getDefaultAddSemanticValue.value,
+      Keys.libraryDependencies  := addScalaFixCompilerPlugin().value,
     )
     /*
      * https://stackoverflow.com/a/53824265/3357831
@@ -116,41 +117,41 @@ object SoteriaPlugin extends AutoPlugin with SoteriaExecutionLogic {
   lazy private val logSettings: Seq[Def.Setting[_]] =
     Seq(
       // Log
-      soteriaLogLevel := Level.Info,
-      soteriaSoft     := false,
+      soteriaLogLevel                 := Level.Info,
+      soteriaSoft                     := false,
       SoteriaPluginKeys.soteriaGetLog :=
         SoteriaLogger(
           ConsoleLogger(),
           Level.Info,
-          softError = false
+          softError = false,
         ),
-      SoteriaPluginKeys.soteriaGetLog := soteriaGetLogExec().value
+      SoteriaPluginKeys.soteriaGetLog := soteriaGetLogExec().value,
     )
 
   lazy private val assemblyRules: Seq[Def.Setting[_]] = {
     import sbtdocker.DockerPlugin.autoImport._
     Seq(
       // Assembly rules
-      SoteriaPluginKeys.defaultAssemblyOption := defaultAssemblyOptionExec.value,
-      soteriaAssemblySettings                 := soteriaAssemblySettingsExec().value,
+      SoteriaPluginKeys.defaultAssemblyOption              := defaultAssemblyOptionExec.value,
+      soteriaAssemblySettings                              := soteriaAssemblySettingsExec().value,
       AssemblyKeys.assembly / AssemblyKeys.assemblyJarName := {
         val projectName = Keys.name.value
-        val version = Keys.version.value
+        val version     = Keys.version.value
         s"$projectName-$version-all.jar"
       },
       // Compile Path
-      Compile / Keys.scalaSource := Keys.baseDirectory.value / "src/main/scala",
-      Test / Keys.scalaSource    := Keys.baseDirectory.value / "src/test/scala",
-      AssemblyKeys.assembly / Keys.fullClasspath :=
+      Compile / Keys.scalaSource                           := Keys.baseDirectory.value / "src/main/scala",
+      Test / Keys.scalaSource                              := Keys.baseDirectory.value / "src/test/scala",
+      AssemblyKeys.assembly / Keys.fullClasspath           :=
         (Compile / Keys.fullClasspath).value,
       // Docker
-      soteriaDockerImage := SoteriaPluginKeys.soteriaConfig.value.dockerImage,
-      docker / dockerfile := {
+      soteriaDockerImage                                   := SoteriaPluginKeys.soteriaConfig.value.dockerImage,
+      docker / dockerfile                                  := {
         // The assembly task generates a fat JAR file
         val artifact: File = AssemblyKeys.assembly.value
-        val conf = SoteriaPluginKeys.soteriaConfig.value
-        val log = SoteriaPluginKeys.soteriaGetLog.value
-        val dockerImage = soteriaDockerImage.value
+        val conf               = SoteriaPluginKeys.soteriaConfig.value
+        val log                = SoteriaPluginKeys.soteriaGetLog.value
+        val dockerImage        = soteriaDockerImage.value
         val artifactTargetPath = s"/app/${artifact.name}"
 
         def makeDocker(imageName: String): Dockerfile =
@@ -160,15 +161,14 @@ object SoteriaPlugin extends AutoPlugin with SoteriaExecutionLogic {
             entryPoint("java", "-jar", artifactTargetPath)
           }
 
-        if (!conf.dockerImageWasSet)
-          log.error(
-            s"'dockerImage' was not set in the configuration file. Using value: '$dockerImage'."
-          )
+        if(!conf.dockerImageWasSet) log.error(
+          s"'dockerImage' was not set in the configuration file. Using value: '$dockerImage'."
+        )
 
         makeDocker(dockerImage)
       },
-      docker / Keys.version := Keys.version.value,
-      docker / buildOptions := sbtdocker.BuildOptions(cache = false)
+      docker / Keys.version                                := Keys.version.value,
+      docker / buildOptions                                := sbtdocker.BuildOptions(cache = false),
     )
   }
 
@@ -180,27 +180,27 @@ object SoteriaPlugin extends AutoPlugin with SoteriaExecutionLogic {
         Seq(
           "-Xms512M",
           "-Xmx2048M",
-          "-XX:+CMSClassUnloadingEnabled"
+          "-XX:+CMSClassUnloadingEnabled",
         ),
       Test / Keys.parallelExecution := false,
       Test / Keys.fork              := true,
       soteriaCheckCoverallEnvVar    := checkEnvVar("COVERALLS_REPO_TOKEN").value,
-      Test / soteriaTestCoverage :=
+      Test / soteriaTestCoverage    :=
         Def
           .sequential(
             Keys.clean,
             Test / Keys.test,
             Test / ScoverageKeys.coverageReport,
-            Test / ScoverageKeys.coverageAggregate
+            Test / ScoverageKeys.coverageAggregate,
           )
           .value,
-      Test / soteriaSubmitCoverage :=
+      Test / soteriaSubmitCoverage  :=
         Def
           .sequential(
             Test / soteriaTestCoverage,
-            Test / CoverallsPlugin.coveralls
+            Test / CoverallsPlugin.coveralls,
           )
-          .value
+          .value,
     )
   }
 
@@ -210,13 +210,13 @@ object SoteriaPlugin extends AutoPlugin with SoteriaExecutionLogic {
       SoteriaPluginKeys.soteriaDebugModule := None,
       soteriaGetAllDependencies            := getAllDependencies.value,
       SoteriaPluginKeys.soteriaBuildConfig := checkDependencies(Test).value,
-      Keys.commands ++= Seq(debugModuleCommand, debugAllModuleCommand)
+      Keys.commands ++= Seq(debugModuleCommand, debugAllModuleCommand),
     )
 
   lazy private val configurations: Seq[Def.Setting[_]] =
     Seq[Def.Setting[_]](
       soteriaConfPath                 := "./soteria.json",
-      SoteriaPluginKeys.soteriaConfig := soteriaConfigurationExec().value
+      SoteriaPluginKeys.soteriaConfig := soteriaConfigurationExec().value,
     )
 
   lazy final override val projectSettings: Seq[Def.Setting[_]] =
@@ -236,9 +236,9 @@ object SoteriaPlugin extends AutoPlugin with SoteriaExecutionLogic {
         Compile / Keys.scalaVersion        := scalaVersionExecSetting().value,
         Keys.sbtVersion                    := sbtVersionExecSetting().value,
         // scalac
-        soteriaSoftOnCompilerWarning := false,
-        Keys.scalacOptions           := extraScalacOptions(None).value,
-        Compile / Keys.scalacOptions := extraScalacOptions(Some(Compile)).value,
-        Test / Keys.scalacOptions    := extraScalacOptions(Some(Test)).value
+        soteriaSoftOnCompilerWarning       := false,
+        Keys.scalacOptions                 := extraScalacOptions(None).value,
+        Compile / Keys.scalacOptions       := extraScalacOptions(Some(Compile)).value,
+        Test / Keys.scalacOptions          := extraScalacOptions(Some(Test)).value,
       ) ++ assemblyRules ++ scalaStyleSettings
 }

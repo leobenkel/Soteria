@@ -12,7 +12,7 @@ class ModuleDefaultsTest extends ParentTest {
     assertEquals(None, ModuleDefaults.toOption(Seq.empty[String]))
     assertEquals(
       Some(Seq("a", "b")),
-      ModuleDefaults.toOption(Seq("a", "b")).map(_.toSeq)
+      ModuleDefaults.toOption(Seq("a", "b")).map(_.toSeq),
     )
   }
 }

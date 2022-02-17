@@ -10,10 +10,10 @@ object ModuleDefaults {
   val NeedDoublePercent: Boolean = false
 
   def toOptionWithDefault[A](
-    defaultValue: A,
-    currentValue: A
-  ): Option[A] = if (defaultValue == currentValue) None else Some(currentValue)
+      defaultValue: A,
+      currentValue: A,
+  ): Option[A] = if(defaultValue == currentValue) None else Some(currentValue)
 
-  def toOption[A: ClassTag](currentArray: Seq[A]): Option[Seq[A]] =
-    if (currentArray.isEmpty) None else Some(currentArray)
+  def toOption[A : ClassTag](currentArray: Seq[A]): Option[Seq[A]] =
+    if(currentArray.isEmpty) None else Some(currentArray)
 }

@@ -14,31 +14,30 @@ private[Transformations] trait TaskUpdate extends CheckVersion {
 
   /** Does not do anything special without the debugging enable. */
   def update(
-    configuration: Configuration
+      configuration: Configuration
   ): Def.Initialize[Task[UpdateReport]] =
     Def.taskDyn {
       val log = SoteriaPluginKeys.soteriaGetLog.value
       log.separatorDebug("update")
       log.debug("> Starting Update")
-      val updateReport: UpdateReport = (configuration / Keys.update).value
-      val soteriaConfig: SoteriaConfiguration =
-        SoteriaPluginKeys.soteriaConfig.value
+      val updateReport:  UpdateReport         = (configuration / Keys.update).value
+      val soteriaConfig: SoteriaConfiguration = SoteriaPluginKeys.soteriaConfig.value
 
       Def.task {
         checkUpdatedLibraries(
           log,
           soteriaConfig,
           configuration,
-          updateReport
+          updateReport,
         )
       }
     }
 
   private def checkUpdatedLibraries(
-    log:           LoggerExtended,
-    soteriaConfig: SoteriaConfiguration,
-    configuration: ConfigRef,
-    updateReport:  UpdateReport
+      log:           LoggerExtended,
+      soteriaConfig: SoteriaConfiguration,
+      configuration: ConfigRef,
+      updateReport:  UpdateReport,
   ): UpdateReport = {
     val allModule: Seq[(String, Seq[Dependency])] =
       getAllModuleForConfigurations(updateReport.configurations, configuration)
@@ -59,31 +58,31 @@ private[Transformations] trait TaskUpdate extends CheckVersion {
   }
 
   private def checkTooManyVersions(
-    log:           LoggerExtended,
-    loadedModules: Seq[Dependency]
+      log:           LoggerExtended,
+      loadedModules: Seq[Dependency],
   ): (Seq[ModuleID], ErrorMessage) = {
     log.separatorDebug("TaskUpdate.checkTooManyVersions")
     val tooManyVersions = loadedModules.filter(_.tooManyVersions)
-    val oneVersion =
-      loadedModules.filter(_.toModuleID.isRight).map(_.toModuleID.right.get)
+    val oneVersion      = loadedModules.filter(_.toModuleID.isRight).map(_.toModuleID.right.get)
 
-    val errors = tooManyVersions
-      .map(m => s"${m.toString} has more than one version")
-      .toError("Found libraries with more than one version")
+    val errors =
+      tooManyVersions
+        .map(m => s"${m.toString} has more than one version")
+        .toError("Found libraries with more than one version")
 
     (oneVersion, errors)
   }
 
   private def getAllModuleForConfigurations(
-    configurations:      Seq[ConfigurationReport],
-    targetConfiguration: ConfigRef
+      configurations:      Seq[ConfigurationReport],
+      targetConfiguration: ConfigRef,
   ): Seq[(String, Seq[Dependency])] =
     configurations
       .filter(_.configuration == targetConfiguration)
       .map { c =>
         (
           c.configuration.name,
-          combineModules(c.allModules.map(Dependency(_)))
+          combineModules(c.allModules.map(Dependency(_))),
         )
       }
 
@@ -95,8 +94,8 @@ private[Transformations] trait TaskUpdate extends CheckVersion {
       .sortBy(_.key)
 
   private def printDebug(
-    log:       LoggerExtended,
-    allModule: Seq[(String, Seq[Dependency])]
+      log:       LoggerExtended,
+      allModule: Seq[(String, Seq[Dependency])],
   ): Unit = {
     val header = "Here are all categories fetch"
     log.debug(s"> $header (${allModule.size}): ")
@@ -109,17 +108,17 @@ private[Transformations] trait TaskUpdate extends CheckVersion {
 
   object ZTestOnlyTaskUpdate {
     @inline def combineModulesTest(
-      allModule: Seq[Dependency]
+        allModule: Seq[Dependency]
     ): Seq[Dependency] = combineModules(allModule)
 
     @inline def checkTooManyVersionsTest(
-      log:           LoggerExtended,
-      loadedModules: Seq[Dependency]
+        log:           LoggerExtended,
+        loadedModules: Seq[Dependency],
     ): (Seq[ModuleID], ErrorMessage) = checkTooManyVersions(log, loadedModules)
 
     @inline def printDebugTest(
-      log:       LoggerExtended,
-      allModule: Seq[(String, Seq[Dependency])]
+        log:       LoggerExtended,
+        allModule: Seq[(String, Seq[Dependency])],
     ): Unit = printDebug(log, allModule)
   }
 }

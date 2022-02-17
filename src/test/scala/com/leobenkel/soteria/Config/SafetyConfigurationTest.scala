@@ -6,104 +6,114 @@ import com.leobenkel.soteria.Utils.Json.JsonDecode
 
 class SoteriaConfigurationTest extends ParentTest {
   private val test:       SoteriaConfigurationTest = this
-  private val soteriaLog: LogTest = new LogTest(test)
+  private val soteriaLog: LogTest                  = new LogTest(test)
 
   test("test serialize/deserialize") {
-    val s = SoteriaConfiguration(
-      soteriaLog,
-      sbtVersion = "sbtV1",
-      scalaVersions = Set(
-        "scala1",
-        "scala2"
-      ),
-      scalaCFlags = Seq("flag1", "flag2"),
-      dockerImageOpt = None,
-      modules = Map(
-        "com.org" ->
+    val s =
+      SoteriaConfiguration(
+        soteriaLog,
+        sbtVersion = "sbtV1",
+        scalaVersions =
+          Set(
+            "scala1",
+            "scala2",
+          ),
+        scalaCFlags = Seq("flag1", "flag2"),
+        dockerImageOpt = None,
+        modules =
           Map(
-            "name" ->
-              SerializedModule
-                .Empty
-                .copy(
-                  version = "1.0",
-                  shouldBeProvided = Some(true),
-                  excludeName = Some(Seq("a", "b"))
-                )
-          )
+            "com.org" ->
+              Map(
+                "name" ->
+                  SerializedModule
+                    .Empty
+                    .copy(
+                      version = "1.0",
+                      shouldBeProvided = Some(true),
+                      excludeName = Some(Seq("a", "b")),
+                    )
+              )
+          ),
       )
-    )
 
     val encodedEi = s.toJsonStructure
     assert(encodedEi.isRight)
-    val encoded = encodedEi.right.get
+    val encoded   = encodedEi.right.get
     log.debug(encoded)
     val sParsedEi = SoteriaConfiguration.parser(soteriaLog)(encoded)
     assert(sParsedEi.isRight)
-    val sParsed = sParsedEi.right.get
+    val sParsed   = sParsedEi.right.get
     assertEquals(s, sParsed)
   }
 
   test("test serialize/deserialize json") {
-    val s = SoteriaConfiguration(
-      soteriaLog,
-      sbtVersion = "sbtV1",
-      scalaVersions = Set(
-        "scala1",
-        "scala2"
-      ),
-      scalaCFlags = Seq("flag1", "flag2"),
-      dockerImageOpt = None,
-      modules = Map(
-        "com.org" ->
+    val s =
+      SoteriaConfiguration(
+        soteriaLog,
+        sbtVersion = "sbtV1",
+        scalaVersions =
+          Set(
+            "scala1",
+            "scala2",
+          ),
+        scalaCFlags = Seq("flag1", "flag2"),
+        dockerImageOpt = None,
+        modules =
           Map(
-            "name" ->
-              SerializedModule
-                .Empty
-                .copy(
-                  version = "1.0",
-                  shouldBeProvided = Some(true),
-                  excludeName = Some(Seq("a", "b"))
-                )
-          )
+            "com.org" ->
+              Map(
+                "name" ->
+                  SerializedModule
+                    .Empty
+                    .copy(
+                      version = "1.0",
+                      shouldBeProvided = Some(true),
+                      excludeName = Some(Seq("a", "b")),
+                    )
+              )
+          ),
       )
-    )
 
     val encodedEi = JsonDecode.encode(s)
     assert(encodedEi.isRight)
-    val encoded = encodedEi.right.get
+    val encoded   = encodedEi.right.get
     log.debug(encoded)
-    val sParsedEi = JsonDecode.parse[SoteriaConfiguration](encoded)(
-      SoteriaConfiguration.parser(soteriaLog)
-    )
+    val sParsedEi =
+      JsonDecode.parse[SoteriaConfiguration](encoded)(
+        SoteriaConfiguration.parser(soteriaLog)
+      )
     assert(sParsedEi.isRight)
-    val sParsed = sParsedEi.right.get
+    val sParsed   = sParsedEi.right.get
     assertEquals(s, sParsed)
   }
 
   test("test replace module - replace") {
-    val s1 = SoteriaConfiguration(
-      soteriaLog,
-      sbtVersion = "sbtV1",
-      scalaVersions = Set(
-        "scala1",
-        "scala2"
-      ),
-      scalaCFlags = Seq("flag1", "flag2"),
-      dockerImageOpt = None,
-      modules = Map(
-        "com.org" ->
+    val s1 =
+      SoteriaConfiguration(
+        soteriaLog,
+        sbtVersion = "sbtV1",
+        scalaVersions =
+          Set(
+            "scala1",
+            "scala2",
+          ),
+        scalaCFlags = Seq("flag1", "flag2"),
+        dockerImageOpt = None,
+        modules =
           Map(
-            "name" ->
-              SerializedModule
-                .Empty
-                .copy(
-                  version = "1.0",
-                  shouldBeProvided = Some(true),
-                  excludeName = Some(Seq("a", "b"))
-                )
-          )
+            "com.org" ->
+              Map(
+                "name" ->
+                  SerializedModule
+                    .Empty
+                    .copy(
+                      version = "1.0",
+                      shouldBeProvided = Some(true),
+                      excludeName = Some(Seq("a", "b")),
+                    )
+              )
+          ),
       )
-    )
 
     val s2 = s1.replaceModule(Dependency("com.org", "name").withVersion("2.0"))
 
@@ -112,29 +122,32 @@ class SoteriaConfigurationTest extends ParentTest {
   }
 
   test("test replace module - new artifact") {
-    val s1 = SoteriaConfiguration(
-      soteriaLog,
-      sbtVersion = "sbtV1",
-      scalaVersions = Set(
-        "scala1",
-        "scala2"
-      ),
-      scalaCFlags = Seq("flag1", "flag2"),
-      dockerImageOpt = None,
-      modules = Map(
-        "com.org" ->
+    val s1 =
+      SoteriaConfiguration(
+        soteriaLog,
+        sbtVersion = "sbtV1",
+        scalaVersions =
+          Set(
+            "scala1",
+            "scala2",
+          ),
+        scalaCFlags = Seq("flag1", "flag2"),
+        dockerImageOpt = None,
+        modules =
           Map(
-            "name" ->
-              SerializedModule
-                .Empty
-                .copy(
-                  version = "1.0",
-                  shouldBeProvided = Some(true),
-                  excludeName = Some(Seq("a", "b"))
-                )
-          )
+            "com.org" ->
+              Map(
+                "name" ->
+                  SerializedModule
+                    .Empty
+                    .copy(
+                      version = "1.0",
+                      shouldBeProvided = Some(true),
+                      excludeName = Some(Seq("a", "b")),
+                    )
+              )
+          ),
       )
-    )
 
     val s2 = s1.replaceModule(Dependency("com.org", "name2").withVersion("2.0"))
 
@@ -144,32 +157,34 @@ class SoteriaConfigurationTest extends ParentTest {
   }
 
   test("test replace module - new org") {
-    val s1 = SoteriaConfiguration(
-      soteriaLog,
-      sbtVersion = "sbtV1",
-      scalaVersions = Set(
-        "scala1",
-        "scala2"
-      ),
-      scalaCFlags = Seq("flag1", "flag2"),
-      dockerImageOpt = None,
-      modules = Map(
-        "com.org" ->
+    val s1 =
+      SoteriaConfiguration(
+        soteriaLog,
+        sbtVersion = "sbtV1",
+        scalaVersions =
+          Set(
+            "scala1",
+            "scala2",
+          ),
+        scalaCFlags = Seq("flag1", "flag2"),
+        dockerImageOpt = None,
+        modules =
           Map(
-            "name" ->
-              SerializedModule
-                .Empty
-                .copy(
-                  version = "1.0",
-                  shouldBeProvided = Some(true),
-                  excludeName = Some(Seq("a", "b"))
-                )
-          )
+            "com.org" ->
+              Map(
+                "name" ->
+                  SerializedModule
+                    .Empty
+                    .copy(
+                      version = "1.0",
+                      shouldBeProvided = Some(true),
+                      excludeName = Some(Seq("a", "b")),
+                    )
+              )
+          ),
       )
-    )
 
-    val s2 =
-      s1.replaceModule(Dependency("com.org2", "name2").withVersion("2.0"))
+    val s2 = s1.replaceModule(Dependency("com.org2", "name2").withVersion("2.0"))
 
     assert(s2.AllModules.length == 2)
     assert(s2.AllModules.find(_.name == "name").get.version.right.get == "1.0")

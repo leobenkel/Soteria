@@ -30,13 +30,12 @@ private[soteria] object JsonParserHelper {
   }
 
   implicit class EISequenceSoSoDeep[KEY, ERR, VALUE](
-    s: Seq[(KEY, Either[ERR, VALUE])]
+      s: Seq[(KEY, Either[ERR, VALUE])]
   ) {
     // https://stackoverflow.com/a/7231180/3357831
     @transient lazy val flattenedEiSeq: Either[ERR, Seq[(KEY, VALUE)]] =
       s.foldRight(Right(Nil): Either[ERR, Seq[(KEY, VALUE)]]) {
-        case ((k, ei), acc) =>
-          for {
+        case ((k, ei), acc) => for {
             ac <- acc
             ae <- ei
           } yield ac :+ (k, ae)
@@ -44,13 +43,12 @@ private[soteria] object JsonParserHelper {
   }
 
   implicit class EISequenceDeep[KEY, ERR, VALUE](
-    s: Seq[(KEY, Seq[Either[ERR, VALUE]])]
+      s: Seq[(KEY, Seq[Either[ERR, VALUE]])]
   ) {
     // https://stackoverflow.com/a/7231180/3357831
     @transient lazy val flattenedEiSeq: Either[ERR, Seq[(KEY, Seq[VALUE])]] =
       s.foldRight(Right(Nil): Either[ERR, Seq[(KEY, Seq[VALUE])]]) {
-        case ((k, ei), acc) =>
-          for {
+        case ((k, ei), acc) => for {
             ac <- acc
             ae <- ei.flattenedEiSeq
           } yield ac :+ (k, ae)
