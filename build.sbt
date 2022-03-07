@@ -7,7 +7,7 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % Test
 
 // https://github.com/scoverage/sbt-scoverage
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.9.3")
-addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.3.1")
+addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.3.2")
 //
 
 // ASSEMBLY
@@ -39,5 +39,5 @@ val silencerVersion = "1.7.8"
 ThisBuild / libraryDependencies ++=
   Seq(
     compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
-    "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
+    "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full,
   )
