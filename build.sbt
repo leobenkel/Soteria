@@ -12,7 +12,7 @@ addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.3.1")
 
 // ASSEMBLY
 addSbtPlugin("com.eed3si9n"      % "sbt-assembly" % "1.2.0")
-addSbtPlugin("se.marcuslonnberg" % "sbt-docker"   % "1.8.3")
+addSbtPlugin("se.marcuslonnberg" % "sbt-docker"   % "1.9.0")
 ///
 
 // For testing
@@ -39,5 +39,5 @@ val silencerVersion = "1.7.8"
 ThisBuild / libraryDependencies ++=
   Seq(
     compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
-    "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
+    "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full,
   )
