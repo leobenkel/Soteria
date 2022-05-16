@@ -31,7 +31,7 @@ class ImplicitModuleToStringTest extends ParentTest {
     val m: Seq[ModuleID] = revisions.map(r => org % name % r)
     val header = "this is a header"
     m.prettyString(
-      new LoggerExtended() {
+      new LoggerExtended {
         override def isSoftError: Boolean = test.fail("Should not be called")
 
         override def setSoftError(softError: Boolean): LoggerExtended =
@@ -75,7 +75,7 @@ class ImplicitModuleToStringTest extends ParentTest {
     val m: Seq[Dependency] = revisions.map(r => Dependency(org % name % r))
     val header = "this is a header"
     m.prettyString(
-      new LoggerExtended() {
+      new LoggerExtended {
         override def isSoftError: Boolean = test.fail("Should not be called")
 
         override def setSoftError(softError: Boolean): LoggerExtended =
