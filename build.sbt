@@ -26,7 +26,7 @@ addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.2")
 
 // https://github.com/scalacenter/sbt-scalafix-example/blob/master/project/plugins.sbt
 resolvers += Resolver.sonatypeRepo("releases")
-addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.10.0")
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.10.1")
 
 resolvers += Resolver.bintrayRepo("scalameta", "maven")
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.6")
