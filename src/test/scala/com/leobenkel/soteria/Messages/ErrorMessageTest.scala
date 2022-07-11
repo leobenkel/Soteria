@@ -157,7 +157,7 @@ class ErrorMessageTest extends ParentTest {
   test("Test combine empty error") {
     val emptyError = NoError
     val error      = ErrorMessage("error title", "error Message")
-    val allError   = (emptyError ++ NoError) ++ (NoError ++ error)
+    val allError   = emptyError ++ NoError ++ (NoError ++ error)
 
     allError.consume { s =>
       assertEquals(

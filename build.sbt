@@ -3,7 +3,7 @@ soteriaAddSemantic := false
 libraryDependencies += "commons-logging" % "commons-logging" % "1.2"
 
 // Test
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.12" % Test
 
 // https://github.com/scoverage/sbt-scoverage
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.9.3")
@@ -26,7 +26,7 @@ addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.2")
 
 // https://github.com/scalacenter/sbt-scalafix-example/blob/master/project/plugins.sbt
 resolvers += Resolver.sonatypeRepo("releases")
-addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.9.34")
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.10.1")
 
 resolvers += Resolver.bintrayRepo("scalameta", "maven")
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.6")
@@ -35,7 +35,7 @@ addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.6")
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
 
 // TODO: Remove when we are able to use Circe for JSON parsing
-val silencerVersion = "1.7.8"
+val silencerVersion = "1.7.9"
 ThisBuild / libraryDependencies ++=
   Seq(
     compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),

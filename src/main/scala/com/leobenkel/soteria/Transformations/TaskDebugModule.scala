@@ -20,7 +20,7 @@ private[Transformations] trait TaskDebugModule {
     implicit class ParserNoQuote(p: Parser[String]) {
       val ensureNoQuotes: Parser[String] =
         p.map {
-            case n if n.contains('"') => throw new Exception()
+            case n if n.contains('"') => throw new Exception
             case n                    => n
           }
           .failOnException
