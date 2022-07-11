@@ -65,7 +65,7 @@ private[Transformations] trait CheckVersion {
       correctVersion:   String,
   ): Seq[String] =
     librariesToCheck
-      .filter(m => (correctModule === m) && m.revision != correctVersion)
+      .filter(m => correctModule === m && m.revision != correctVersion)
       .map { m =>
         val correctModuleToString = m.withRevision(correctVersion).withName(m.name).prettyString
 

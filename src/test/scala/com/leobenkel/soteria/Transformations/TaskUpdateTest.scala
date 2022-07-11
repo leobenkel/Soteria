@@ -71,7 +71,7 @@ class TaskUpdateTest extends ParentTest with TaskUpdate {
     val (goodModules, errors) =
       ZTestOnlyTaskUpdate.checkTooManyVersionsTest(
         log =
-          new LogTest() {
+          new LogTest {
             override def separator(
                 level: Level.Value,
                 title: String,
@@ -100,7 +100,7 @@ class TaskUpdateTest extends ParentTest with TaskUpdate {
     val (goodModules, errors) =
       ZTestOnlyTaskUpdate.checkTooManyVersionsTest(
         log =
-          new LogTest() {
+          new LogTest {
             override def separator(
                 level: Level.Value,
                 title: String,
@@ -155,7 +155,7 @@ class TaskUpdateTest extends ParentTest with TaskUpdate {
 
     ZTestOnlyTaskUpdate.printDebugTest(
       log =
-        new LogTest() {
+        new LogTest {
           override def separator(
               level: Level.Value,
               title: String,

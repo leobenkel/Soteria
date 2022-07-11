@@ -93,7 +93,7 @@ case class Dependency(
   def withVersion(version: String): Dependency = this.copy(versions = Set(version))
 
   private def shouldBeTestedForInclusion(m: ModuleID): Boolean =
-    ((m.name.contains("_") || m.crossVersion.isInstanceOf[CrossVersion.Binary]) ||
+    (m.name.contains("_") || m.crossVersion.isInstanceOf[CrossVersion.Binary] ||
     this.nameObj.needDoublePercent || this.scalaVersionsFilter.nonEmpty) && this.shouldDownload
 
   def shouldBeDownloaded(scalaV: ScalaV): Boolean =

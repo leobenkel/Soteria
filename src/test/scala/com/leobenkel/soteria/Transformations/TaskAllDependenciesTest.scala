@@ -47,7 +47,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   test("test filterLibraries - empty") {
     val inputLib           = Seq()
     val dependencySearched = Dependency("com.org", "artifact")
-    val log                = new LogTest()
+    val log                = new LogTest
     val output             =
       ZTestOnlyTaskAllDependencies.filterLibrariesTest(
         log = log,
@@ -75,7 +75,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
         "com.org2" % "foo"      % "v2.0",
       )
     val dependencySearched = Dependency("com.org", "artifact")
-    val log                = new LogTest()
+    val log                = new LogTest
 
     val output =
       ZTestOnlyTaskAllDependencies.filterLibrariesTest(
@@ -111,7 +111,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
         "org.scala-lang" % "scala"    % "2.12",
       )
     val dependencySearched = Dependency("com.org", "artifact")
-    val log                = new LogTest()
+    val log                = new LogTest
 
     val output =
       ZTestOnlyTaskAllDependencies.filterLibrariesTest(
@@ -143,7 +143,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   test("test getLibraryFiltered - empty") {
     val packageKnownRiskDependencies: Map[Dependency, Seq[NameOfModule]] = Map()
     val libraries:                    Seq[ModuleID]                      = Seq()
-    val log    = new LogTest()
+    val log    = new LogTest
     val output =
       ZTestOnlyTaskAllDependencies.getLibraryFilteredTest(
         log,
@@ -166,7 +166,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
       Seq(
         "com.org" % "artifact" % "v1.0"
       )
-    val log = new LogTest()
+    val log = new LogTest
     val output =
       ZTestOnlyTaskAllDependencies.getLibraryFilteredTest(
         log,
@@ -181,7 +181,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   }
 
   test("test removeBadDependencies - remove fully") {
-    val log = new LogTest()
+    val log = new LogTest
     val needToBeReplaced: Seq[Dependency] =
       Seq(
         Dependency("com.org2", "foo"),
@@ -213,7 +213,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
 
   test("test removeBadDependencies - break") {
     val log =
-      new LogTest() {
+      new LogTest {
         override def setSoftError(softError: Boolean): LoggerExtended = {
           test.assert(softError)
           this
@@ -246,7 +246,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   }
 
   test("test removeBadDependencies - replace") {
-    val log         = new LogTest()
+    val log         = new LogTest
     val replacement = Dependency("com.org2", "baz").withVersion("v3.0")
 
     val needToBeReplaced: Seq[Dependency] =
@@ -286,7 +286,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   }
 
   test("test excludeBadDependencies - empty") {
-    val log = new LogTest()
+    val log = new LogTest
     val libraryToEdit:    Seq[(ModuleID, Seq[NameOfModule])] = Seq()
     val needToBeReplaced: Seq[Dependency]                    = Seq()
     val output =
@@ -301,7 +301,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   }
 
   test("test excludeBadDependencies - nothing to do") {
-    val log = new LogTest()
+    val log = new LogTest
     val libraryToEdit:    Seq[(ModuleID, Seq[NameOfModule])] =
       Seq(
         "com.org" % "artifact" % "v1.0" -> Seq()
@@ -320,7 +320,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   }
 
   test("test excludeBadDependencies - remove entirely") {
-    val log = new LogTest()
+    val log = new LogTest
     val libraryToEdit:    Seq[(ModuleID, Seq[NameOfModule])] =
       Seq(
         "com.org" % "artifact" % "v1.0" ->
@@ -350,7 +350,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
   }
 
   test("test excludeBadDependencies") {
-    val log = new LogTest()
+    val log = new LogTest
     val libraryToEdit:    Seq[(ModuleID, Seq[NameOfModule])] =
       Seq(
         "com.org" % "artifact" % "v1.0" ->
@@ -377,14 +377,14 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
     )
     assert(log.getAllMessages.contains(needToBeReplaced.head.toString))
 
-    assert(output.length == (libraryToEdit.length + needToBeReplaced.length))
+    assert(output.length == libraryToEdit.length + needToBeReplaced.length)
     assert(output.head.prettyString == needToBeReplaced.head.toString)
     assert(output.apply(1).prettyString == libraryToEdit.head._1.prettyString)
   }
 
   test("test execAllDependencies - empty") {
     val log =
-      new LogTest() {
+      new LogTest {
         override def separator(
             level: Level.Value,
             title: String,
@@ -433,7 +433,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
 
   test("test execAllDependencies - with debug - present") {
     val log =
-      new LogTest() {
+      new LogTest {
         override def separator(
             level: Level.Value,
             title: String,
@@ -492,7 +492,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
 
   test("test execAllDependencies - with debug - absent") {
     val log =
-      new LogTest() {
+      new LogTest {
         override def separator(
             level: Level.Value,
             title: String,
@@ -553,7 +553,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
 
   test("test execAllDependencies") {
     val log =
-      new LogTest() {
+      new LogTest {
         override def separator(
             level: Level.Value,
             title: String,
@@ -609,7 +609,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
 
   test("test rewriteLibAndVersionCheck - wrong version") {
     val log =
-      new LogTest() {
+      new LogTest {
         override def separator(
             level: Level.Value,
             title: String,
@@ -674,7 +674,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
 
   test("test rewriteLibAndVersionCheck") {
     val log =
-      new LogTest() {
+      new LogTest {
         override def separator(
             level: Level.Value,
             title: String,
@@ -732,7 +732,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
 
   test("test rewriteLibraries") {
     val log =
-      new LogTest() {
+      new LogTest {
         override def separator(
             level: Level.Value,
             title: String,
