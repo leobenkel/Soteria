@@ -81,8 +81,8 @@ object SoteriaPlugin extends AutoPlugin with SoteriaExecutionLogic {
       soteriaCheckScalaFmt      :=
         Def
           .sequential(
-            (Compile / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmtCheck),
-            (Test / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmtCheck),
+            Compile / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmtCheck,
+            Test / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmtCheck,
           )
           .value,
       soteriaCheckScalaCheckAll :=
@@ -96,8 +96,8 @@ object SoteriaPlugin extends AutoPlugin with SoteriaExecutionLogic {
       soteriaCheckScalaFmtRun   :=
         Def
           .sequential(
-            (Compile / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmt),
-            (Test / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmt),
+            Compile / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmt,
+            Test / org.scalafmt.sbt.ScalafmtPlugin.autoImport.scalafmt,
           )
           .value,
       soteriaAddSemantic        := getDefaultAddSemanticValue.value,
