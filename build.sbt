@@ -6,7 +6,7 @@ libraryDependencies += "commons-logging" % "commons-logging" % "1.2"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.12" % Test
 
 // https://github.com/scoverage/sbt-scoverage
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.9.3")
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.0.0")
 addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.3.2")
 //
 
