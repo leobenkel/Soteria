@@ -71,12 +71,12 @@ case class Dependency(
         )
     )
 
-  @transient lazy val toModuleID:   Either[String, ModuleID] = version.flatMap(nameObj.toModuleID)
-  def toModuleID(revision: String): Either[String, ModuleID] = nameObj.toModuleID(revision)
-  def ===(other: Dependency):       Boolean                  = this.nameObj === other.nameObj
-  def =!=(other: Dependency):       Boolean                  = !(this === other)
-  def ===(other: ModuleID):         Boolean                  = this === Dependency(other)
-  def =!=(other: ModuleID):         Boolean                  = !(this === Dependency(other))
+  @transient lazy val toModuleID: Either[String, ModuleID] = version.flatMap(nameObj.toModuleID)
+  def toModuleID(revision: String):     Either[String, ModuleID] = nameObj.toModuleID(revision)
+  def ===(other:           Dependency): Boolean                  = this.nameObj === other.nameObj
+  def =!=(other:           Dependency): Boolean                  = !(this === other)
+  def ===(other:           ModuleID):   Boolean                  = this === Dependency(other)
+  def =!=(other:           ModuleID):   Boolean                  = !(this === Dependency(other))
 
   def |+|(other: Dependency): Either[String, Dependency] =
     if(this === other) Right(this.copy(versions = this.versions ++ other.versions))

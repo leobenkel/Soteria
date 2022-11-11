@@ -114,7 +114,7 @@ case class ScalaV(
       }
   }
 
-  def ===(moduleScalaVersion: String):         Boolean = this === ScalaV(moduleScalaVersion)
+  def ===(moduleScalaVersion:         String): Boolean = this === ScalaV(moduleScalaVersion)
   @inline def =!=(moduleScalaVersion: String): Boolean = !(this === moduleScalaVersion)
 
   def ===(input: ScalaV): Boolean =
