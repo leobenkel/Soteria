@@ -29,7 +29,7 @@ resolvers += Resolver.sonatypeRepo("releases")
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.10.1")
 
 resolvers += Resolver.bintrayRepo("scalameta", "maven")
-addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.6")
+addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.0")
 
 // http://www.scalastyle.org/sbt.html
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
