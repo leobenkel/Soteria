@@ -7,7 +7,7 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.13" % Test
 
 // https://github.com/scoverage/sbt-scoverage
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.9.3")
-addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.3.2")
+addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.3.3")
 //
 
 // ASSEMBLY
