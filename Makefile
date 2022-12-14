@@ -14,6 +14,9 @@ fmt:
 publishLocal:
 	 sbt 'set isSnapshot := true' publishLocal
 
+ prePublishForSelfUse:
+	./publishForSelfUse.sh $(VERSION)
+
 publish: test publish_only
 
 publish_only:

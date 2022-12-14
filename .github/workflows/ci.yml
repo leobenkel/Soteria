@@ -14,6 +14,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: self publish
+        run: make prePublishForSelfUse
+
       - name: tests
         run: sbt ";clean ;Test/compile ;coverage ;test; set isSnapshot := true; scripted ;coverageReport ;coveralls"
         env:
