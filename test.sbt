@@ -9,10 +9,10 @@ scriptedBufferLog         := false
 scriptedParallelInstances := 1
 scriptedBatchExecution    := false
 
-stryker / logLevel := Level.Debug
+//stryker / logLevel := Level.Debug
 
 coverageOutputDebug := true
 
-coverallsFailBuildOnError := false
+coverallsFailBuildOnError := true
 
 coverallsFile := baseDirectory.value / "coveralls/coveralls.json"
