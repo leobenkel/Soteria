@@ -1,6 +1,4 @@
-//soteriaAddSemantic := false
-
-scalaVersion := "2.12.17"
+soteriaAddSemantic := false
 
 libraryDependencies += "commons-logging" % "commons-logging" % "1.2"
 
