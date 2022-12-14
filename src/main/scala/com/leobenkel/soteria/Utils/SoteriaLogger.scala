@@ -12,10 +12,10 @@ case class SoteriaLogger(
 
   /** For test only */
   object TestOnly {
-    @inline def makeSeparatorTest(title: String):      String      = makeSeparator(title)
-    @transient lazy val getLevelTest:                  Level.Value = getLevel
-    @inline def atLevelTest(level: Level.Value):       Boolean     = atLevel(level)
-    @inline def prependHeaderTest(message: => String): String      = prependHeader(message)
+    @inline def makeSeparatorTest(title: String): String = makeSeparator(title)
+    @transient lazy val getLevelTest: Level.Value = getLevel
+    @inline def atLevelTest(level:         Level.Value): Boolean = atLevel(level)
+    @inline def prependHeaderTest(message: => String):   String  = prependHeader(message)
   }
 
   innerLog.setLevel(Level.Debug)
