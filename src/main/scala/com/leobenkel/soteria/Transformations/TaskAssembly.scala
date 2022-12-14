@@ -11,16 +11,13 @@ private[Transformations] trait TaskAssembly extends MergeStrategyConfiguration {
       Def.task {
         val s = Keys.streams.value
         AssemblyOption(
-          assemblyDirectory = Some(s.cacheDirectory / "assembly"),
           includeBin = (Keys.packageBin / AssemblyKeys.assembleArtifact).value,
           includeScala = (AssemblyKeys.assemblyPackageScala / AssemblyKeys.assembleArtifact).value,
           includeDependency =
             (AssemblyKeys.assemblyPackageDependency / AssemblyKeys.assembleArtifact).value,
           mergeStrategy = (AssemblyKeys.assembly / AssemblyKeys.assemblyMergeStrategy).value,
           excludedJars = (AssemblyKeys.assembly / AssemblyKeys.assemblyExcludedJars).value,
-          excludedFiles = Assembly.defaultExcludedFiles,
           cacheOutput = true,
-          cacheUnzip = true,
           appendContentHash = false,
           prependShellScript = None,
           maxHashLength = None,
