@@ -3,4 +3,7 @@ lazy val root = (project in file(".")).settings(
   assembly / assemblyJarName := "foo.jar",
 )
 
-soteriaConfPath := "https://raw.githubusercontent.com/leobenkel/soteria/main/soteria.json"
+soteriaConfPath := {
+  val baseDir = baseDirectory.value
+  s"file://$baseDir/soteria.json"
+}
