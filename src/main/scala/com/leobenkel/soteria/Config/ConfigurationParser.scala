@@ -15,7 +15,8 @@ private[soteria] case class ConfigurationParser(
   )
 
   @transient lazy private val isWeb: Boolean =
-    configPath.startsWith("http://") || configPath.startsWith("https://")
+    configPath.startsWith("http://") || configPath.startsWith("https://") ||
+    configPath.startsWith("file://")
 
   @transient lazy private val fileContent: String =
     Try(
