@@ -7,3 +7,6 @@ addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.3.5")
 
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.6.4")
 
+// https://github.com/sbt/sbt/issues/6997#issuecomment-1310637232
+ThisBuild / libraryDependencySchemes +=
+  "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
