@@ -9,7 +9,6 @@ private[Transformations] trait TaskAssembly extends MergeStrategyConfiguration {
   def defaultAssemblyOptionExec: Def.Initialize[Task[AssemblyOption]] = {
     Def.taskDyn {
       Def.task {
-        val s = Keys.streams.value
         AssemblyOption(
           includeBin = (Keys.packageBin / AssemblyKeys.assembleArtifact).value,
           includeScala = (AssemblyKeys.assemblyPackageScala / AssemblyKeys.assembleArtifact).value,
