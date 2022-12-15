@@ -39,14 +39,12 @@ jobs:
 
       - name: release-staging
         run: |
-          sbt clean
           make prePublishForSelfUse
           sbt ";set isSnapshot := true ; ci-release"
         if: startsWith(github.ref, 'refs/tags/') != true && github.ref == 'refs/heads/main'
 
       - name: release-production
         run: |
-          sbt clean
           make prePublishForSelfUse
           sbt ci-release
         if: startsWith(github.ref, 'refs/tags/v')
