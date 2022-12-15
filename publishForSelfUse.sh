@@ -2,4 +2,4 @@
 
 V=`echo $1 | cut -c2-`
 echo "$V"
-sbt -Dwithout_self_use ";set version := \"${V}\" ;publishLocal"
+sbt -Dwithout_self_use ";clean ;set version := \"${V}\" ;publishLocal"
