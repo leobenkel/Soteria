@@ -3,7 +3,7 @@ soteriaAddSemantic := false
 libraryDependencies += "commons-logging" % "commons-logging" % "1.2"
 
 // Test
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.14" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % Test
 
 // https://github.com/sbt/sbt/issues/6997#issuecomment-1310637232
 libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
