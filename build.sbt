@@ -19,7 +19,7 @@ addSbtPlugin("se.marcuslonnberg" % "sbt-docker"   % "1.9.0")
 ///
 
 // For testing
-addSbtPlugin("io.stryker-mutator" % "sbt-stryker4s" % "0.14.3")
+addSbtPlugin("io.stryker-mutator" % "sbt-stryker4s" % "0.15.0")
 
 // For SourceClear
 // https://github.com/jrudolph/sbt-dependency-graph
