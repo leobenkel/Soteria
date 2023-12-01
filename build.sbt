@@ -1,6 +1,6 @@
 soteriaAddSemantic := false
 
-libraryDependencies += "commons-logging" % "commons-logging" % "1.2"
+libraryDependencies += "commons-logging" % "commons-logging" % "1.3.0"
 
 // Test
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.14" % Test
