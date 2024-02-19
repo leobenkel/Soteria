@@ -507,6 +507,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
 
           ()
         }
+
         override def setSoftError(softError: Boolean): LoggerExtended = {
           test.assert(softError)
           this
