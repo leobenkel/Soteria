@@ -9,7 +9,7 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.14" % Test
 libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
 
 // https://github.com/scoverage/sbt-scoverage
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.0.6")
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.0.10")
 addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.3.5")
 //
 
