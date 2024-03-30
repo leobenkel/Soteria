@@ -94,7 +94,7 @@ case class Dependency(
 
   private def shouldBeTestedForInclusion(m: ModuleID): Boolean =
     (m.name.contains("_") || m.crossVersion.isInstanceOf[CrossVersion.Binary] ||
-    this.nameObj.needDoublePercent || this.scalaVersionsFilter.nonEmpty) && this.shouldDownload
+      this.nameObj.needDoublePercent || this.scalaVersionsFilter.nonEmpty) && this.shouldDownload
 
   def shouldBeDownloaded(scalaV: ScalaV): Boolean =
     this.toModuleID.right.map(shouldBeDownloaded(scalaV, _)).right.getOrElse(false)
