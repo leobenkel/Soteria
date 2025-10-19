@@ -57,8 +57,8 @@ private[Transformations] trait TaskLibraryDependencies {
         config.ForbiddenModules,
       ) ++ getProvidedEnforcedErrors(libraryDependencies, config.AsProvided)).sortBy(identity)
 
-    if(errors.nonEmpty) log
-      .fail(s"You have errors in your 'libraryDependencies': \n${errors.mkString("\n")}")
+    if(errors.nonEmpty)
+      log.fail(s"You have errors in your 'libraryDependencies': \n${errors.mkString("\n")}")
 
     libraryDependencies
   }
