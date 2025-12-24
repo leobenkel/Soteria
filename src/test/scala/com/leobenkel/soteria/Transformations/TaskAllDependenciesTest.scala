@@ -496,7 +496,7 @@ class TaskAllDependenciesTest extends ParentTest with TaskAllDependencies {
         override def separator(
             level: Level.Value,
             title: String,
-        ): Unit = {
+        ):                                             Unit           = {
           test.assert(
             title.contains("allDependencies") || title.contains("checkVersion") ||
             title.contains("rewriteLibraries") ||
