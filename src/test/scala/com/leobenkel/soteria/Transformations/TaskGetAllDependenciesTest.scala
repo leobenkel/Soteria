@@ -67,8 +67,9 @@ class TaskGetAllDependenciesTest extends ParentTest with TaskGetAllDependencies 
 
   test("Process Deps - with scala version filter negative 1") {
     val m       =
-      Dependency("org.something" % "artifact-no-cross" % "1.0.0")
-        .copy(scalaVersionsFilter = Seq(ScalaVersionHandler("-2.12").right.get))
+      Dependency("org.something" % "artifact-no-cross" % "1.0.0").copy(scalaVersionsFilter =
+        Seq(ScalaVersionHandler("-2.12").right.get)
+      )
     val modules =
       Seq(
         "org.something" % "artifact_2.12" % "1.0.0"
@@ -85,8 +86,9 @@ class TaskGetAllDependenciesTest extends ParentTest with TaskGetAllDependencies 
 
   test("Process Deps - with scala version filter positive 1") {
     val m       =
-      Dependency("org.something" % "artifact-no-cross" % "1.0.0")
-        .copy(scalaVersionsFilter = Seq(ScalaVersionHandler("+2.12").right.get))
+      Dependency("org.something" % "artifact-no-cross" % "1.0.0").copy(scalaVersionsFilter =
+        Seq(ScalaVersionHandler("+2.12").right.get)
+      )
     val modules =
       Seq(
         "org.something" % "artifact_2.12" % "1.0.0"
@@ -103,8 +105,9 @@ class TaskGetAllDependenciesTest extends ParentTest with TaskGetAllDependencies 
 
   test("Process Deps - with scala version filter negative 2") {
     val m       =
-      Dependency("org.something" %% "artifact-no-cross" % "1.0.0")
-        .copy(scalaVersionsFilter = Seq(ScalaVersionHandler("-2.12").right.get))
+      Dependency("org.something" %% "artifact-no-cross" % "1.0.0").copy(scalaVersionsFilter =
+        Seq(ScalaVersionHandler("-2.12").right.get)
+      )
     val modules =
       Seq(
         "org.something" % "artifact_2.12" % "1.0.0"
@@ -121,8 +124,9 @@ class TaskGetAllDependenciesTest extends ParentTest with TaskGetAllDependencies 
 
   test("Process Deps - with scala version filter negative 3") {
     val m       =
-      Dependency("org.something" %% "artifact-no-cross" % "1.0.0")
-        .copy(scalaVersionsFilter = Seq(ScalaVersionHandler("-2.12").right.get))
+      Dependency("org.something" %% "artifact-no-cross" % "1.0.0").copy(scalaVersionsFilter =
+        Seq(ScalaVersionHandler("-2.12").right.get)
+      )
     val modules =
       Seq(
         "org.something" % "artifact_2.12" % "1.0.0"
@@ -139,8 +143,9 @@ class TaskGetAllDependenciesTest extends ParentTest with TaskGetAllDependencies 
 
   test("Process Deps - with scala version filter positive 2") {
     val m       =
-      Dependency("org.something" %% "artifact-no-cross" % "1.0.0")
-        .copy(scalaVersionsFilter = Seq(ScalaVersionHandler("+2.12").right.get))
+      Dependency("org.something" %% "artifact-no-cross" % "1.0.0").copy(scalaVersionsFilter =
+        Seq(ScalaVersionHandler("+2.12").right.get)
+      )
     val modules =
       Seq(
         "org.something" % "artifact_2.12" % "1.0.0"
