@@ -6,7 +6,7 @@ import sbt._
 import sbtassembly._
 
 private[Transformations] trait TaskAssembly extends MergeStrategyConfiguration {
-  def defaultAssemblyOptionExec: Def.Initialize[Task[AssemblyOption]] = {
+  def defaultAssemblyOptionExec: Def.Initialize[Task[AssemblyOption]] =
     Def.taskDyn {
       Def.task {
         AssemblyOption(
@@ -26,7 +26,6 @@ private[Transformations] trait TaskAssembly extends MergeStrategyConfiguration {
         )
       }
     }
-  }
 
   def soteriaAssemblySettingsExec(): Def.Initialize[Task[AssemblyOption]] =
     Def.taskDyn {
