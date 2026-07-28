@@ -8,8 +8,9 @@ import com.leobenkel.soteria.Utils.SoteriaLogger
 import sbt._
 
 private[Transformations] trait TaskGetAllDependencies {
-  lazy protected val javaX = ("javax.ws.rs" % "javax.ws.rs-api" % "2.1")
-    .artifacts(Artifact("javax.ws.rs-api", "jar", "jar"))
+  lazy protected val javaX = ("javax.ws.rs" % "javax.ws.rs-api" % "2.1").artifacts(
+    Artifact("javax.ws.rs-api", "jar", "jar")
+  )
 
   protected def processDependencies(
       log:          SoteriaLogger,
