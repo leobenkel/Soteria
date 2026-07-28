@@ -142,8 +142,7 @@ object SoteriaPlugin extends AutoPlugin with SoteriaExecutionLogic {
       // Compile Path
       Compile / Keys.scalaSource                           := Keys.baseDirectory.value / "src/main/scala",
       Test / Keys.scalaSource                              := Keys.baseDirectory.value / "src/test/scala",
-      AssemblyKeys.assembly / Keys.fullClasspath           :=
-        (Compile / Keys.fullClasspath).value,
+      AssemblyKeys.assembly / Keys.fullClasspath           := (Compile / Keys.fullClasspath).value,
       // Docker
       soteriaDockerImage                                   := SoteriaPluginKeys.soteriaConfig.value.dockerImage,
       docker / dockerfile                                  := {
